@@ -1,0 +1,85 @@
+# industrio — automated ingest + publish (DISABLED)
+#
+# This workflow is intentionally disabled (the `.disabled` suffix stops GitHub
+# from running it). It's a placeholder for when you want the site to refresh
+# itself on a schedule instead of running `scripts/build-public.py` locally.
+#
+# To enable:
+#   1. Add the secrets listed under `env:` below (Settings → Secrets and
+#      variables → Actions → New repository secret).
+#   2. Rename this file to `publish.yml` (drop the `.disabled`).
+#   3. Commit and push. The workflow will start running on the schedule.
+#
+# What it does when enabled:
+#   - Runs on a cron schedule + on manual dispatch.
+#   - Checks out the repo, installs Python deps.
+#   - Runs the ingest scripts you want (uncomment as sources come online).
+#   - Rebuilds /docs with `scripts/build-public.py`.
+#   - Commits + pushes any changes to `docs/` back to main.
+#   - GitHub Pages then redeploys automatically.
+
+name: Publish industrio
+
+on:
+  schedule:
+    # Daily at 05:30 UTC = 00:30 America/Toronto (outside the 9am–noon window
+    # mentioned in Cowork's scheduling guidance, so cloud delay is unlikely).
+    - cron: '30 5 * * *'
+  workflow_dispatch: {}   # allow a manual run from the Actions tab
+
+permissions:
+  contents: write   # needed so the Action can commit docs/ back to main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      # ---- Secrets to configure in Settings → Secrets → Actions ----------
+      # Fill these in as each ingestion source comes online.
+      ICLOUD_EMAIL: ${{ secrets.ICLOUD_EMAIL }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      TRREB_API_KEY: ${{ secrets.TRREB_API_KEY }}
+      TRREB_API_URL: ${{ secrets.TRREB_API_URL }}
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # full history so we can push cleanly
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pypdf requests python-dateutil
+
+      # -- Ingest from email (uncomment when parse-emails.py reads from IMAP)
+      # - name: Ingest broker emails
+      #   run: python parse-emails.py
+
+      # -- Ingest Realm PDFs that have been checked into the repo
+      # - name: Ingest Realm PDFs
+      #   run: python import-realm-pdfs.py realm-pdfs/
+
+      # -- Ingest from TRREB RESO API (uncomment when fetch-trreb.py exists)
+      # - name: Ingest TRREB API
+      #   run: python scripts/fetch-trreb.py
+
+      - name: Rebuild /docs
+        run: python scripts/build-public.py --verbose
+
+      - name: Commit + push if docs/ changed
+        run: |
+          git config user.name  "industrio-bot"
+          git config user.email "bot@industrio.ai"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+            exit 0
+          fi
+          git commit -m "publish: automated refresh ($(date -u +%Y-%m-%d))"
+          git push

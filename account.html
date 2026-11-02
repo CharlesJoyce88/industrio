@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — industrio</title>
+<meta name="description" content="Manage your industrio account, notifications, saved searches, and security settings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .account-wrap { max-width: 1200px; margin: 0 auto; padding: 32px 24px 64px 24px; }
+  .account-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 18px; }
+  .account-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .account-grid { grid-template-columns: 1fr; } }
+  .account-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 8px 0; }
+  .account-row { display: grid; grid-template-columns: 220px 1fr auto auto; gap: 16px; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); }
+  .account-row:last-child { border-bottom: none; }
+  .account-row-label { font-size: 0.95rem; color: var(--text); font-weight: 500; }
+  .account-row-label .sub { display: block; font-size: 0.78rem; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+  .account-row-value { color: var(--text-dim); font-size: 0.92rem; font-family: var(--font-mono); }
+  .account-row-value.empty { color: var(--text-muted); }
+  .account-action { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1.5px solid var(--accent); color: var(--accent); background: transparent; border-radius: 999px; font-family: var(--font-sans); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: background .15s, color .15s; }
+  .account-action:hover { background: var(--accent); color: #fff; }
+  .account-action.danger { border-color: var(--danger); color: var(--danger); }
+  .account-action.danger:hover { background: var(--danger); color: #fff; }
+  .account-row.delete { background: rgba(185, 28, 28, 0.04); border: 1.5px solid var(--danger); border-radius: 12px; margin: 12px 18px; padding: 18px 24px; grid-template-columns: 1fr auto; }
+  .account-row.delete .label { color: var(--danger); font-weight: 600; }
+  .account-row.delete .desc { color: var(--text-dim); font-size: 0.85rem; margin-top: 4px; }
+
+  .account-side { display: flex; flex-direction: column; gap: 16px; }
+  .side-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 22px; }
+  .side-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; }
+  .side-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+  .side-row-label { font-size: 0.92rem; color: var(--text); font-weight: 500; }
+  .side-link { color: var(--accent); font-size: 0.84rem; font-weight: 500; text-decoration: none; padding: 5px 12px; border: 1.5px solid var(--accent); border-radius: 999px; }
+  .side-link:hover { background: var(--accent); color: #fff; }
+
+  .notif-section { padding: 8px 0 4px 0; }
+  .notif-section:not(:first-child) { border-top: 1px solid var(--border); padding-top: 14px; margin-top: 4px; }
+  .notif-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
+  .notif-grid { display: grid; grid-template-columns: 100px 1fr; gap: 10px 14px; align-items: center; }
+  .notif-grid-label { color: var(--text-dim); font-size: 0.88rem; font-weight: 500; }
+  .notif-options { display: flex; flex-direction: column; gap: 8px; }
+  .notif-option { display: inline-flex; align-items: center; gap: 8px; font-size: 0.86rem; color: var(--text-dim); cursor: pointer; }
+  .notif-option input { margin: 0; }
+
+  .notif-info { display: flex; gap: 8px; padding: 10px 12px; background: var(--bg-elev); border-radius: 8px; margin-top: 10px; font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+  .notif-info-icon { color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+
+  .signout-row { display: flex; justify-content: flex-end; padding-top: 6px; }
+  .signout-btn { background: var(--accent); color: #fff; border: none; padding: 9px 22px; border-radius: 999px; font-family: var(--font-sans); font-size: 0.9rem; font-weight: 500; cursor: pointer; }
+  .signout-btn:hover { background: var(--accent-dark); }
+
+  .gated-message { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 60px 32px; text-align: center; }
+  .gated-message h2 { margin: 0 0 8px 0; font-size: 1.4rem; }
+  .gated-message p { max-width: 480px; margin: 0 auto 18px auto; color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+      <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="active nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<div class="account-wrap">
+
+  <h1 class="account-title">User Account</h1>
+
+  <!-- Shown when not logged in -->
+  <div class="gated-message" id="gatedMessage" hidden>
+    <h2>Sign in to manage your account.</h2>
+    <p>You need to be signed in to view your account, manage notifications, or update your profile.</p>
+    <a href="login.html" class="btn btn-primary">Log in</a>
+  </div>
+
+  <!-- Shown when logged in -->
+  <div class="account-grid" id="accountBody" hidden>
+
+    <div>
+      <div class="account-card">
+        <div class="account-row">
+          <div class="account-row-label">Sign-in email</div>
+          <div class="account-row-value" id="acctEmail">—</div>
+          <div></div>
+          <button class="account-action" data-update="email">Update</button>
+        </div>
+        <div class="account-row">
+          <div class="account-row-label">Registered on</div>
+          <div class="account-row-value" id="acctRegistered">—</div>
+          <div></div>
+          <div></div>
+        </div>
+        <div class="account-row">
+          <div class="account-row-label">Name</div>
+          <div class="account-row-value" id="acctName">—</div>
+          <div></div>
+          <button class="account-action" data-update="name">Update</button>
+        </div>
+        <div class="account-row">
+          <div class="account-row-label">Company</div>
+          <div class="account-row-value" id="acctCompany">—</div>
+          <div></div>
+          <button class="account-action" data-update="company">Update</button>
+        </div>
+        <div class="account-row">
+          <div class="account-row-label">Address <span class="sub">helps us surface relevant local data</span></div>
+          <div class="account-row-value" id="acctAddress">—</div>
+          <div></div>
+          <button class="account-action" data-update="address">Update</button>
+        </div>
+        <div class="account-row">
+          <div class="account-row-label">Contact phone</div>
+          <div class="account-row-value" id="acctPhone">—</div>
+          <div></div>
+          <button class="account-action" data-update="phone">Update</button>
+        </div>
+        <div class="account-row">
+          <div class="account-row-label">Password</div>
+          <div class="account-row-value">••••••</div>
+          <div></div>
+          <button class="account-action" data-update="password">Update</button>
+        </div>
+        <div class="account-row">
+          <div class="account-row-label">Referral code <span class="sub">(optional)</span></div>
+          <div class="account-row-value" id="acctReferral">—</div>
+          <div></div>
+          <button class="account-action" data-update="referral">Update</button>
+        </div>
+      </div>
+
+      <div class="account-row delete">
+        <div>
+          <div class="label">Delete my account</div>
+          <div class="desc">Once you delete the account, there is no going back &mdash; all saved searches, lease abstracts, and communication history will be permanently removed. Please be certain.</div>
+        </div>
+        <button class="account-action danger" id="deleteAccount">Delete Account</button>
+      </div>
+
+      <div class="account-row" style="display:block; padding-top:22px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <div>
+            <div class="label">My anonymous comp contributions</div>
+            <div class="desc">Leases you&rsquo;ve uploaded that contribute to industrio&rsquo;s aggregated market benchmarks. Withdraw any contribution and the data point is removed from all aggregates within 24 hours. <a href="data-policy.html">How this works &rarr;</a></div>
+          </div>
+          <a href="lease-abstract.html" class="account-action" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">+ Add a lease</a>
+        </div>
+        <div id="myContributionsList" class="contrib-list">
+          <div class="contrib-empty">No contributions yet.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="account-side">
+
+      <div class="side-card">
+        <div class="side-row">
+          <span class="side-row-label">My saved searches</span>
+          <a class="side-link" href="tracked.html">View all</a>
+        </div>
+        <div class="side-row">
+          <span class="side-row-label">My lease abstracts</span>
+          <a class="side-link" href="lease-abstract.html">View all</a>
+        </div>
+        <div class="side-row">
+          <span class="side-row-label">My landlord threads</span>
+          <a class="side-link" href="landlord-comms.html">View all</a>
+        </div>
+      </div>
+
+      <div class="side-card">
+        <div class="notif-section">
+          <div class="notif-title">Email notifications</div>
+          <div class="notif-grid">
+            <div class="notif-grid-label">When</div>
+            <div class="notif-options">
+              <label class="notif-option"><input type="checkbox" checked> A new listing matches a saved search</label>
+              <label class="notif-option"><input type="checkbox" checked> A property you watched is leased or sold</label>
+              <label class="notif-option"><input type="checkbox" checked> Landlord replies on a thread</label>
+              <label class="notif-option"><input type="checkbox"> Weekly market digest</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="notif-section">
+          <div class="notif-title">Push notifications</div>
+          <div class="notif-grid">
+            <div class="notif-grid-label">When</div>
+            <div class="notif-options">
+              <label class="notif-option"><input type="checkbox" checked> A new listing matches a saved search</label>
+              <label class="notif-option"><input type="checkbox"> Lease-expiry reminders</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="notif-info">
+          <span class="notif-info-icon">&#9432;</span>
+          <span>Email goes to your <strong>contact email</strong> above. Push notifications require enabling notifications in your browser.</span>
+        </div>
+      </div>
+
+      <div class="signout-row">
+        <button class="signout-btn" id="signOutBtn">Sign out</button>
+      </div>
+
+    </aside>
+
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="tracked.html">Saved Searches</a></li>
+        <li><a href="account.html">My Account</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var loggedIn = localStorage.getItem('industrio.loggedIn') === 'true';
+  document.getElementById('gatedMessage').toggleAttribute('hidden', loggedIn);
+  document.getElementById('accountBody').toggleAttribute('hidden', !loggedIn);
+  // When signed in, hide the Log in / Join pills in the top nav
+  if (loggedIn){
+    var auth = document.querySelector('.nav-auth');
+    if (auth) auth.style.display = 'none';
+  }
+  if (!loggedIn) return;
+
+  var email = localStorage.getItem('industrio.userEmail') || 'charles@northbridgecapital.com';
+  var name  = localStorage.getItem('industrio.userName')  || '';
+  var company = localStorage.getItem('industrio.userCompany') || '';
+  var phone = localStorage.getItem('industrio.userAddress','industrio.userPhone') || '';
+  var registered = localStorage.getItem('industrio.userRegistered');
+  if (!registered){
+    var d = new Date();
+    var pad = function(n){ return n < 10 ? '0' + n : n; };
+    registered = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+    localStorage.setItem('industrio.userRegistered', registered);
+  }
+  var referral = localStorage.getItem('industrio.userReferral') || '';
+
+  function set(id, val, emptyText){
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (val){ el.textContent = val; el.classList.remove('empty'); }
+    else    { el.textContent = emptyText || '—'; el.classList.add('empty'); }
+  }
+  set('acctEmail', email);
+  set('acctRegistered', registered);
+  set('acctName', name, 'Not set');
+  set('acctCompany', company, 'Not set');
+  set('acctAddress', localStorage.getItem('industrio.userAddress') || '', 'Not set');
+  set('acctPhone', phone, 'Not set');
+  set('acctReferral', referral, 'None');
+
+  var removePhone = document.getElementById('removePhone');
+  if (removePhone){
+    removePhone.toggleAttribute('hidden', !phone);
+    removePhone.addEventListener('click', function(){
+      if (window.confirm('Remove your contact phone?')){
+        localStorage.removeItem('industrio.userPhone');
+        set('acctPhone', '', 'Not set');
+        removePhone.setAttribute('hidden','');
+      }
+    });
+  }
+
+  document.querySelectorAll('[data-update]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var field = b.dataset.update;
+      var key   = 'industrio.user' + field.charAt(0).toUpperCase() + field.slice(1);
+      var labelMap = { email:'sign-in email', name:'name', company:'company', address:'address', phone:'phone', password:'password', referral:'referral code' };
+      var current = localStorage.getItem(key) || (field === 'email' ? email : '');
+      var prompt_msg = 'Update your ' + (labelMap[field] || field) + ':';
+      var v = window.prompt(prompt_msg, current);
+      if (v == null) return;
+      v = v.trim();
+      if (v === ''){ localStorage.removeItem(key); }
+      else        { localStorage.setItem(key, v); }
+      // Special cases
+      if (field === 'email')   { localStorage.setItem('industrio.userEmail', v || email); set('acctEmail', v || email); }
+      if (field === 'name')    { set('acctName', v, 'Not set'); }
+      if (field === 'company') { set('acctCompany', v, 'Not set'); }
+      if (field === 'address') { set('acctAddress', v, 'Not set'); }
+      if (field === 'phone')   { set('acctPhone', v, 'Not set'); if (removePhone) removePhone.toggleAttribute('hidden', !v); }
+      if (field === 'referral'){ set('acctReferral', v, 'None'); }
+      if (field === 'password'){ /* nothing visible to update */ }
+    });
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', function(){
+    localStorage.removeItem('industrio.loggedIn');
+    window.location.href = 'index.html';
+  });
+
+  document.getElementById('deleteAccount').addEventListener('click', function(){
+    if (!window.confirm('Permanently delete your account? This cannot be undone.')) return;
+    if (!window.confirm('Are you absolutely sure? Type DELETE in the next box to confirm.')) return;
+    var c = window.prompt('Type DELETE to confirm:');
+    if (c !== 'DELETE') return;
+    ['industrio.loggedIn','industrio.userEmail','industrio.userName','industrio.userCompany','industrio.userPhone','industrio.userReferral','industrio.userRegistered','industrio.savedSearches','industrio.requirement','industrio.myLeases']
+      .forEach(function(k){ try { localStorage.removeItem(k); } catch(e){} });
+    window.location.href = 'index.html';
+  });
+
+  // ===== My contributions panel =====
+  function loadContributions(){
+    var arr = [];
+    try { arr = JSON.parse(localStorage.getItem('industrio.myLeases') || '[]'); } catch(e){}
+    return arr;
+  }
+  function saveContributions(arr){
+    try { localStorage.setItem('industrio.myLeases', JSON.stringify(arr)); } catch(e){}
+  }
+  function fmtDate(iso){
+    if (!iso) return '\u2014';
+    var d = new Date(iso); if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('en-CA', { year:'numeric', month:'short', day:'numeric' });
+  }
+  function escapeHtmlSafe(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+  function renderContributions(){
+    var host = document.getElementById('myContributionsList');
+    if (!host) return;
+    var arr = loadContributions();
+    if (!arr.length){
+      host.innerHTML = '<div class="contrib-empty">No contributions yet. <a href="lease-abstract.html">Upload your first lease &rarr;</a></div>';
+      return;
+    }
+    host.innerHTML = arr.map(function(item, i){
+      var p = item.private || {};
+      var addr = p.address || (p.file_name ? '(uploaded ' + p.file_name + ')' : 'Lease #' + (i+1));
+      var sub = item.submarket || '\u2014';
+      var sz  = item.bucket_size  ? item.bucket_size + ' SF' : '\u2014';
+      var rt  = item.bucket_rent  || '\u2014';
+      var optBadge = item.opt_in_benchmarks
+        ? '<span class="contrib-badge contrib-in">Contributing to benchmarks</span>'
+        : '<span class="contrib-badge contrib-out">Private only (not contributing)</span>';
+      return ''
+        + '<div class="contrib-card" data-idx="' + i + '">'
+        +   '<div class="contrib-card-head">'
+        +     '<div>'
+        +       '<div class="contrib-addr">' + escapeHtmlSafe(addr) + '</div>'
+        +       '<div class="contrib-meta">Submitted ' + fmtDate(item.submitted_at) + ' \u00b7 ' + escapeHtmlSafe(sub) + ' \u00b7 ' + escapeHtmlSafe(sz) + ' \u00b7 rent bucket ' + escapeHtmlSafe(rt) + '</div>'
+        +     '</div>'
+        +     optBadge
+        +   '</div>'
+        +   '<div class="contrib-card-foot">'
+        +     '<button type="button" class="contrib-action contrib-toggle" data-idx="' + i + '">' + (item.opt_in_benchmarks ? 'Stop contributing' : 'Start contributing') + '</button>'
+        +     '<button type="button" class="contrib-action contrib-delete" data-idx="' + i + '">Withdraw &amp; delete</button>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+
+    host.querySelectorAll('.contrib-toggle').forEach(function(b){
+      b.addEventListener('click', function(){
+        var i = parseInt(b.dataset.idx, 10);
+        var arr = loadContributions();
+        if (!arr[i]) return;
+        arr[i].opt_in_benchmarks = !arr[i].opt_in_benchmarks;
+        saveContributions(arr);
+        renderContributions();
+      });
+    });
+    host.querySelectorAll('.contrib-delete').forEach(function(b){
+      b.addEventListener('click', function(){
+        var i = parseInt(b.dataset.idx, 10);
+        if (!window.confirm('Withdraw this contribution?\n\nIf you opted in to benchmarks, your data point is removed from all aggregates within 24 hours. Your private lease abstract will also be deleted. This cannot be undone.')) return;
+        var arr = loadContributions();
+        arr.splice(i, 1);
+        saveContributions(arr);
+        renderContributions();
+      });
+    });
+  }
+  if (document.getElementById('myContributionsList')) renderContributions();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join industrio</title>
+<meta name="description" content="Create your industrio account to get unlimited GTA industrial market intelligence, alerts, verified landlord reviews, and the AI broker.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+      <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a></div>
+  </div>
+</nav>
+
+<div class="auth-wrap auth-wide">
+  <div class="auth-card">
+    <h1 class="auth-title">Create your account.</h1>
+    <p class="auth-sub">Unlimited MLS search, live alerts, verified landlord reviews, and the AI broker. Free to start.</p>
+
+    <div class="auth-social">
+      <button class="btn btn-secondary auth-social-btn" type="button"><span style="font-weight:600;">G</span>&nbsp; Sign up with Google</button>
+      <button class="btn btn-secondary auth-social-btn" type="button"><span style="font-weight:600;">&#x25A2;</span>&nbsp; Sign up with Microsoft</button>
+    </div>
+
+    <div class="auth-divider"><span>or with email</span></div>
+
+    <form class="auth-form" onsubmit="return false;">
+
+      <div class="auth-grid">
+        <label class="auth-label">Full name
+          <input type="text" placeholder="Charles Reynolds" required>
+        </label>
+        <label class="auth-label">Work email
+          <input type="email" placeholder="you@company.com" required>
+        </label>
+
+        <label class="auth-label">Phone
+          <input type="tel" placeholder="(416) 555-0199" required>
+        </label>
+        <label class="auth-label">Company
+          <input type="text" placeholder="Northbridge Capital">
+        </label>
+
+        <label class="auth-label">Password
+          <input type="password" placeholder="Min 12 characters" required>
+        </label>
+        <label class="auth-label">Confirm password
+          <input type="password" placeholder="Re-enter" required>
+        </label>
+      </div>
+
+      <div class="auth-grid">
+        <label class="auth-label" style="grid-column: 1 / -1;">Address <span style="font-weight:400;color:var(--text-muted);font-size:0.8rem;">(optional &mdash; knowing your address helps us surface relevant local data)</span>
+          <input type="text" placeholder="123 Industrial Dr, Mississauga, ON">
+        </label>
+      </div>
+
+      <div class="auth-block">
+        <span class="auth-block-label">I am a&hellip;</span>
+        <div class="pill-group auth-pills">
+          <span class="pill on">Tenant</span>
+          <span class="pill">Landlord</span>
+          <span class="pill">Broker</span>
+          <span class="pill">Investor</span>
+          <span class="pill">Other</span>
+        </div>
+      </div>
+
+      <div class="auth-block">
+        <span class="auth-block-label">What I&rsquo;m looking for</span>
+        <div class="pill-group auth-pills">
+          <span class="pill on">Lease industrial space</span>
+          <span class="pill">Buy industrial condo</span>
+          <span class="pill">Renewal research</span>
+          <span class="pill">Sublet space</span>
+          <span class="pill">Just browsing</span>
+        </div>
+      </div>
+
+      <div class="auth-grid">
+        <div class="auth-label">Target size (SF)
+          <div class="size-range">
+            <input type="number" id="sizeMin" placeholder="Min" min="0" step="500" inputmode="numeric">
+            <span class="size-sep">to</span>
+            <input type="number" id="sizeMax" placeholder="Max" min="0" step="500" inputmode="numeric">
+          </div>
+        </div>
+        <label class="auth-label">Preferred submarket(s)
+          <input type="text" placeholder="Mississauga, Brampton">
+        </label>
+      </div>
+
+      <div class="brokerage-disclosure">
+        <div class="brokerage-title">VOW &middot; Brokerage Disclosure</div>
+        <p>industrio is operated by <strong>industrio Realty Inc., Brokerage</strong>, a Member of the Toronto Regional Real Estate Board (TRREB). Listings displayed on this Virtual Office Website (VOW) are sourced from the TRREB MLS&reg; System under TRREB's VOW rules.</p>
+        <p><strong>The information provided herein must only be used by consumers that have a bona fide interest in the purchase, sale, or lease of real estate</strong> of the type being offered via this VOW and may not be used for any commercial purpose or any other purpose. Information is deemed reliable but not guaranteed accurate by TRREB. The trademarks MLS&reg;, Multiple Listing Service&reg; and the associated logos are owned by The Canadian Real Estate Association (CREA) and identify the quality of services provided by real estate professionals who are members of CREA.</p>
+      </div>
+
+      <div class="auth-terms">
+        <label class="auth-check auth-check-block">
+          <input type="checkbox" required>
+          <span><strong>I confirm I have a bona fide interest</strong> in the purchase, sale, or lease of industrial real estate in the GTA and will use the information provided on this website only for that personal, non-commercial purpose. I am actively looking to lease or buy space (or researching a renewal).</span>
+        </label>
+        <label class="auth-check auth-check-block">
+          <input type="checkbox" required>
+          <span>I agree to the <a href="#" target="_blank">industrio Terms of Use</a> and acknowledge the <strong>TRREB VOW Terms of Use Agreement</strong>. MLS listing data is displayed under authorized consumer access and I will not copy, redistribute, scrape, or resell MLS data.</span>
+        </label>
+        <label class="auth-check auth-check-block">
+          <input type="checkbox" required>
+          <span>I agree to the <a href="#" target="_blank">Privacy Policy</a>. industrio will never share my uploaded documents (leases, financial data) with landlords, brokers, or any third party.</span>
+        </label>
+        <label class="auth-check auth-check-block">
+          <input type="checkbox">
+          <span>Send me occasional product updates and market digests. (Optional &mdash; uncheck if you'd rather not.)</span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary auth-submit">Create account</button>
+      <p class="auth-foot" style="margin-top:12px;">By creating an account you confirm the information above is accurate. Your search profile helps us match you to listings faster.</p>
+    </form>
+
+    <p class="auth-foot">Already have an account? <a href="login.html">Log in</a></p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0;">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span><a href="about.html">About</a> &middot; <a href="pricing.html">Pricing</a> &middot; <a href="docs.html">Developer Docs</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Pill toggle on join form
+document.querySelectorAll('.auth-pills .pill').forEach(function(p){
+  p.addEventListener('click', function(){ p.classList.toggle('on'); });
+});
+
+// Auto-jump focus from Min to Max when user fills Min
+var minEl = document.getElementById('sizeMin');
+var maxEl = document.getElementById('sizeMax');
+if (minEl && maxEl){
+  var jumped = false;
+  minEl.addEventListener('input', function(){
+    if (jumped) return;
+    var v = minEl.value.trim();
+    // Jump after user has typed a plausible size (>= 3 digits, e.g. 100+ SF)
+    if (v.length >= 3 && /^[0-9]+$/.test(v)){
+      jumped = true;
+      maxEl.focus();
+    }
+  });
+  minEl.addEventListener('blur', function(){
+    if (minEl.value.trim() && !maxEl.value.trim()) maxEl.focus();
+  });
+  // Reset the one-shot flag if user clears the Min field
+  minEl.addEventListener('change', function(){ if (!minEl.value.trim()) jumped = false; });
+}
+
+// Create account / socia

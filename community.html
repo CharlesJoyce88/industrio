@@ -1,0 +1,347 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community — industrio</title>
+<meta name="description" content="Verified tenant forum, landlord right-of-reply, and a ranked tenant-rep broker scoreboard for GTA industrial.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Community</span>
+    <h1>Industrial tenants finally have <span class="gradient-text">a room of their own.</span></h1>
+    <p class="lead">Every poster is lease-verified. Landlords get to reply to scores on the record. And the brokers who earn tenant business are the ones ranked at the top.</p>
+  </div>
+</header>
+
+<\!-- Tabs -->
+<section style="padding-top:16px;">
+  <div class="container">
+    <div class="community-tabs" role="tablist">
+      <button class="community-tab active" data-tab="forum" type="button">Tenant forum</button>
+      <button class="community-tab" data-tab="replies" type="button">Landlord replies</button>
+      <button class="community-tab" data-tab="brokers" type="button">Broker scoreboard</button>
+    </div>
+  </div>
+</section>
+
+<\!-- FORUM -->
+<section id="tab-forum" class="tab-panel active" style="padding-top:24px;">
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 20px 0;">
+      <div class="eyebrow">Tenant forum</div>
+      <h2 style="margin:0;">What's on other tenants' minds.</h2>
+      <p style="max-width:640px; margin-top:6px;">Every poster has a lease-verified badge. Spam, agent-brigading, and anonymous attacks aren't possible — posts that can't be tied to a lease don't appear.</p>
+    </div>
+
+    <div class="forum-list">
+      <article class="forum-thread">
+        <div class="forum-head">
+          <h3>TMI reconciliation came in 28% over the estimate — is this normal in Mississauga E2?</h3>
+          <span class="badge-verified">&check; Verified tenant</span>
+        </div>
+        <div class="forum-meta">Posted by <strong>Arjun R.</strong> &middot; 3PL, 12,400 SF, Mississauga &middot; 4 days ago &middot; 18 replies</div>
+        <p class="forum-body">Our 2025 reconciliation landed at $8.20/SF after a $6.40 estimate. Landlord blames insurance and snow removal. Looking for comparables — what did others see in Mississauga E2 buildings last year?</p>
+        <div class="forum-tags"><span class="tag">TMI</span><span class="tag">Mississauga</span><span class="tag">Reconciliation</span></div>
+      </article>
+
+      <article class="forum-thread">
+        <div class="forum-head">
+          <h3>Early warning: Meridian Properties is pushing market + 15% at renewal — negotiating tips?</h3>
+          <span class="badge-verified">&check; Verified tenant</span>
+        </div>
+        <div class="forum-meta">Posted by <strong>Sarah K.</strong> &middot; Electrical contractor, 7,800 SF, Scarborough &middot; 1 week ago &middot; 32 replies</div>
+        <p class="forum-body">First renewal offer came in at $18.50 net vs. current $14.20. Researched market shows $15.50 – $16.50 is typical for our submarket. Anyone successfully pushed back against Meridian?</p>
+        <div class="forum-tags"><span class="tag">Renewal</span><span class="tag">Meridian</span><span class="tag">Scarborough</span></div>
+      </article>
+
+      <article class="forum-thread">
+        <div class="forum-head">
+          <h3>600V 3-phase upgrade at a leased building — who pays? (Landlord says tenant.)</h3>
+          <span class="badge-verified">&check; Verified tenant</span>
+        </div>
+        <div class="forum-meta">Posted by <strong>David L.</strong> &middot; Metal fabricator, 14,200 SF, Brampton &middot; 2 weeks ago &middot; 24 replies</div>
+        <p class="forum-body">Bought a new CNC and need 600V 3-phase. Building has 208V only. Landlord is pushing the full cost on us as a leasehold improvement. Our counter: it stays on the building and increases its value. Is this negotiable?</p>
+        <div class="forum-tags"><span class="tag">Power</span><span class="tag">Leasehold</span><span class="tag">Negotiation</span></div>
+      </article>
+
+      <article class="forum-thread">
+        <div class="forum-head">
+          <h3>Parking enforcement at Continental Business Parks — tenants being ticketed on their own leased stalls?</h3>
+          <span class="badge-verified">&check; Verified tenant</span>
+        </div>
+        <div class="forum-meta">Posted by <strong>Priya M.</strong> &middot; Distributor, 9,800 SF, Vaughan &middot; 3 weeks ago &middot; 14 replies</div>
+        <p class="forum-body">New property manager at Continental is ticketing our vehicles in stalls explicitly assigned to our unit in the lease. Anyone dealing with this? How did you escalate?</p>
+        <div class="forum-tags"><span class="tag">Parking</span><span class="tag">Continental</span><span class="tag">Vaughan</span></div>
+      </article>
+
+      <article class="forum-thread">
+        <div class="forum-head">
+          <h3>Cold storage build-out in a standard warehouse — roof capacity experience?</h3>
+          <span class="badge-verified">&check; Verified tenant</span>
+        </div>
+        <div class="forum-meta">Posted by <strong>Mark W.</strong> &middot; Food distributor, 11,200 SF, Oakville &middot; 1 month ago &middot; 9 replies</div>
+        <p class="forum-body">Planning a 4,000 SF freezer within an existing warehouse. Roof is 1989 vintage. Structural wants $12/SF reinforcement. Anyone DIY'd this with a ceiling-hung evaporator instead?</p>
+        <div class="forum-tags"><span class="tag">Cold storage</span><span class="tag">Build-out</span><span class="tag">Roof</span></div>
+      </article>
+    </div>
+
+    <div class="text-center mt-2"><a href="pricing.html" class="btn btn-primary">Join the forum</a></div>
+  </div>
+</section>
+
+<\!-- LANDLORD REPLIES -->
+<section id="tab-replies" class="tab-panel" style="padding-top:24px; display:none;">
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 20px 0;">
+      <div class="eyebrow">Landlord right-of-reply</div>
+      <h2 style="margin:0;">On the record, beside the score.</h2>
+      <p style="max-width:640px; margin-top:6px;">Every landlord with a profile can publish one reply per published score. Replies are permanent and sit alongside the review, so the reader sees both sides.</p>
+    </div>
+
+    <div class="reply-list">
+      <article class="reply-block">
+        <div class="reply-header">
+          <div>
+            <h3 style="margin:0;">Continental Business Parks</h3>
+            <div style="font-size:0.88rem; color:var(--text-muted); margin-top:4px;">Responding to 41 tenant reviews &middot; Overall score <strong>7.3</strong> / 10</div>
+          </div>
+          <span class="score" style="font-size:1.15rem;">7.3</span>
+        </div>
+        <div class="review-plus-reply">
+          <div class="side tenant">
+            <div class="side-label">Tenant review</div>
+            <p>"Maintenance response times have dropped since the 2024 property manager change. Three weeks for a dock seal last summer." <em>— Electrical contractor, 8,800 Airport Rd</em></p>
+            <div style="font-size:0.78rem; color:var(--text-muted);">Maintenance score: 6.2</div>
+          </div>
+          <div class="side landlord">
+            <div class="side-label">Landlord reply</div>
+            <p>Continental acknowledges the 2024 PM transition created gaps. We've added a regional maintenance supervisor and contracted a second dock vendor; median response time is now 41 hours (Q1 2026) vs. 9 days in Q3 2024. We invite the tenant to re-rate after this year's renewal.</p>
+            <div style="font-size:0.78rem; color:var(--text-muted);">— Continental Operations &middot; March 2026</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="reply-block">
+        <div class="reply-header">
+          <div>
+            <h3 style="margin:0;">Meridian Properties</h3>
+            <div style="font-size:0.88rem; color:var(--text-muted); margin-top:4px;">Responding to 28 tenant reviews &middot; Overall score <strong style="color:var(--danger);">6.3</strong> / 10</div>
+          </div>
+          <span class="score" style="font-size:1.15rem; color:var(--danger);">6.3</span>
+        </div>
+        <div class="review-plus-reply">
+          <div class="side tenant">
+            <div class="side-label">Tenant review</div>
+            <p>"Renewal offer was market + 18%. After we pushed back with comps, they met market — but only after eight weeks of escalation." <em>— Food distributor, Scarborough</em></p>
+            <div style="font-size:0.78rem; color:var(--text-muted);">Renewal fairness: 5.1</div>
+          </div>
+          <div class="side landlord">
+            <div class="side-label">Landlord reply</div>
+            <p>Meridian's position is that opening renewal offers reflect portfolio-wide risk premiums. Final pricing tracks the market when tenants negotiate. We are reviewing our initial-offer methodology with the Tenant Advisory Committee this quarter.</p>
+            <div style="font-size:0.78rem; color:var(--text-muted);">— Meridian Asset Management &middot; February 2026</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="reply-block">
+        <div class="reply-header">
+          <div>
+            <h3 style="margin:0;">ACME Industrial Holdings</h3>
+            <div style="font-size:0.88rem; color:var(--text-muted); margin-top:4px;">Responding to 56 tenant reviews &middot; Overall score <strong style="color:#15803d;">8.2</strong> / 10</div>
+          </div>
+          <span class="score" style="font-size:1.15rem;">8.2</span>
+        </div>
+        <div class="review-plus-reply">
+          <div class="side tenant">
+            <div class="side-label">Tenant review</div>
+            <p>"TMI reconciliation arrived on March 31 like clockwork for five years running. Line items are explained. This should be the standard."</p>
+            <div style="font-size:0.78rem; color:var(--text-muted);">Operating cost clarity: 9.1</div>
+          </div>
+          <div class="side landlord">
+            <div class="side-label">Landlord reply</div>
+            <p>Thank you. ACME publishes a draft reconciliation with supporting invoices on February 15 and finalizes after tenant review. We think this is the baseline the industry should adopt and welcome other landlords to match the practice.</p>
+            <div style="font-size:0.78rem; color:var(--text-muted);">— ACME Asset Management &middot; April 2026</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<\!-- BROKER SCOREBOARD -->
+<section id="tab-brokers" class="tab-panel" style="padding-top:24px; display:none;">
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 20px 0;">
+      <div class="eyebrow">Tenant-rep broker scoreboard</div>
+      <h2 style="margin:0;">The brokers tenants actually recommend.</h2>
+      <p style="max-width:640px; margin-top:6px;">Scoring is derived from verified tenant outcomes (effective rent vs. market), responsiveness, and fiduciary record. No pay-to-play. Brokers cannot remove reviews.</p>
+    </div>
+
+    <div class="broker-board">
+      <div class="broker-row">
+        <div class="broker-rank">1</div>
+        <div class="broker-meta">
+          <div class="broker-name">Alex Chen — Independent</div>
+          <div class="broker-subs">GTA West &middot; 18 yrs experience &middot; Tenant-only</div>
+          <div class="broker-stats"><span>Effective rent vs. market: <strong>−7.4%</strong></span><span>Median response: <strong>3 hrs</strong></span><span>Deals 2025: <strong>31</strong></span></div>
+        </div>
+        <div class="broker-score"><span class="score" style="font-size:1.4rem;">9.3</span></div>
+      </div>
+
+      <div class="broker-row">
+        <div class="broker-rank">2</div>
+        <div class="broker-meta">
+          <div class="broker-name">Priya Shah — Colliers (tenant-side practice)</div>
+          <div class="broker-subs">North York / Vaughan &middot; 12 yrs &middot; Tenant-only within firm</div>
+          <div class="broker-stats"><span>Effective rent vs. market: <strong>−6.8%</strong></span><span>Median response: <strong>4 hrs</strong></span><span>Deals 2025: <strong>24</strong></span></div>
+        </div>
+        <div class="broker-score"><span class="score" style="font-size:1.4rem;">9.1</span></div>
+      </div>
+
+      <div class="broker-row">
+        <div class="broker-rank">3</div>
+        <div class="broker-meta">
+          <div class="broker-name">Marcus O'Neil — Avison Young</div>
+          <div class="broker-subs">Pickering / Ajax / Whitby &middot; 21 yrs &middot; Mixed book</div>
+          <div class="broker-stats"><span>Effective rent vs. market: <strong>−5.2%</strong></span><span>Median response: <strong>5 hrs</strong></span><span>Deals 2025: <strong>28</strong></span></div>
+        </div>
+        <div class="broker-score"><span class="score" style="font-size:1.4rem;">8.8</span></div>
+      </div>
+
+      <div class="broker-row">
+        <div class="broker-rank">4</div>
+        <div class="broker-meta">
+          <div class="broker-name">Jenny Wu — CBRE (small-bay specialist)</div>
+          <div class="broker-subs">Brampton / Mississauga &middot; 9 yrs &middot; Tenant preferred</div>
+          <div class="broker-stats"><span>Effective rent vs. market: <strong>−4.9%</strong></span><span>Median response: <strong>6 hrs</strong></span><span>Deals 2025: <strong>22</strong></span></div>
+        </div>
+        <div class="broker-score"><span class="score" style="font-size:1.4rem;">8.6</span></div>
+      </div>
+
+      <div class="broker-row">
+        <div class="broker-rank">5</div>
+        <div class="broker-meta">
+          <div class="broker-name">Robert Ellison — JLL</div>
+          <div class="broker-subs">Oakville / Burlington / Milton &middot; 15 yrs &middot; Mixed book</div>
+          <div class="broker-stats"><span>Effective rent vs. market: <strong>−4.2%</strong></span><span>Median response: <strong>8 hrs</strong></span><span>Deals 2025: <strong>19</strong></span></div>
+        </div>
+        <div class="broker-score"><span class="score" style="font-size:1.4rem;">8.4</span></div>
+      </div>
+
+      <div class="broker-row">
+        <div class="broker-rank">6</div>
+        <div class="broker-meta">
+          <div class="broker-name">Samir Patel — Independent</div>
+          <div class="broker-subs">Markham / Richmond Hill &middot; 11 yrs &middot; Tenant-only</div>
+          <div class="broker-stats"><span>Effective rent vs. market: <strong>−3.8%</strong></span><span>Median response: <strong>6 hrs</strong></span><span>Deals 2025: <strong>16</strong></span></div>
+        </div>
+        <div class="broker-score"><span class="score" style="font-size:1.4rem;">8.2</span></div>
+      </div>
+    </div>
+
+    <p style="margin-top:20px; font-size:0.85rem; color:var(--text-muted); max-width:680px;">Scoreboard is assembled from tenant feedback submitted through industrio, anonymized lease outcome data, and broker responsiveness metrics. Only brokers with at least 10 verified tenant deals per year appear. Scoring methodology is published in our <a href="about.html">about page</a>.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Every voice, on the record.</h2>
+      <p>Join the tenant forum, verify your lease, and help push the industrial market toward transparency.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">Get verified</a>
+        <a href="reviews.html" class="btn btn-secondary">Read landlord reviews</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Verification is by lease or estoppel letter. No anonymous posts.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.community-tab');
+  var panels = { forum: document.getElementById('tab-forum'), replies: document.getElementById('tab-replies'), brokers: document.getElementById('tab-brokers') };
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.classList.remove('active'); });
+      t.classList.add('active');
+      Object.keys(panels).forEach(function(k){
+        panels[k].style.display = (k === t.dataset.tab) ? 'block' : 'none';
+        panels[k].classList.toggle('active', k === t.dataset.tab);
+      });
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

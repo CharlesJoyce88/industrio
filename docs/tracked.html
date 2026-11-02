@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saved Searches — industrio</title>
+<meta name="description" content="Save your search criteria and track every for-lease, for-sale, leased, and sold listing that matches — over time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html" class="active">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero" style="padding:48px 0 24px 0;">
+  <div class="container">
+    <span class="hero-eyebrow">Saved searches</span>
+    <h1>Saved searches, <span class="gradient-text">always live.</span></h1>
+    <p class="lead">Every search you save is watched continuously. New for-lease and for-sale listings flow in, leased and sold deals close out — all under one search, with the dates the deals happened.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+
+    <div class="search-overview" id="searchOverview">
+      <div class="search-overview-head">
+        <div>
+          <div class="search-overview-eyebrow">Your saved searches</div>
+          <div class="search-overview-count" id="searchCount">0 saved</div>
+        </div>
+        <div class="search-overview-actions">
+          <button class="btn btn-primary" id="newSearchBtn" type="button">+ New from map</button>
+        </div>
+      </div>
+      <div class="search-tabs" id="searchTabs"></div>
+      <select id="searchPicker" hidden></select>
+      <div class="search-overview-toolbar">
+        <button class="btn btn-secondary" id="renameSearchBtn" type="button">Rename</button>
+        <button class="btn btn-secondary" id="deleteSearchBtn" type="button">Delete this search</button>
+      </div>
+    </div>
+
+    <div class="tracked-empty" id="trackedEmpty" hidden>
+      <h3>No saved searches yet.</h3>
+      <p>Open the map, build a filter (status, location, size, clear height, doors&hellip;), then click <strong>+ Save Search</strong> in the filter bar.</p>
+      <div class="btn-row" style="justify-content:center;">
+        <a href="map.html" class="btn btn-primary">Open the map &rarr;</a>
+        <button type="button" class="btn btn-secondary" id="loadDemoBtn">Load demo searches</button>
+      </div>
+    </div>
+
+    <div id="trackedBody" hidden>
+      <div class="tracked-criteria" id="trackedCriteria"></div>
+
+      <div class="tracked-tabs" id="trackedTabs">
+        <button class="tracked-tab active" data-status="for-lease" type="button">For Lease <span class="tab-count" id="cntLease">0</span></button>
+        <button class="tracked-tab"        data-status="for-sale"  type="button">For Sale <span class="tab-count" id="cntSale">0</span></button>
+        <button class="tracked-tab"        data-status="leased"    type="button">Recently Leased <span class="tab-count" id="cntLeased">0</span></button>
+        <button class="tracked-tab"        data-status="sold"      type="button">Recently Sold <span class="tab-count" id="cntSold">0</span></button>
+      </div>
+
+      <div class="tracked-results" id="trackedResults"></div>
+
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:14px;">&laquo;Recently leased&raquo; and &laquo;Recently sold&raquo; show deals closed in the last 365 days. Source: TRREB MLS via industrio.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="tracked.html">Saved Searches</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="tracked.js"></script>
+
+</body>
+</html>

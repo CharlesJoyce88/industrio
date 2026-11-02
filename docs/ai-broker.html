@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Broker — industrio</title>
+<meta name="description" content="An AI broker that filters spaces, emails listing agents, confirms availability, requests plans, schedules tours, and generates tour packages — tenant-first.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">AI Broker</span>
+    <h1>Your tenant-first broker, <span class="gradient-text">on duty 24/7.</span></h1>
+    <p class="lead">industrio's AI broker does the unglamorous work of industrial leasing — filtering listings, chasing listing agents, gathering plans, and building clean tour packages — so you walk into every tour prepared and impartial.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Filters spaces by your needs</h3>
+        <p>Size, clear height, shipping, office %, parking, budget, submarket, and operational constraints — the AI works from a structured brief, not a vague email.</p>
+      </div>
+      <div class="card">
+        <h3>Contacts listing agents automatically</h3>
+        <p>Professional, concise outreach drafted per listing — identifying you as the tenant and asking only what's needed to move forward.</p>
+      </div>
+      <div class="card">
+        <h3>Confirms availability</h3>
+        <p>Verifies whether the space is still available, whether offers are in, and the current asking terms — before you invest time in a tour.</p>
+      </div>
+      <div class="card">
+        <h3>Requests plans &amp; details</h3>
+        <p>Floor plans, site plans, updated photos, power specs, roof age, and anything else missing from the listing — pulled into one record.</p>
+      </div>
+      <div class="card">
+        <h3>Schedules tours</h3>
+        <p>Coordinates tour windows directly with listing agents, grouping by geography to keep your day efficient.</p>
+      </div>
+      <div class="card">
+        <h3>Generates a tour package</h3>
+        <p>Maps, key specs, photos, drive-time analytics, environmental flags, landlord scores, and a tailored list of questions — per stop.</p>
+      </div>
+      <div class="card">
+        <h3>Tracks communication</h3>
+        <p>Every email, call note, and document lives in one thread per listing — no more digging through inboxes to find who said what.</p>
+      </div>
+      <div class="card">
+        <h3>Tenant-first by design</h3>
+        <p>industrio is not paid by landlords and never shows listings based on commission splits. The AI's only incentive is your shortlist.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="split">
+      <div>
+        <div class="eyebrow" style="color:var(--accent); font-size:0.85rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px;">Example outreach</div>
+        <h2>Polished, concise, agent-ready.</h2>
+        <p>Every email industrio sends on your behalf is reviewed by you before it goes out — or set to full-auto once you're comfortable. The AI mirrors a professional tenant rep, without the conflicts.</p>
+      </div>
+      <div class="visual" style="padding:24px;">
+        <div style="margin-bottom:12px;"><span class="tag">Draft — awaiting your approval</span></div>
+        <div style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-dim); line-height:1.7;">
+<strong style="color:var(--text);">Subject:</strong> 123 Example Rd — availability &amp; plans<br><br>
+Hi [Agent name],<br><br>
+I'm reaching out on behalf of a qualified tenant seeking approximately 15,000 SF of industrial space in the GTA West submarket, targeting occupancy Q3 2026.<br><br>
+123 Example Rd looks like a potential fit. Could you confirm:<br>
+&nbsp;&nbsp;• Is the space still available?<br>
+&nbsp;&nbsp;• Are there any offers in play?<br>
+&nbsp;&nbsp;• Could you share floor plans, site plans, and recent photos?<br>
+&nbsp;&nbsp;• When are tour windows available this week or next?<br><br>
+Happy to sign an NDA if required.<br><br>
+Thanks,<br>
+industrio, on behalf of [Tenant]
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="human-broker">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">The human element</div>
+      <h2>Want a seasoned broker <span class="gradient-text">on the deal with you?</span></h2>
+      <p>industrio is AI-first, but some deals benefit from a human tenant rep. We maintain a short list of best-in-class GTA industrial brokers with no tie-in to us. They work for you; we introduce them. No commission splits, no kickbacks.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card" style="padding:28px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.05rem;">AR</div>
+          <div>
+            <h3 style="margin:0;font-size:1.05rem;">Alex Richardson</h3>
+            <p style="margin:0;font-size:0.85rem;color:var(--text-muted);">Tenant rep &middot; GTA West</p>
+          </div>
+        </div>
+        <div class="data-list" style="margin-bottom:16px;">
+          <div class="row"><span class="label">Specialty</span><span class="value" style="font-family:var(--font-sans);">Small-bay under 25k SF</span></div>
+          <div class="row"><span class="label">Years</span><span class="value">18</span></div>
+          <div class="row"><span class="label">Deals closed</span><span class="value">340+</span></div>
+          <div class="row"><span class="label">Submarkets</span><span class="value" style="font-family:var(--font-sans);">Mississauga, Oakville</span></div>
+        </div>
+        <button class="btn btn-primary" data-broker="alex" style="width:100%;justify-content:center;font-size:0.9rem;padding:10px;">Book a 20-min intro call</button>
+      </div>
+
+      <div class="card" style="padding:28px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.05rem;">SP</div>
+          <div>
+            <h3 style="margin:0;font-size:1.05rem;">Sarah Patel</h3>
+            <p style="margin:0;font-size:0.85rem;color:var(--text-muted);">Tenant rep &middot; York Region</p>
+          </div>
+        </div>
+        <div class="data-list" style="margin-bottom:16px;">
+          <div class="row"><span class="label">Specialty</span><span class="value" style="font-family:var(--font-sans);">Food &amp; light mfg</span></div>
+          <div class="row"><span class="label">Years</span><span class="value">12</span></div>
+          <div class="row"><span class="label">Deals closed</span><span class="value">210+</span></div>
+          <div class="row"><span class="label">Submarkets</span><span class="value" style="font-family:var(--font-sans);">Vaughan, Markham</span></div>
+        </div>
+        <button class="btn btn-primary" data-broker="sarah" style="width:100%;justify-content:center;font-size:0.9rem;padding:10px;">Book a 20-min intro call</button>
+      </div>
+
+      <div class="card" style="padding:28px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.05rem;">DL</div>
+          <div>
+            <h3 style="margin:0;font-size:1.05rem;">David Lam</h3>
+            <p style="margin:0;font-size:0.85rem;color:var(--text-muted);">Tenant rep + purchase</p>
+          </div>
+        </div>
+        <div class="data-list" style="margin-bottom:16px;">
+          <div class="row"><span class="label">Specialty</span><span class="value" style="font-family:var(--font-sans);">Industrial condo sales</span></div>
+          <div class="row"><span class="label">Years</span><span class="value">22</span></div>
+          <div class="row"><span class="label">Deals closed</span><span class="value">480+</span></div>
+          <div class="row"><span class="label">Submarkets</span><span class="value" style="font-family:var(--font-sans);">GTA East, Durham</span></div>
+        </div>
+        <button class="btn btn-primary" data-broker="david" style="width:100%;justify-content:center;font-size:0.9rem;padding:10px;">Book a 20-min intro call</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:24px;padding:28px;background:var(--accent-soft);border-color:rgba(11,30,79,0.2);">
+      <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;">
+        <div>
+          <h3 style="margin:0 0 6px 0;font-size:1.05rem;">Not sure which broker fits?</h3>
+          <p style="margin:0;font-size:0.93rem;">Tell us your target submarket, size, and use case. We'll match you with one of three vetted brokers and introduce you on the same thread &mdash; typically inside a business day.</p>
+        </div>
+        <a href="mailto:brokers@industrio.ai?subject=Broker%20intro%20request" class="btn btn-primary" style="white-space:nowrap;">Request a match</a>
+      </div>
+    </div>
+
+    <p class="text-center" style="color:var(--text-muted);font-size:0.82rem;margin-top:20px;">
+      industrio does not receive commissions on any deal closed through an introduced broker. Brokers are vetted annually against tenant outcomes, responsiveness, and fiduciary record. See <a href="about.html">our methodology</a>.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Skip the inbox. Get the tour.</h2>
+      <p>AI broker and auto-generated tour packages are included in the Enterprise plan.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">See pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;">
+          <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+        </div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — industrio</title>
+<meta name="description" content="Log in to your industrio account to access your saved searches, alerts, lease abstracts, and landlord communication.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+      <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1 class="auth-title">Welcome back.</h1>
+    <p class="auth-sub">Log in to access your saved searches, alerts, and lease workspace.</p>
+
+    <div class="auth-social">
+      <button class="btn btn-secondary auth-social-btn" type="button">
+        <span style="font-weight:600;">G</span>&nbsp; Continue with Google
+      </button>
+      <button class="btn btn-secondary auth-social-btn" type="button">
+        <span style="font-weight:600;">&#x25A2;</span>&nbsp; Continue with Microsoft
+      </button>
+    </div>
+
+    <div class="auth-divider"><span>or with email</span></div>
+
+    <form class="auth-form" onsubmit="return false;">
+      <label class="auth-label">Email
+        <input type="email" id="loginEmail" placeholder="you@company.com" required>
+      </label>
+      <label class="auth-label">Password
+        <input type="password" id="loginPassword" placeholder="Your password" required>
+      </label>
+
+      <div class="auth-row">
+        <label class="auth-check"><input type="checkbox"> Keep me signed in</label>
+        <a href="#" class="auth-small">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary auth-submit">Log in</button>
+    </form>
+
+    <p class="auth-foot">New to industrio? <a href="join.html">Create an account</a></p>
+    <p class="auth-foot auth-subtle">Landlord? <a href="for-landlords.html">Sign in to the landlord portal &rarr;</a></p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0;">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span><a href="about.html">About</a> &middot; <a href="pricing.html">Pricing</a> &middot; <a href="docs.html">Developer Docs</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function doLogin(email){
+    try {
+      localStorage.setItem('industrio.loggedIn', 'true');
+      if (email) localStorage.setItem('industrio.userEmail', email);
+    } catch(e){}
+    window.location.href = 'map.html';
+  }
+  var form = document.querySelector('.auth-form');
+  if (form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      doLogin((document.getElementById('loginEmail') || {}).value || '');
+    });
+  }
+  document.querySelectorAll('.auth-social-btn').forEach(function(b){
+    b.addEventListener('click', function(){ doLogin(''); });
+  });
+})();
+</script>
+</body>
+</html>

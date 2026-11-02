@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5309 Maingate Drive, Mississauga — industrio</title>
+<meta name="description" content="Newly-renovated 16,187 SF freestanding industrial building for lease. $18.00 net + $4.86 TMI. E2-19 zoning permits outdoor storage. 90-day possession.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  body { background: #faf8f2; }
+  .ld-wrap { max-width: 1280px; margin: 0 auto; padding: 14px 20px 80px; }
+
+  /* Top action bar — sticky */
+  .ld-actionbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 18px; background: #fff; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 14px; position: sticky; top: 12px; z-index: 100; box-shadow: 0 2px 8px rgba(15,30,78,0.06); }
+  .ld-actionbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .ld-back { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.86rem; text-decoration: none; padding: 6px 10px; border-radius: 6px; }
+  .ld-back:hover { background: var(--bg-elev); color: var(--accent); }
+  .ld-statpill { padding: 4px 10px; border-radius: 999px; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .ld-statpill.lease { background: #e0e7ff; color: var(--accent); }
+  .ld-statpill.new { background: #fef3c7; color: #b45309; }
+  .ld-statpill.dom { background: var(--bg-elev); color: var(--text-muted); }
+  .ld-statpill.mls { background: var(--bg-elev); color: var(--text-muted); font-family: 'Geist Mono', monospace; }
+  .ld-actionbar-right { display: flex; gap: 8px; }
+  .ld-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 8px; font-family: var(--font-sans); font-size: 0.86rem; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: #fff; color: var(--accent); }
+  .ld-btn:hover { border-color: var(--accent); background: var(--bg-elev); }
+  .ld-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .ld-btn.primary:hover { background: #0a1638; }
+
+  /* Hero gallery */
+  .ld-hero { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 4px; height: 420px; border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+  .ld-hero-img { background-size: cover; background-position: center; background-color: var(--bg-elev); position: relative; cursor: pointer; transition: transform .2s; }
+  .ld-hero-img:hover { transform: scale(1.02); z-index: 1; }
+  .ld-hero-img:first-child { grid-row: 1 / 3; }
+  .ld-hero-more { position: absolute; bottom: 12px; right: 12px; background: rgba(15,30,78,0.85); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; cursor: pointer; }
+  .ld-hero-more:hover { background: rgba(15,30,78,1); }
+  @media (max-width: 768px){ .ld-hero { grid-template-columns: 1fr; grid-template-rows: 1fr; height: 240px; } .ld-hero-img:not(:first-child) { display: none; } }
+
+  /* Lightbox */
+  .ld-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 6000; display: flex; align-items: center; justify-content: center; padding: 40px; }
+  .ld-lightbox[hidden] { display: none !important; }
+  .ld-lightbox-inner { position: relative; max-width: 90vw; max-height: 90vh; }
+  .ld-lightbox-img { max-width: 90vw; max-height: 80vh; display: block; border-radius: 6px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .ld-lightbox-close { position: absolute; top: -42px; right: 0; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3); width: 36px; height: 36px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; line-height: 1; }
+  .ld-lightbox-close:hover { background: rgba(255,255,255,0.2); }
+  .ld-lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3); width: 48px; height: 48px; border-radius: 50%; font-size: 1.6rem; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; }
+  .ld-lightbox-nav.prev { left: -64px; }
+  .ld-lightbox-nav.next { right: -64px; }
+  .ld-lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+  @media (max-width: 768px){ .ld-lightbox-nav.prev { left: 8px; } .ld-lightbox-nav.next { right: 8px; } }
+  .ld-lightbox-caption { color: #fff; text-align: center; margin-top: 12px; font-size: 0.92rem; }
+  .ld-lightbox-counter { color: rgba(255,255,255,0.6); text-align: center; margin-top: 4px; font-size: 0.78rem; font-variant-numeric: tabular-nums; }
+
+  /* Headline */
+  .ld-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ld-head-l h1 { font-size: 1.85rem; margin: 4px 0 6px; color: var(--accent); line-height: 1.2; }
+  .ld-head-l .ld-sub { font-size: 0.96rem; color: var(--text-muted); }
+  .ld-head-l .ld-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+  .ld-head-r { text-align: right; }
+  .ld-price-headline { font-size: 1.85rem; font-weight: 700; color: var(--accent); line-height: 1.1; }
+  .ld-price-sub { font-size: 0.86rem; color: var(--text-muted); }
+  .ld-allin-pill { display: inline-block; background: #ccfbf1; color: #0d9488; padding: 4px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; margin-top: 6px; }
+
+  /* Layout — 2 column main area */
+  .ld-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 980px){ .ld-grid { grid-template-columns: 1fr; } }
+
+  /* Section card */
+  .ld-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; margin-bottom: 14px; }
+  .ld-card h2 { font-size: 1.1rem; margin: 0 0 12px; color: var(--accent); }
+  .ld-card-eyebrow { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 4px; }
+
+  /* Key facts strip */
+  .ld-keyfacts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .ld-kf { padding: 10px 12px; border-right: 1px solid var(--border); }
+  .ld-kf:last-child { border-right: none; }
+  .ld-kf-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 600; }
+  .ld-kf-value { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-top: 2px; }
+  .ld-kf-sub { font-size: 0.74rem; color: var(--text-muted); }
+
+  /* Specs grid */
+  .ld-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+  @media (max-width: 600px){ .ld-specs { grid-template-columns: 1fr; } }
+  .ld-spec { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+  .ld-spec span:first-child { color: var(--text-muted); }
+  .ld-spec span:last-child { color: var(--accent); font-weight: 600; }
+
+  /* Upgrades checklist */
+  .ld-upgrades { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+  @media (max-width: 600px){ .ld-upgrades { grid-template-columns: 1fr; } }
+  .ld-upgrade { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.88rem; color: var(--accent); }
+  .ld-upgrade-check { color: #0d9488; flex-shrink: 0; }
+
+  /* Benchmark callout */
+  .ld-bench { background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 60%); border: 1px solid #a7f3d0; border-radius: 12px; padding: 16px 20px; margin-bottom: 14px; }
+  .ld-bench-title { display: flex; align-items: center; gap: 8px; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: #065f46; font-weight: 700; margin-bottom: 8px; }
+  .ld-bench-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 6px; }
+  .ld-bench-stat { font-size: 1.4rem; font-weight: 700; color: #0d9488; }
+  .ld-bench-detail { font-size: 0.86rem; color: var(--accent); line-height: 1.5; }
+
+  /* Lease history bars */
+  .ld-history { padding: 14px 0 4px; }
+  .ld-history-bar { display: grid; grid-template-columns: 80px 1fr 100px; gap: 10px; align-items: center; padding: 6px 0; font-size: 0.86rem; }
+  .ld-history-year { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .ld-history-track { background: var(--bg-elev); height: 18px; border-radius: 4px; position: relative; overflow: hidden; }
+  .ld-history-fill { background: linear-gradient(90deg, #0f1e4e 0%, #1e3a8a 100%); height: 100%; border-radius: 4px; position: relative; }
+  .ld-history-fill.expired { background: linear-gradient(90deg, #94a3b8 0%, #cbd5e1 100%); }
+  .ld-history-fill.leased { background: linear-gradient(90deg, #0d9488 0%, #14b8a6 100%); }
+  .ld-history-amount { color: var(--accent); font-weight: 700; text-align: right; }
+  .ld-history-event { font-size: 0.74rem; color: var(--text-muted); }
+
+  /* Drive-times */
+  .ld-drive { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+  @media (max-width: 600px){ .ld-drive { grid-template-columns: 1fr; } }
+  .ld-drive-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 0.86rem; }
+  .ld-drive-row span:first-child { color: var(--accent); font-weight: 500; }
+  .ld-drive-row span:last-child { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+  /* Permitted uses tag cloud */
+  .ld-uses { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ld-use { background: var(--bg-elev); color: var(--accent); padding: 4px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 500; border: 1px solid var(--border); }
+  .ld-use.primary { background: #e0e7ff; border-color: #c7d2fe; color: var(--accent); font-weight: 600; }
+  .ld-use.excluded { background: #fee2e2; color: #b91c1c; border-color: #fecaca; text-decoration: line-through; }
+
+  /* Map */
+  .ld-map { height: 320px; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
+
+  /* Operations Fit */
+  .ld-fit-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .ld-fit-row:last-child { border-bottom: none; }
+  .ld-fit-icon { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.84rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .ld-fit-icon.ok { background: #0d9488; }
+  .ld-fit-icon.bad { background: #dc2626; }
+  .ld-fit-icon.warn { background: #f59e0b; }
+  .ld-fit-text { flex: 1; font-size: 0.86rem; color: var(--accent); }
+  .ld-fit-detail { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* Sidebar — listing team + CTA */
+  .ld-side .ld-card { padding: 16px 18px; }
+  .ld-side .ld-broker { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .ld-side .ld-broker:last-child { border-bottom: none; }
+  .ld-broker-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.92rem; flex-shrink: 0; }
+  .ld-broker-name { font-size: 0.86rem; font-weight: 600; color: var(--accent); line-height: 1.25; }
+  .ld-broker-role { font-size: 0.74rem; color: var(--text-muted); }
+  .ld-broker-phone { font-size: 0.78rem; color: var(--accent); margin-top: 1px; }
+  .ld-cta-card { background: var(--accent); color: #fff; padding: 18px 20px; border-radius: 12px; }
+  .ld-cta-card h2 { color: #fff; margin: 0 0 8px; font-size: 1.05rem; }
+  .ld-cta-card p { font-size: 0.86rem; line-height: 1.5; opacity: 0.9; margin: 0 0 14px; }
+  .ld-cta-card .ld-btn { background: #fff; color: var(--accent); border: none; width: 100%; justify-content: center; padding: 11px; font-weight: 600; }
+  .ld-cta-card .ld-btn.secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.4); margin-top: 8px; }
+  .ld-cta-card .ld-btn.secondary:hover { background: rgba(255,255,255,0.1); }
+
+  /* Co-op commission card (broker view) */
+  .ld-coop { background: #fef9e7; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  .ld-coop-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #92400e; font-weight: 700; margin-bottom: 6px; }
+  .ld-coop-rate { font-size: 1.05rem; font-weight: 700; color: #92400e; }
+  .ld-coop-detail { font-size: 0.78rem; color: #92400e; margin-top: 4px; }
+
+  /* Inquiry box */
+  .ld-inquiry { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .ld-inquiry-title { font-size: 0.84rem; font-weight: 600; color: var(--accent); margin-bottom: 8px; }
+  .ld-inquiry-text { font-size: 0.86rem; color: var(--accent); line-height: 1.45; padding: 8px 10px; background: var(--bg-elev); border-radius: 8px; border-left: 3px solid var(--accent); }
+
+  /* Disclosure footer */
+  .ld-disclosure { margin-top: 24px; padding: 14px 18px; background: #fff; border: 1px solid var(--border); border-radius: 10px; font-size: 0.74rem; color: var(--text-muted); line-height: 1.55; }
+  .ld-disclosure strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></a>
+    <div class="nav-links">
+      <a href="map.html" class="active">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+      <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<div class="ld-wrap">
+
+  <!-- ==================== TOP ACTION BAR ==================== -->
+  <div class="ld-actionbar">
+    <div class="ld-actionbar-left">
+      <a href="map.html" class="ld-back">&larr; Back to map</a>
+      <span class="ld-statpill new">NEW</span>
+      <span class="ld-statpill lease">For Lease</span>
+      <span class="ld-statpill dom">29 days on market</span>
+      <span class="ld-statpill mls">MLS# W12941372</span>
+    </div>
+    <div class="ld-actionbar-right">
+      <button class="ld-btn" id="saveListing"><span>♡</span> Save</button>
+      <button class="ld-btn" id="compareListing"><span>⊕</span> Compare</button>
+      <button class="ld-btn" id="shareListing"><span>↗</span> Share</button>
+      <button class="ld-btn primary" id="inquireListing"><span>✉</span> Inquire</button>
+    </div>
+  </div>
+
+  <!-- ==================== HERO GALLERY ==================== -->
+  <div class="ld-hero">
+    <div class="ld-hero-img" style="background-image:url('photos/5309-maingate/01-exterior-front.jpg');" data-caption="Exterior front · Maingate Drive"></div>
+    <div class="ld-hero-img" style="background-image:url('photos/5309-maingate/05-warehouse-interior.jpg');" data-caption="Warehouse · epoxy floor, LED lighting"></div>
+    <div class="ld-hero-img" style="background-image:url('photos/5309-maingate/03-aerial-skyline.jpg');" data-caption="Aerial with downtown Toronto skyline"></div>
+    <div class="ld-hero-img" style="background-image:url('photos/5309-maingate/07-office-interior.jpg');" data-caption="Renovated office area"></div>
+    <div class="ld-hero-img" style="background-image:url('photos/5309-maingate/06-warehouse-mezzanine.jpg');" data-caption="Warehouse with mezzanine">
+      <div class="ld-hero-more" id="heroMoreBtn">+3 more photos</div>
+    </div>
+  </div>
+
+  <!-- Photo lightbox / full gallery overlay -->
+  <div class="ld-lightbox" id="ldLightbox" hidden>
+    <div class="ld-lightbox-inner">
+      <button class="ld-lightbox-close" id="ldLightboxClose" aria-label="Close">&times;</button>
+      <button class="ld-lightbox-nav prev" id="ldLightboxPrev" aria-label="Previous">&#8249;</button>
+      <button class="ld-lightbox-nav next" id="ldLightboxNext" aria-label="Next">&#8250;</button>
+      <img class="ld-lightbox-img" id="ldLightboxImg" alt="">
+      <div class="ld-lightbox-caption" id="ldLightboxCaption"></div>
+      <div class="ld-lightbox-counter" id="ldLightboxCounter"></div>
+    </div>
+  </div>
+
+  <!-- ==================== HEADLINE ==================== -->
+  <div class="ld-head">
+    <div class="ld-head-l">
+      <span class="ld-eyebrow">Industrial · Freestanding · Warehousing</span>
+      <h1>5309 Maingate Drive</h1>
+      <div class="ld-sub">Mississauga · Northeast · Peel · L4W 1G6 · Maingate / Matheson Blvd E</div>
+    </div>
+    <div class="ld-head-r">
+      <div class="ld-price-headline">$18.00 <span style="font-size:0.96rem;font-weight:500;color:var(--text-muted);">/ SF / yr net</span></div>
+      <div class="ld-price-sub">+ $4.86 / SF TMI (2025)</div>
+      <div class="ld-allin-pill">All-in $22.86 / SF / yr</div>
+    </div>
+  </div>
+
+  <!-- ==================== KEY FACTS ==================== -->
+  <div class="ld-card">
+    <div class="ld-keyfacts">
+      <div class="ld-kf"><div class="ld-kf-label">Total area</div><div class="ld-kf-value">16,187 SF</div><div class="ld-kf-sub">+1,173 SF mezzanine</div></div>
+      <div class="ld-kf"><div class="ld-kf-label">Office</div><div class="ld-kf-value">2,108 SF</div><div class="ld-kf-sub">13% of building</div></div>
+      <div class="ld-kf"><div class="ld-kf-label">Warehouse</div><div class="ld-kf-value">14,065 SF</div><div class="ld-kf-sub">87% of building</div></div>
+      <div class="ld-kf"><div class="ld-kf-label">Clear height</div><div class="ld-kf-value">14′1″</div><div class="ld-kf-sub">Small/mid-bay</div></div>
+      <div class="ld-kf"><div class="ld-kf-label">Loading</div><div class="ld-kf-value">1 TL · 2 DI</div><div class="ld-kf-sub">Drive-in level</div></div>
+      <div class="ld-kf"><div class="ld-kf-label">Lot</div><div class="ld-kf-value">0.84 ac</div><div class="ld-kf-sub">Irregular · fenced yard</div></div>
+      <div class="ld-kf"><div class="ld-kf-label">Zoning</div><div class="ld-kf-value">E2-19</div><div class="ld-kf-sub">Outdoor storage OK</div></div>
+      <div class="ld-kf"><div class="ld-kf-label">Possession</div><div class="ld-kf-value">90 Days</div><div class="ld-kf-sub">Vacant</div></div>
+    </div>
+  </div>
+
+  <!-- ==================== INDUSTRIO BENCHMARK CALLOUT ==================== -->
+  <div class="ld-bench">
+    <div class="ld-bench-title">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+      industrio benchmark · Mississauga · 15–20k SF
+    </div>
+    <div class="ld-bench-row">
+      <div>
+        <div class="ld-bench-stat">$18.00 / SF</div>
+        <div style="font-size:0.78rem; color:var(--text-muted);">This listing</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:1rem; font-weight:600; color:#b45309;">+18% above market average</div>
+        <div style="font-size:0.78rem; color:var(--text-muted);">vs. <strong>$15.30 / SF</strong> avg · range $14–17 · n=18 comps last 12 mo</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:0.86rem; font-weight:600; color:var(--accent);">2 differentiators justify the premium</div>
+        <div style="font-size:0.78rem; color:var(--text-muted);">Freshly renovated · E2-19 outdoor storage</div>
+      </div>
+    </div>
+    <div class="ld-bench-detail" style="margin-top:8px; padding-top:8px; border-top:1px solid #a7f3d0;">
+      <strong>Negotiating context:</strong> The freshly-renovated package + outdoor-storage zoning is genuinely scarce in the 15–20k SF segment. But the prior listing at the same $18 ran <strong>9 months without leasing</strong> (Jun 2025–Mar 2026) before being re-listed. There may be room to negotiate to ~$16.50–17/SF, plus push for a 12–18 month TMI cap. Anchor with the 2011 lease comp at $4.50/SF for the same space — landlord knows the building hasn't seen $18 historically.
+    </div>
+  </div>
+
+  <!-- ==================== TWO-COLUMN MAIN AREA ==================== -->
+  <div class="ld-grid">
+    <!-- ============== LEFT MAIN ============== -->
+    <div class="ld-main">
+
+      <!-- Public remarks -->
+      <div class="ld-card">
+        <h2>About this listing</h2>
+        <p style="font-size:0.96rem; line-height:1.6; color:var(--accent); margin:0 0 12px;">
+          Functional 15,000 sq ft industrial freestanding building in central Mississauga. Quick access to 400-series highways, amenities, transit & Pearson Airport. Zoning permits outside storage. Direct proximity to one of the GTA's most active labour pools.
+        </p>
+        <p style="font-size:0.84rem; color:var(--text-muted); margin:0; padding-top:10px; border-top:1px solid var(--border);">
+          <strong style="color:var(--accent);">Note:</strong> 1,173 SF mezzanine not included in total area. Offers must include Schedule B.
+        </p>
+      </div>
+
+      <!-- Building specs -->
+      <div class="ld-card">
+        <h2>Building specifications</h2>
+        <div class="ld-specs">
+          <div class="ld-spec"><span>Type</span><span>Industrial · Freestanding</span></div>
+          <div class="ld-spec"><span>Use</span><span>Warehousing</span></div>
+          <div class="ld-spec"><span>Total area (GLA)</span><span>16,187 SF</span></div>
+          <div class="ld-spec"><span>Office area</span><span>2,108 SF</span></div>
+          <div class="ld-spec"><span>Industrial area</span><span>14,065 SF</span></div>
+          <div class="ld-spec"><span>Mezzanine</span><span>1,173 SF (bonus)</span></div>
+          <div class="ld-spec"><span>Clear height</span><span>14′1″</span></div>
+          <div class="ld-spec"><span>Truck-level doors</span><span>1</span></div>
+          <div class="ld-spec"><span>Drive-in doors</span><span>2</span></div>
+          <div class="ld-spec"><span>Grade-level doors</span><span>0</span></div>
+          <div class="ld-spec"><span>Heating</span><span>Gas forced air, open</span></div>
+          <div class="ld-spec"><span>Air conditioning</span><span>Part (office)</span></div>
+          <div class="ld-spec"><span>Sprinklers</span><span>Yes</span></div>
+          <div class="ld-spec"><span>Water</span><span>Municipal</span></div>
+          <div class="ld-spec"><span>Lot size</span><span>0.84 acres</span></div>
+          <div class="ld-spec"><span>Lot shape</span><span>Irregular</span></div>
+          <div class="ld-spec"><span>Parking</span><span>Outside / surface</span></div>
+          <div class="ld-spec"><span>Rail access</span><span>No</span></div>
+          <div class="ld-spec"><span>Cross streets</span><span>Maingate / Matheson Blvd E</span></div>
+          <div class="ld-spec"><span>Year built</span><span>~1972 (Maingate corridor era)</span></div>
+        </div>
+      </div>
+
+      <!-- Recent upgrades -->
+      <div class="ld-card">
+        <h2>Recent upgrades · "Newly renovated"</h2>
+        <div class="ld-upgrades">
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Aluminum thermopane windows (office + warehouse)</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Air curtain at entrance</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Insulated steel exit doors</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Insulated aluminum shipping doors</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> LED lighting throughout</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Epoxy floor coating in warehouse</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Painted sprinkler & gas lines</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Painted warehouse walls + structure</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Utility sink in warehouse</div>
+          <div class="ld-upgrade"><span class="ld-upgrade-check">✓</span> Fenced yard with wireless gate security</div>
+        </div>
+      </div>
+
+      <!-- Lease terms -->
+      <div class="ld-card">
+        <h2>Lease terms</h2>
+        <div class="ld-specs">
+          <div class="ld-spec"><span>Net rent</span><span>$18.00 / SF / yr</span></div>
+          <div class="ld-spec"><span>Additional rent (TMI)</span><span>$4.86 / SF / yr (2025)</span></div>
+          <div class="ld-spec"><span>All-in</span><span>$22.86 / SF / yr</span></div>
+          <div class="ld-spec"><span>Monthly all-in (full bldg)</span><span>$30,837</span></div>
+          <div class="ld-spec"><span>Annual all-in (full bldg)</span><span>$370,033</span></div>
+          <div class="ld-spec"><span>Min term</span><span>60 months (5 yrs)</span></div>
+          <div class="ld-spec"><span>Max term</span><span>120 months (10 yrs)</span></div>
+          <div class="ld-spec"><span>Possession</span><span>90 days</span></div>
+          <div class="ld-spec"><span>Holdover</span><span>90 days</span></div>
+          <div class="ld-spec"><span>Occupancy</span><span>Vacant</span></div>
+          <div class="ld-spec"><span>Landlord</span><span>Ianco Holdings Inc.</span></div>
+          <div class="ld-spec"><span>Tax year</span><span>2025</span></div>
+          <div class="ld-spec"><span>ARN</span><span>210505011602202</span></div>
+          <div class="ld-spec"><span>Listed</span><span>Mar 30, 2026</span></div>
+          <div class="ld-spec"><span>Listing expires</span><span>Sep 29, 2026</span></div>
+        </div>
+      </div>
+
+      <!-- Lease history -->
+      <div class="ld-card">
+        <h2>Lease history at this address</h2>
+        <p style="font-size:0.84rem; color:var(--text-muted); margin:0 0 12px;">15 years of MLS data on this exact property. Achieved rents in teal, asking-only / expired in grey.</p>
+        <div class="ld-history">
+          <div class="ld-history-bar">
+            <span class="ld-history-year">2026</span>
+            <div class="ld-history-track"><div class="ld-history-fill" style="width:90%;"></div></div>
+            <span class="ld-history-amount">$18.00 <span class="ld-history-event">listed</span></span>
+          </div>
+          <div class="ld-history-bar">
+            <span class="ld-history-year">Jun 2025</span>
+            <div class="ld-history-track"><div class="ld-history-fill expired" style="width:90%;"></div></div>
+            <span class="ld-history-amount">$18.00 <span class="ld-history-event">9 mo · expired</span></span>
+          </div>
+          <div class="ld-history-bar">
+            <span class="ld-history-year">2014</span>
+            <div class="ld-history-track"><div class="ld-history-fill expired" style="width:30%;"></div></div>
+            <span class="ld-history-amount">$5.95 <span class="ld-history-event">terminated</span></span>
+          </div>
+          <div class="ld-history-bar">
+            <span class="ld-history-year">2011</span>
+            <div class="ld-history-track"><div class="ld-history-fill leased" style="width:23%;"></div></div>
+            <span class="ld-history-amount">$4.50 <span class="ld-history-event">leased ✓</span></span>
+          </div>
+          <div class="ld-history-bar">
+            <span class="ld-history-year">2007</span>
+            <div class="ld-history-track"><div class="ld-history-fill leased" style="width:29%;"></div></div>
+            <span class="ld-history-amount">$5.75 <span class="ld-history-event">leased ✓</span></span>
+          </div>
+          <div class="ld-history-bar">
+            <span class="ld-history-year">2005</span>
+            <div class="ld-history-track"><div class="ld-history-fill leased" style="width:30%;"></div></div>
+            <span class="ld-history-amount">$5.95 <span class="ld-history-event">leased ✓</span></span>
+          </div>
+          <div class="ld-history-bar">
+            <span class="ld-history-year">1991</span>
+            <div class="ld-history-track"><div class="ld-history-fill expired" style="width:14%;"></div></div>
+            <span class="ld-history-amount">$2.95 <span class="ld-history-event">expired</span></span>
+          </div>
+        </div>
+        <div style="background:#fef9e7; border:1px solid #fde68a; border-radius:8px; padding:12px 14px; margin-top:14px; font-size:0.86rem; color:#92400e; line-height:1.55;">
+          <strong>Tenant takeaway:</strong> Last achieved lease was $4.50 in 2011 (15 years ago — a different cycle). The previous $18 attempt expired without leasing in 9 months. Use this history as evidence in negotiation that pricing has moved aggressively beyond the property's prior rent envelope.
+        </div>
+      </div>
+
+      <!-- Drive times -->
+      <div class="ld-card">
+        <h2>Site access</h2>
+        <div class="ld-drive">
+          <div class="ld-drive-row"><span>Hwy 403</span><span>3 min</span></div>
+          <div class="ld-drive-row"><span>Hwy 401</span><span>6 min</span></div>
+          <div class="ld-drive-row"><span>Hwy 407</span><span>9 min</span></div>
+          <div class="ld-drive-row"><span>Hwy 427</span><span>12 min</span></div>
+          <div class="ld-drive-row"><span>Pearson Airport (YYZ)</span><span>12 min</span></div>
+          <div class="ld-drive-row"><span>QEW</span><span>15 min</span></div>
+          <div class="ld-drive-row"><span>CN Brampton Intermodal</span><span>14 min</span></div>
+          <div class="ld-drive-row"><span>CP Vaughan Intermodal</span><span>25 min</span></div>
+          <div class="ld-drive-row"><span>Downtown Toronto (Union)</span><span>38 min</span></div>
+        </div>
+      </div>
+
+      <!-- Permitted uses -->
+      <div class="ld-card">
+        <h2>Permitted uses · E2-19</h2>
+        <p style="font-size:0.84rem; color:var(--text-muted); margin:0 0 10px;">Mississauga E2-19 zoning is broad. All E3 permitted uses also allowed.</p>
+        <div class="ld-uses">
+          <span class="ld-use primary">Outdoor storage / display</span>
+          <span class="ld-use primary">Contractor's yard</span>
+          <span class="ld-use primary">Warehousing & distribution</span>
+          <span class="ld-use primary">Manufacturing (light + restricted commercial medicinal)</span>
+          <span class="ld-use">Truck terminal</span>
+          <span class="ld-use">Self-storage</span>
+          <span class="ld-use">Wholesaling</span>
+          <span class="ld-use">Vehicle pound</span>
+          <span class="ld-use">Motor vehicle service / repair / wash / sales</span>
+          <span class="ld-use">Gas bar</span>
+          <span class="ld-use">Truck fuel dispensing</span>
+          <span class="ld-use">Science & technology facility</span>
+          <span class="ld-use">Broadcasting / communications</span>
+          <span class="ld-use">Banquet / conference / convention centre</span>
+          <span class="ld-use">Restaurant / take-out / convenience</span>
+          <span class="ld-use">Office</span>
+          <span class="ld-use">Medical office</span>
+          <span class="ld-use">Veterinary clinic</span>
+          <span class="ld-use">Animal boarding</span>
+          <span class="ld-use">Recreational / private club</span>
+          <span class="ld-use">Funeral establishment</span>
+          <span class="ld-use">University / college</span>
+          <span class="ld-use">Courier / messenger</span>
+          <span class="ld-use excluded">Power-generating facility</span>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="ld-card">
+        <h2>Location</h2>
+        <div class="ld-map" id="ldMap"></div>
+      </div>
+
+    </div>
+
+    <!-- ============== RIGHT SIDEBAR ============== -->
+    <aside class="ld-side">
+
+      <!-- Listing team -->
+      <div class="ld-card">
+        <div class="ld-card-eyebrow">Listing team · Colliers Canada</div>
+        <h2 style="margin:4px 0 12px; font-size:1rem;">Listed by</h2>
+        <div class="ld-broker">
+          <div class="ld-broker-avatar">BE</div>
+          <div>
+            <div class="ld-broker-name">Brennan Eastmure, SIOR</div>
+            <div class="ld-broker-role">Senior Vice President</div>
+            <div class="ld-broker-phone">+1 647 522 3039</div>
+          </div>
+        </div>
+        <div class="ld-broker">
+          <div class="ld-broker-avatar">DC</div>
+          <div>
+            <div class="ld-broker-name">David Colley, SIOR</div>
+            <div class="ld-broker-role">Executive Vice President</div>
+            <div class="ld-broker-phone">+1 416 999 8191</div>
+          </div>
+        </div>
+        <div class="ld-broker">
+          <div class="ld-broker-avatar">AM</div>
+          <div>
+            <div class="ld-broker-name">Adam McKenzie</div>
+            <div class="ld-broker-role">Sales Representative</div>
+            <div class="ld-broker-phone">+1 416 522 6671</div>
+          </div>
+        </div>
+        <div style="font-size:0.74rem; color:var(--text-muted); margin-top:10px; padding-top:10px; border-top:1px solid var(--border); line-height:1.5;">
+          Colliers Canada · 401 The West Mall, Suite 800 · Toronto M9C 5J5 · 416 777 2200
+        </div>
+      </div>
+
+      <!-- Co-op commission (broker view) -->
+      <div class="ld-card">
+        <div class="ld-coop">
+          <div class="ld-coop-title">Co-op commission</div>
+          <div class="ld-coop-rate">4% Year 1 + 1.75% Years 2–5</div>
+          <div class="ld-coop-detail">of net rent paid · standard OREA structure</div>
+        </div>
+        <div class="ld-spec"><span>Showing instructions</span><span>List Salesperson</span></div>
+        <div class="ld-spec"><span>Contact after expired</span><span>No</span></div>
+        <div class="ld-spec"><span>Permission to advertise</span><span>No</span></div>
+      </div>
+
+      <!-- AI broker handoff -->
+      <div class="ld-cta-card">
+        <h2>Want a tenant rep on this?</h2>
+        <p>Get an instant analysis from industrio's AI broker, or have a human reach out to negotiate on your behalf.</p>
+        <button class="ld-btn primary" onclick="document.getElementById('aiBrokerLauncher')?.click(); setTimeout(function(){ var i = document.getElementById('aiBrokerInput'); if (i){ i.value='Tell me about 5309 Maingate Dr — should I tour it?'; i.focus(); }}, 300);">Ask the AI broker</button>
+        <button class="ld-btn secondary">Request a tour</button>
+        <button class="ld-btn secondary">Schedule a call</button>
+      </div>
+
+      <!-- Operations Fit -->
+      <div class="ld-card">
+        <h2>Operations fit · vs. your saved search</h2>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin: 0 0 10px;">Comparing this listing to "Mississauga 12k–18k · 22'+ clear · outdoor storage" requirement.</p>
+        <div class="ld-fit-row">
+          <span class="ld-fit-icon ok">✓</span>
+          <div>
+            <div class="ld-fit-text">Size in range</div>
+            <div class="ld-fit-detail">16,187 SF — fits 12–18k window</div>
+          </div>
+        </div>
+        <div class="ld-fit-row">
+          <span class="ld-fit-icon bad">✕</span>
+          <div>
+            <div class="ld-fit-text">Clear height too low</div>
+            <div class="ld-fit-detail">14′1″ vs. 22′ minimum — disqualifying for high-stack ops</div>
+          </div>
+        </div>
+        <div class="ld-fit-row">
+          <span class="ld-fit-icon ok">✓</span>
+          <div>
+            <div class="ld-fit-text">Outdoor storage permitted</div>
+            <div class="ld-fit-detail">E2-19 + fenced yard · rare combination</div>
+          </div>
+        </div>
+        <div class="ld-fit-row">
+          <span class="ld-fit-icon warn">!</span>
+          <div>
+            <div class="ld-fit-text">Limited dock-level loading</div>
+            <div class="ld-fit-detail">1 TL · 2 DI — fine for vans/cube trucks, light for 53' trailers</div>
+          </div>
+        </div>
+        <div class="ld-fit-row">
+          <span class="ld-fit-icon ok">✓</span>
+          <div>
+            <div class="ld-fit-text">Vacant + 90-day possession</div>
+            <div class="ld-fit-detail">Move-in flexibility · matches your timing</div>
+          </div>
+        </div>
+        <div class="ld-fit-row">
+          <span class="ld-fit-icon warn">!</span>
+          <div>
+            <div class="ld-fit-text">Above-market rent</div>
+            <div class="ld-fit-detail">$18.00 vs. $15.30 area avg · negotiate ~10% off</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inquiry preview -->
+      <div class="ld-card">
+        <div class="ld-inquiry">
+          <div class="ld-inquiry-title">Suggested inquiry message</div>
+          <div class="ld-inquiry-text">
+            Hi, interested in 5309 Maingate. Could we discuss flexibility on net rent (mid-$16s)? Also keen to confirm power capacity, slab load, and whether the mezzanine is structurally sound for storage. Available to tour next Tue/Wed.
+          </div>
+          <div style="display:flex; gap:6px; margin-top:8px;">
+            <button class="ld-btn primary" style="flex:1;">Send via industrio</button>
+            <button class="ld-btn" style="flex:1;">Edit</button>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ==================== DISCLOSURE FOOTER ==================== -->
+  <div class="ld-disclosure">
+    <strong>Data sources:</strong> Listing details aggregated from Colliers brochure (Apr 2026) and TRREB MLS via REALM (W12941372, listed Mar 30, 2026). Lease history and pricing from PropTx Innovations Inc. industrio enriches with building-level data from public records and the tenant comp pool. Co-operating brokerage commission of <strong>4% Year 1 + 1.75% Years 2–5 of net rent</strong> offered to registered brokerages per the listing. Tenants sourcing direct may negotiate equivalent value as a rent abatement. <strong>This is a marketing summary, not an offer to lease.</strong> Prospective tenants should rely on the formal Offer to Lease and Schedule B for binding terms. PropTx Innovations Inc. assumes no responsibility for the accuracy of any information shown. Copyright 2026, used under license to PropTx 2026.
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0;">
+      <span>&copy; 2026 industrio. All rights reserved.</span>
+      <span><a href="data-policy.html">Data policy</a> &middot; <a href="landlord-disclosure.html">Landlord disclosure</a> &middot; <a href="docs.html">Developer docs</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="ai-broker.js"></script>
+<script>
+(function(){
+  // Map
+  if (window.L && document.getElementById('ldMap')){
+    var m = L.map('ldMap', { scrollWheelZoom: false }).setView([43.6325, -79.6230], 15);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      maxZoom: 20, subdomains: 'abcd',
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(m);
+    L.circleMarker([43.6325, -79.6230], { radius: 11, fillColor: '#0f1e4e', color: '#fff', weight: 3, fillOpacity: 0.95 })
+      .addTo(m)
+      .bindPopup('<strong>5309 Maingate Drive</strong><br>16,187 SF · For Lease · $18.00 net')
+      .openPopup();
+    setTimeout(function(){ m.invalidateSize(); }, 100);
+  }
+
+  // Action handlers — wire to existing systems
+  document.getElementById('saveListing').addEventListener('click', function(){
+    this.style.background = 'var(--accent)'; this.style.color = '#fff'; this.innerHTML = '<span>♥</span> Saved';
+  });
+  document.getElementById('compareListing').addEventListener('click', function(){
+    window.alert('Added to comparison. Visit the search page to see your selected listings side-by-side.');
+  });
+  document.getElementById('shareListing').addEventListener('click', function(){
+    if (navigator.share){
+      navigator.share({ title: '5309 Maingate Dr — industrio', text: 'Newly-renovated 16k SF freestanding industrial · Mississauga · $18 net', url: window.location.href });
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(function(){
+        window.alert('Link copied to clipboard.');
+      });
+    }
+  });
+  document.getElementById('inquireListing').addEventListener('click', function(){
+    var launcher = document.getElementById('aiBrokerLauncher');
+    if (launcher) launcher.click();
+    setTimeout(function(){
+      var i = document.getElementById('aiBrokerInput');
+      if (i){ i.value = 'I want to inquire about 5309 Maingate Dr.'; i.focus(); }
+    }, 300);
+  });
+
+  // ================== Lightbox photo gallery ==================
+  var GALLERY = [
+    { src: 'photos/5309-maingate/01-exterior-front.jpg',    caption: 'Exterior front · Maingate Drive (street view)' },
+    { src: 'photos/5309-maingate/02-aerial-overhead.jpg',   caption: 'Aerial overhead · roof + lot' },
+    { src: 'photos/5309-maingate/03-aerial-skyline.jpg',    caption: 'Aerial with downtown Toronto skyline' },
+    { src: 'photos/5309-maingate/04-aerial-yard.jpg',       caption: 'Aerial · fenced yard + outdoor storage potential' },
+    { src: 'photos/5309-maingate/05-warehouse-interior.jpg',caption: 'Warehouse · epoxy floor, LED lighting, painted structure' },
+    { src: 'photos/5309-maingate/06-warehouse-mezzanine.jpg',caption: 'Warehouse with mezzanine + access stairs' },
+    { src: 'photos/5309-maingate/07-office-interior.jpg',   caption: 'Renovated office · open plan' },
+    { src: 'photos/5309-maingate/08-office-windows.jpg',    caption: 'Office · new aluminum thermopane windows' }
+  ];
+  var lbIdx = 0;
+  function openLightbox(i){
+    lbIdx = i;
+    var lb = document.getElementById('ldLightbox');
+    document.getElementById('ldLightboxImg').src = GALLERY[i].src;
+    document.getElementById('ldLightboxCaption').textContent = GALLERY[i].caption;
+    document.getElementById('ldLightboxCounter').textContent = (i + 1) + ' / ' + GALLERY.length;
+    lb.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    document.getElementById('ldLightbox').hidden = true;
+    document.body.style.overflow = '';
+  }
+  function navLightbox(delta){
+    lbIdx = (lbIdx + delta + GALLERY.length) % GALLERY.length;
+    openLightbox(lbIdx);
+  }
+  // Hero tile clicks
+  var heroes = document.querySelectorAll('.ld-hero .ld-hero-img');
+  heroes.forEach(function(h, idx){
+    h.addEventListener('click', function(e){
+      // Map the 5 hero tiles to gallery indices
+      var indexMap = [0, 4, 2, 6, 5];
+      openLightbox(indexMap[idx] || 0);
+    });
+  });
+  document.getElementById('heroMoreBtn')?.addEventListener('click', function(e){
+    e.stopPropagation();
+    openLightbox(0);
+  });
+  document.getElementById('ldLightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('ldLightboxPrev').addEventListener('click', function(){ navLightbox(-1); });
+  document.getElementById('ldLightboxNext').addEventListener('click', function(){ navLightbox(1); });
+  document.getElementById('ldLightbox').addEventListener('click', function(e){ if (e.target.id === 'ldLightbox') closeLightbox(); });
+  document.addEventListener('keydown', function(e){
+    if (document.getElementById('ldLightbox').hidden) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') navLightbox(-1);
+    if (e.key === 'ArrowRight') navLightbox(1);
+  });
+})();
+</script>
+
+</body>
+</html>

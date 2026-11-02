@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "last_updated": "2026-04-28",
+    "note": "Anonymized comp pool. Each submission is bucketed by submarket + size class + $1/SF rent band. Benchmarks displayed only where comp_count >= 5.",
+    "total_comps": 180
+  },
+  "benchmarks": [
+    {
+      "submarket": "Mississauga",
+      "size_class": "<5k",
+      "comp_count": 48,
+      "rent_low": 13.0,
+      "rent_high": 24.0,
+      "rent_avg": 18.3
+    },
+    {
+      "submarket": "Mississauga",
+      "size_class": "10\u201315k",
+      "comp_count": 22,
+      "rent_low": 15.0,
+      "rent_high": 18.0,
+      "rent_avg": 16.4
+    },
+    {
+      "submarket": "Mississauga",
+      "size_class": "15\u201320k",
+      "comp_count": 18,
+      "rent_low": 14.0,
+      "rent_high": 17.0,
+      "rent_avg": 15.3
+    },
+    {
+      "submarket": "Mississauga",
+      "size_class": "5\u201310k",
+      "comp_count": 15,
+      "rent_low": 16.0,
+      "rent_high": 21.0,
+      "rent_avg": 17.5
+    },
+    {
+      "submarket": "Brampton",
+      "size_class": "10\u201315k",
+      "comp_count": 11,
+      "rent_low": 14.0,
+      "rent_high": 17.0,
+      "rent_avg": 15.3
+    },
+    {
+      "submarket": "Vaughan",
+      "size_class": "15\u201320k",
+      "comp_count": 10,
+      "rent_low": 17.0,
+      "rent_high": 20.0,
+      "rent_avg": 18.3
+    },
+    {
+      "submarket": "Vaughan",
+      "size_class": "10\u201315k",
+      "comp_count": 9,
+      "rent_low": 19.0,
+      "rent_high": 21.0,
+      "rent_avg": 19.4
+    },
+    {
+      "submarket": "Brampton",
+      "size_class": "15\u201320k",
+      "comp_count": 8,
+      "rent_low": 13.0,
+      "rent_high": 16.0,
+      "rent_avg": 14.1
+    },
+    {
+      "submarket": "West Toronto",
+      "size_class": "5\u201310k",
+      "comp_count": 7,
+      "rent_low": 14.0,
+      "rent_high": 17.0,
+      "rent_avg": 15.1
+    },
+    {
+      "submarket": "West Toronto",
+      "size_class": "10\u201315k",
+      "comp_count": 6,
+      "rent_low": 16.0,
+      "rent_high": 18.0,
+      "rent_avg": 16.5
+    },
+    {
+      "submarket": "GTA North",
+      "size_class": "15\u201320k",
+      "comp_count": 6,
+      "rent_low": 14.0,
+      "rent_high": 17.0,
+      "rent_avg": 15.3
+    },
+    {
+      "submarket": "Central Toronto",
+      "size_class": "10\u201315k",
+      "comp_count": 6,
+      "rent_low": 17.0,
+      "rent_high": 20.0,
+      "rent_avg": 18.0
+    },
+    {
+      "submarket": "GTA North",
+      "size_class": "10\u201315k",
+      "comp_count": 5,
+      "rent_low": 14.0,
+      "rent_high": 16.0,
+      "rent_avg": 14.4
+    },
+    {
+      "submarket": "East Toronto",
+      "size_class": "10\u201315k",
+      "comp_count": 5,
+      "rent_low": 15.0,
+      "rent_high": 18.0,
+      "rent_avg": 16.0
+    }
+  ],
+  "comps_count_by_source": {
+    "tenant_attested_upload": 180
+  }
+}

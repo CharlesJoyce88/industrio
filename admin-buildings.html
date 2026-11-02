@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Building Inventory — industrio</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { background: var(--bg-elev); }
+  .admin-wrap { padding: 16px 24px 60px; max-width: 1600px; margin: 0 auto; }
+  .admin-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
+  .admin-eyebrow { background: #fef3c7; color: #b45309; padding: 3px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; display: inline-block; }
+  .admin-head h1 { font-size: 1.6rem; margin: 6px 0 0; color: var(--accent); }
+  .admin-head-meta { font-size: 0.86rem; color: var(--text-muted); }
+  .admin-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+  .admin-controls input[type="text"], .admin-controls select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-sans); font-size: 0.88rem; background: #fff; color: var(--accent); min-width: 0; }
+  .admin-controls input[type="text"] { flex: 1; min-width: 240px; }
+  .admin-controls button { background: var(--accent); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-family: var(--font-sans); font-size: 0.84rem; font-weight: 500; cursor: pointer; }
+  .admin-controls button.secondary { background: #fff; color: var(--accent); border: 1px solid var(--border); }
+  .admin-controls button:hover { opacity: 0.9; }
+  .admin-counts { font-size: 0.82rem; color: var(--text-muted); margin-left: auto; }
+  .admin-counts strong { color: var(--accent); }
+
+  .admin-table-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .admin-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  .admin-table thead th { position: sticky; top: 0; background: var(--bg-elev); padding: 10px 12px; text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 700; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); }
+  .admin-table thead th:hover { background: #faf8f2; color: var(--accent); }
+  .admin-table thead th.sorted::after { content: ' ▾'; font-size: 0.7rem; }
+  .admin-table thead th.sorted.asc::after { content: ' ▴'; }
+  .admin-table thead th.num { text-align: right; }
+  .admin-table tbody td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .admin-table tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .admin-table tbody tr { cursor: pointer; }
+  .admin-table tbody tr:hover { background: var(--bg-elev); }
+  .admin-table tbody tr.selected { background: #eef2ff; }
+  .admin-empty { padding: 60px; text-align: center; color: var(--text-muted); }
+  .admin-bldg-id { font-family: 'Geist Mono', monospace; font-size: 0.74rem; color: var(--text-muted); }
+  .admin-paging { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-elev); border-top: 1px solid var(--border); }
+  .admin-paging button { background: #fff; border: 1px solid var(--border); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: var(--font-sans); font-size: 0.84rem; color: var(--accent); }
+  .admin-paging button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Detail drawer */
+  .admin-drawer { position: fixed; top: 0; right: 0; width: 480px; max-width: 100vw; height: 100vh; background: var(--bg-card); border-left: 1px solid var(--border); box-shadow: -10px 0 30px rgba(0,0,0,0.10); z-index: 5000; overflow-y: auto; transform: translateX(100%); transition: transform .2s ease-out; }
+  .admin-drawer.open { transform: translateX(0); }
+  .admin-drawer-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 18px 20px 12px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-card); z-index: 1; }
+  .admin-drawer-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 0; line-height: 1.3; }
+  .admin-drawer-sub { font-size: 0.84rem; color: var(--text-muted); margin-top: 4px; }
+  .admin-drawer-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); padding: 0 6px; }
+  .admin-drawer-close:hover { color: var(--accent); }
+  .admin-drawer-body { padding: 16px 20px; }
+  .admin-detail-grid { display: grid; grid-template-columns: 130px 1fr; gap: 8px 14px; font-size: 0.86rem; margin-bottom: 18px; }
+  .admin-detail-label { color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+  .admin-detail-value { color: var(--accent); font-weight: 500; word-break: break-word; }
+  .admin-detail-section { margin-bottom: 18px; }
+  .admin-detail-section h3 { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 10px; }
+  .admin-mapbox { width: 100%; height: 220px; background: #faf8f2; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 14px; }
+
+  .admin-gate { max-width: 480px; margin: 80px auto; background: var(--bg-card); padding: 32px 28px; border-radius: 14px; border: 1px solid var(--border); text-align: center; }
+  .admin-gate h2 { color: var(--accent); margin-top: 0; }
+  .admin-gate p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; }
+  .admin-gate input { width: 100%; box-sizing: border-box; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-sans); font-size: 0.96rem; margin: 14px 0 12px; }
+  .admin-gate button { width: 100%; background: var(--accent); color: #fff; border: none; padding: 11px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+      <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<!-- Gate (shown when not unlocked) -->
+<div class="admin-gate" id="adminGate" hidden>
+  <span class="admin-eyebrow">Admin only</span>
+  <h2>Building inventory browser</h2>
+  <p>This is internal tooling for the industrio team. Enter the admin passphrase to continue. (Set <code>industrio.adminKey</code> in localStorage if you want to skip this gate.)</p>
+  <input type="password" id="adminGateInput" placeholder="Admin passphrase">
+  <button type="button" id="adminGateBtn">Unlock</button>
+  <p style="font-size:0.78rem; margin-top:14px;">Hint for the demo: any non-empty value unlocks. In production this would be replaced with proper auth.</p>
+</div>
+
+<!-- Main content (shown when unlocked) -->
+<div class="admin-wrap" id="adminWrap" hidden>
+
+  <div class="admin-head">
+    <div>
+      <span class="admin-eyebrow">Admin · internal</span>
+      <h1>Building inventory</h1>
+      <div class="admin-head-meta" id="adminHeadMeta">Loading&hellip;</div>
+    </div>
+    <div>
+      <button class="btn btn-secondary" id="adminLockBtn" type="button">Lock</button>
+      <a href="map.html" class="btn btn-secondary" style="margin-left:6px;">&larr; Back to Search</a>
+    </div>
+  </div>
+
+  <div class="admin-controls">
+    <input type="text" id="adminSearch" placeholder="Search address, owner, postal code, building ID&hellip;">
+    <select id="adminCity"><option value="">All cities</option></select>
+    <select id="adminSubmarket"><option value="">All submarkets</option></select>
+    <select id="adminSize">
+      <option value="">Any size</option>
+      <option value="0-10000">&lt; 10k SF</option>
+      <option value="10000-30000">10k–30k SF</option>
+      <option value="30000-100000">30k–100k SF</option>
+      <option value="100000-99999999">100k+ SF</option>
+    </select>
+    <button class="secondary" id="adminClearFilters" type="button">Clear</button>
+    <button id="adminExport" type="button">Export CSV</button>
+    <span class="admin-counts" id="adminCounts">&mdash;</span>
+  </div>
+
+  <div class="admin-table-wrap">
+    <table class="admin-table" id="adminTable">
+      <thead>
+        <tr>
+          <th data-sort="address">Address</th>
+          <th data-sort="city">City</th>
+          <th data-sort="submarket">Submarket</th>
+          <th data-sort="owner">Owner</th>
+          <th class="num" data-sort="year_built">Built</th>
+          <th class="num" data-sort="total_rentable_sf">Size (SF)</th>
+          <th class="num" data-sort="num_units">Units</th>
+          <th class="num" data-sort="clear_ft">Clear</th>
+          <th class="num" data-sort="avg_weighted_rent_psf">Avg rent</th>
+          <th class="num" data-sort="vacancy_pct">Vac.</th>
+        </tr>
+      </thead>
+      <tbody id="adminRows"></tbody>
+    </table>
+    <div class="admin-paging">
+      <button type="button" id="adminPrev">&larr; Prev</button>
+      <span id="adminPageInfo" style="font-size:0.84rem; color:var(--text-muted);">&mdash;</span>
+      <button type="button" id="adminNext">Next &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail drawer -->
+<aside class="admin-drawer" id="adminDrawer">
+  <div class="admin-drawer-head">
+    <div>
+      <h3 class="admin-drawer-title" id="adminDrawerTitle">&mdash;</h3>
+      <div class="admin-drawer-sub" id="adminDrawerSub">&mdash;</div>
+    </div>
+    <button type="button" class="admin-drawer-close" id="adminDrawerClose">&times;</button>
+  </div>
+  <div class="admin-drawer-body" id="adminDrawerBody"></div>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var ADMIN_KEY = 'industrio.adminUnlocked';
+  var PAGE_SIZE = 100;
+  var ALL = [];
+  var FILTERED = [];
+  var page = 0;
+  var sortKey = 'address';
+  var sortDir = 'asc';
+  var detailMap = null, detailMarker = null;
+
+  function fmtSF(n){ if (n == null) return '—'; return Number(n).toLocaleString(); }
+  function fmtPct(n){ if (n == null) return '—'; return (n*100).toFixed(1)+'%'; }
+  function fmtMoney(n){ if (n == null) return '—'; return '$'+Number(n).toFixed(2); }
+  function escHtml(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+
+  function gateUnlocked(){
+    try { return localStorage.getItem(ADMIN_KEY) === 'true'; } catch(e){ return false; }
+  }
+  function unlock(){ try { localStorage.setItem(ADMIN_KEY, 'true'); } catch(e){} init(); }
+  function lock(){ try { localStorage.removeItem(ADMIN_KEY); } catch(e){} window.location.reload(); }
+
+  function bootGate(){
+    if (gateUnlocked()){ init(); return; }
+    document.getElementById('adminGate').hidden = false;
+    document.getElementById('adminWrap').hidden = true;
+    document.getElementById('adminGateBtn').addEventListener('click', function(){
+      var v = document.getElementById('adminGateInput').value;
+      if (v && v.trim().length > 0) unlock();
+      else document.getElementById('adminGateInput').focus();
+    });
+    document.getElementById('adminGateInput').addEventListener('keypress', function(e){
+      if (e.key === 'Enter') document.getElementById('adminGateBtn').click();
+    });
+    document.getElementById('adminGateInput').focus();
+  }
+
+  function init(){
+    document.getElementById('adminGate').hidden = true;
+    document.getElementById('adminWrap').hidden = false;
+    document.getElementById('adminLockBtn').addEventListener('click', lock);
+
+    fetch('buildings.json', { cache: 'no-store' }).then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function(data){
+      ALL = data.buildings || [];
+      document.getElementById('adminHeadMeta').textContent =
+        ALL.length.toLocaleString() + ' buildings · ' +
+        (data.submarket_stats || []).reduce(function(s,x){ return s + (x.total_rentable_sf||0); }, 0).toLocaleString() + ' SF total · last updated ' + (data.meta && data.meta.last_updated || '—');
+      buildFilterDropdowns();
+      bindControls();
+      applyFilters();
+    }).catch(function(err){
+      document.getElementById('adminRows').innerHTML = '<tr><td colspan="10" class="admin-empty">Failed to load buildings.json: ' + escHtml(err.message || err) + '<br>Are you running a local server? <code>python -m http.server 8000</code></td></tr>';
+    });
+  }
+
+  function unique(arr, key){
+    var s = {};
+    arr.forEach(function(x){ if (x[key]) s[x[key]] = true; });
+    return Object.keys(s).sort();
+  }
+  function buildFilterDropdowns(){
+    var c = document.getElementById('adminCity');
+    var sub = document.getElementById('adminSubmarket');
+    unique(ALL, 'city').forEach(function(v){ c.appendChild(opt(v)); });
+    unique(ALL, 'submarket').forEach(function(v){ sub.appendChild(opt(v)); });
+  }
+  function opt(v){ var o = document.createElement('option'); o.value = v; o.textContent = v; return o; }
+
+  function bindControls(){
+    ['adminSearch','adminCity','adminSubmarket','adminSize'].forEach(function(id){
+      document.getElementById(id).addEventListener('input', applyFilters);
+      document.getElementById(id).addEventListener('change', applyFilters);
+    });
+    document.getElementById('adminClearFilters').addEventListener('click', function(){
+      document.getElementById('adminSearch').value = '';
+      document.getElementById('adminCity').value = '';
+      document.getElementById('adminSubmarket').value = '';
+      document.getElementById('adminSize').value = '';
+      applyFilters();
+    });
+    document.getElementById('adminExport').addEventListener('click', exportCSV);
+    document.getElementById('adminPrev').addEventListener('click', function(){ if (page>0){ page--; render(); }});
+    document.getElementById('adminNext').addEventListener('click', function(){ if ((page+1)*PAGE_SIZE < FILTERED.length){ page++; render(); }});
+
+    document.querySelectorAll('#adminTable thead th').forEach(function(th){
+      th.addEventListener('click', function(){
+        var k = th.dataset.sort;
+        if (sortKey === k) sortDir = (sortDir === 'asc' ? 'desc' : 'asc');
+        else { sortKey = k; sortDir = 'asc'; }
+        applyFilters();
+      });
+    });
+    document.getElementById('adminDrawerClose').addEventListener('click', closeDrawer);
+  }
+
+  function applyFilters(){
+    var q = (document.getElementById('adminSearch').value || '').toLowerCase().trim();
+    var city = document.getElementById('adminCity').value;
+    var sub  = document.getElementById('adminSubmarket').value;
+    var sz   = document.getElementById('adminSize').value;
+    var szLo = null, szHi = null;
+    if (sz){ var p = sz.split('-'); szLo = parseInt(p[0],10); szHi = parseInt(p[1],10); }
+
+    FILTERED = ALL.filter(function(b){
+      if (city && b.city !== city) return false;
+      if (sub  && b.submarket !== sub) return false;
+      if (szLo != null && (b.total_rentable_sf == null || b.total_rentable_sf < szLo || b.total_rentable_sf >= szHi)) return false;
+      if (q){
+        var hay = ((b.address||'') + ' ' + (b.owner||'') + ' ' + (b.postal_code||'') + ' ' + (b.building_id||'') + ' ' + (b.true_owner||'')).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+
+    FILTERED.sort(function(a,b){
+      var av = a[sortKey], bv = b[sortKey];
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      if (typeof av === 'string'){
+        return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+      }
+      return sortDir === 'asc' ? av - bv : bv - av;
+    });
+
+    page = 0;
+    render();
+  }
+
+  function render(){
+    var slice = FILTERED.slice(page*PAGE_SIZE, (page+1)*PAGE_SIZE);
+    var tbody = document.getElementById('adminRows');
+    if (!slice.length){
+      tbody.innerHTML = '<tr><td colspan="10" class="admin-empty">No buildings match these filters.</td></tr>';
+    } else {
+      tbody.innerHTML = slice.map(function(b){
+        return '<tr data-id="' + escHtml(b.building_id) + '">'
+          + '<td><strong>' + escHtml(b.address || '—') + '</strong><br><span class="admin-bldg-id">' + escHtml(b.building_id) + '</span></td>'
+          + '<td>' + escHtml(b.city || '—') + '</td>'
+          + '<td>' + escHtml(b.submarket || '—') + '</td>'
+          + '<td>' + escHtml(b.owner || '—') + '</td>'
+          + '<td class="num">' + (b.year_built || '—') + '</td>'
+          + '<td class="num">' + fmtSF(b.total_rentable_sf) + '</td>'
+          + '<td class="num">' + (b.num_units || '—') + '</td>'
+          + '<td class="num">' + (b.clear_ft ? b.clear_ft + "'" : '—') + '</td>'
+          + '<td class="num">' + (b.avg_weighted_rent_psf != null ? fmtMoney(b.avg_weighted_rent_psf) : '—') + '</td>'
+          + '<td class="num">' + fmtPct(b.vacancy_pct) + '</td>'
+        + '</tr>';
+      }).join('');
+      tbody.querySelectorAll('tr').forEach(function(tr){
+        tr.addEventListener('click', function(){
+          var id = tr.dataset.id;
+          openDrawer(ALL.find(function(b){ return b.building_id === id; }));
+          tbody.querySelectorAll('tr').forEach(function(x){ x.classList.remove('selected'); });
+          tr.classList.add('selected');
+        });
+      });
+    }
+
+    // Sort indicators
+    document.querySelectorAll('#adminTable thead th').forEach(function(th){
+      th.classList.remove('sorted','asc');
+      if (th.dataset.sort === sortKey){ th.classList.add('sorted'); if (sortDir === 'asc') th.classList.add('asc'); }
+    });
+
+    // Counts + paging
+    document.getElementById('adminCounts').innerHTML =
+      '<strong>' + FILTERED.length.toLocaleString() + '</strong> matches' +
+      (FILTERED.length !== ALL.length ? ' (of ' + ALL.length.toLocaleString() + ')' : '');
+    document.getElementById('adminPageInfo').textContent =
+      'Page ' + (page+1) + ' of ' + Math.max(1, Math.ceil(FILTERED.length / PAGE_SIZE));
+    document.getElementById('adminPrev').disabled = (page === 0);
+    document.getElementById('adminNext').disabled = ((page+1) * PAGE_SIZE >= FILTERED.length);
+  }
+
+  function openDrawer(b){
+    if (!b) return;
+    var drawer = document.getElementById('adminDrawer');
+    document.getElementById('adminDrawerTitle').textContent = b.address || '—';
+    document.getElementById('adminDrawerSub').textContent = (b.city || '') + (b.postal_code ? ' · ' + b.postal_code : '');
+    var fields = [
+      ['Building ID', b.building_id],
+      ['Submarket', b.submarket],
+      ['Owner', b.owner],
+      ['True owner', b.true_owner],
+      ['Owner type', b.owner_type],
+      ['Year built', b.year_built],
+      ['Stories', b.stories],
+      ['Tenancy', b.tenancy],
+      ['Total rentable SF', fmtSF(b.total_rentable_sf)],
+      ['# Units', b.num_units],
+      ['Avg unit SF', fmtSF(b.avg_unit_sf)],
+      ['Avg weighted rent', b.avg_weighted_rent_psf != null ? fmtMoney(b.avg_weighted_rent_psf) + ' / SF' : null],
+      ['Available SF', b.available_sf != null ? fmtSF(b.available_sf) : null],
+      ['Vacancy', fmtPct(b.vacancy_pct)],
+      ['Clear height', b.clear_ft ? b.clear_ft + "'" : null],
+      ['Loading docks', b.docks_total],
+      ['Drive-ins', b.drive_in_total],
+      ['Parking ratio', b.parking_ratio],
+      ['Land area', b.acres ? b.acres.toFixed(2) + ' ac' : null],
+      ['Last sale date', b.last_sale_date],
+      ['Last sale price', b.last_sale_price ? '$' + b.last_sale_price.toLocaleString() : null],
+      ['Status', b.status],
+      ['Lat / Lng', (b.lat && b.lng) ? b.lat.toFixed(4) + ', ' + b.lng.toFixed(4) : null],
+      ['Geocoded by', b.geocode_method]
+    ];
+    var rows = fields.filter(function(f){ return f[1] != null && f[1] !== '' && f[1] !== '—'; })
+      .map(function(f){ return '<div class="admin-detail-label">' + escHtml(f[0]) + '</div><div class="admin-detail-value">' + escHtml(f[1]) + '</div>'; }).join('');
+    document.getElementById('adminDrawerBody').innerHTML =
+      '<div id="adminMapBox" class="admin-mapbox"></div>'
+      + '<div class="admin-detail-grid">' + rows + '</div>'
+      + '<div class="admin-detail-section">'
+      + '<h3>Linked listings (this building)</h3>'
+      + '<div id="adminLinkedListings" style="font-size:0.84rem;color:var(--text-muted);">Loading…</div>'
+      + '</div>';
+    drawer.classList.add('open');
+
+    // Render the map
+    if (detailMap){ detailMap.remove(); detailMap = null; }
+    if (b.lat && b.lng){
+      detailMap = L.map('adminMapBox', { scrollWheelZoom: false }).setView([b.lat, b.lng], 15);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        maxZoom: 20, subdomains: 'abcd',
+        attribution: '&copy; OSM &copy; CARTO'
+      }).addTo(detailMap);
+      L.circleMarker([b.lat, b.lng], { radius: 9, fillColor: '#0f1e4e', color: '#fff', weight: 2, fillOpacity: 0.95 })
+        .addTo(detailMap)
+        .bindPopup('<strong>' + escHtml(b.address) + '</strong>')
+        .openPopup();
+    }
+
+    // Linked listings
+    fetch('listings.json', { cache: 'no-store' }).then(function(r){ return r.ok ? r.json() : null; }).then(function(data){
+      if (!data) return;
+      var groups = ['for_lease','leased','for_sale','sold','delisted_lease','delisted_sale'];
+      var hits = [];
+      groups.forEach(function(g){
+        (data[g] || []).forEach(function(l){
+          if (l.building_id === b.building_id) hits.push({ kind:g, l:l });
+        });
+      });
+      var el = document.getElementById('adminLinkedListings');
+      if (!el) return;
+      if (!hits.length){ el.textContent = 'No listings linked to this building.'; return; }
+      el.innerHTML = hits.map(function(h){
+        var l = h.l;
+        var rent = l.net_rent_psf || l.achieved_net_psf;
+        return '<div style="padding:6px 0; border-top:1px solid var(--border);">'
+          + '<strong>' + escHtml(l.tenant || l.address || h.kind) + '</strong> · '
+          + (l.size_sf ? l.size_sf.toLocaleString() + ' SF · ' : '')
+          + (rent ? '$' + Number(rent).toFixed(2) + ' net' : '')
+          + ' <span style="background:#e0e7ff;color:var(--accent);padding:1px 6px;border-radius:6px;font-size:0.74rem;font-weight:700;">' + h.kind.replace('_','-') + '</span>'
+          + '</div>';
+      }).join('');
+    }).catch(function(){});
+  }
+  function closeDrawer(){
+    document.getElementById('adminDrawer').classList.remove('open');
+    if (detailMap){ detailMap.remove(); detailMap = null; }
+    document.querySelectorAll('#adminTable tbody tr').forEach(function(x){ x.classList.remove('selected'); });
+  }
+
+  function exportCSV(){
+    var cols = ['building_id','address','city','submarket','postal_code','owner','true_owner','owner_type','year_built','stories','tenancy','total_rentable_sf','num_units','avg_unit_sf','avg_weighted_rent_psf','available_sf','vacancy_pct','docks_total','drive_in_total','clear_ft','parking_ratio','acres','last_sale_date','last_sale_price','lat','lng'];
+    var lines = [cols.join(',')];
+    FILTERED.forEach(function(b){
+      lines.push(cols.map(function(c){
+        var v = b[c]; if (v == null) return '';
+        v = String(v); if (v.indexOf(',') !== -1 || v.indexOf('"') !== -1) v = '"' + v.replace(/"/g,'""') + '"';
+        return v;
+      }).join(','));
+    });
+    var blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'industrio-buildings-' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  bootGate();
+})();
+</script>
+</body>
+</html>

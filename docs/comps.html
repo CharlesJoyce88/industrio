@@ -1,0 +1,456 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comps &amp; Landlord Portfolio Deals — industrio</title>
+<meta name="description" content="Live GTA industrial lease and sale comps pulled from TRREB. Subscribe to alerts by size, submarket, landlord portfolio, or building spec.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Comps &amp; landlord portfolio deals</span>
+    <h1>Every closed deal. <span class="gradient-text">On your terms.</span></h1>
+    <p class="lead">Pulled live from TRREB MLS and industrio's off-market channels. Subscribe to alerts by size, submarket, landlord portfolio, or building spec — the moment a matching deal closes, you'll know the rent, term, and concessions.</p>
+  </div>
+</header>
+
+<!-- GTA leased dashboard — sourced from realm-aggregate-2026.json -->
+<section style="padding-top: 0;">
+  <div class="container">
+    <div class="comps-dashboard">
+      <div class="comps-dash-head">
+        <h2>GTA leased industrial · 2026 to date</h2>
+        <span class="comps-dash-asof">610 closed deals · Peel + Toronto + York + Halton + Durham</span>
+      </div>
+
+      <div class="comps-chart-row">
+        <div class="comps-chart-card">
+          <div class="comps-chart-title">Achieved rent distribution ($/SF net)</div>
+          <div class="comps-bar-chart">
+            <div class="comps-bar"><span style="height:8%"></span><label>&lt;$10</label></div>
+            <div class="comps-bar"><span style="height:18%"></span><label>$10-12</label></div>
+            <div class="comps-bar"><span style="height:35%"></span><label>$12-14</label></div>
+            <div class="comps-bar"><span style="height:62%"></span><label>$14-16</label></div>
+            <div class="comps-bar"><span style="height:90%"></span><label>$16-18</label></div>
+            <div class="comps-bar"><span style="height:78%"></span><label>$18-20</label></div>
+            <div class="comps-bar"><span style="height:42%"></span><label>$20-22</label></div>
+            <div class="comps-bar"><span style="height:22%"></span><label>$22-24</label></div>
+            <div class="comps-bar"><span style="height:12%"></span><label>&gt;$24</label></div>
+          </div>
+          <div class="comps-chart-foot"><b>Median $18.00 net</b> · 489 disclosed of 610 leased</div>
+        </div>
+
+        <div class="comps-chart-card">
+          <div class="comps-chart-title">Days on market distribution</div>
+          <div class="comps-bar-chart">
+            <div class="comps-bar dom"><span style="height:48%"></span><label>0-30</label></div>
+            <div class="comps-bar dom"><span style="height:74%"></span><label>30-60</label></div>
+            <div class="comps-bar dom"><span style="height:85%"></span><label>60-90</label></div>
+            <div class="comps-bar dom"><span style="height:62%"></span><label>90-120</label></div>
+            <div class="comps-bar dom"><span style="height:48%"></span><label>120-180</label></div>
+            <div class="comps-bar dom"><span style="height:32%"></span><label>180-365</label></div>
+            <div class="comps-bar dom"><span style="height:14%"></span><label>365+</label></div>
+          </div>
+          <div class="comps-chart-foot"><b>Median 74 days</b> · mode 14 · mean 112</div>
+        </div>
+      </div>
+
+      <div class="comps-regional-table">
+        <div class="comps-rtable-title">Achieved rent by region · GTA 2026</div>
+        <table class="comps-rtable">
+          <thead>
+            <tr><th>Region</th><th>Deals</th><th>Median rent</th><th>Median DOM</th><th>Top submarket</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Peel</b></td><td>230</td><td>$18.50</td><td>68 days</td><td>Northeast Mississauga</td></tr>
+            <tr><td><b>Toronto</b></td><td>161</td><td>$19.25</td><td>71 days</td><td>West Humber-Clairville</td></tr>
+            <tr><td><b>York</b></td><td>142</td><td>$17.50</td><td>78 days</td><td>Concord</td></tr>
+            <tr><td><b>Halton</b></td><td>41</td><td>$16.75</td><td>82 days</td><td>QE Queen Elizabeth</td></tr>
+            <tr><td><b>Durham</b></td><td>36</td><td>$15.50</td><td>89 days</td><td>Brock Industrial</td></tr>
+          </tbody>
+        </table>
+        <div class="comps-rtable-foot">Median rent figures are illustrative regional breakdowns of the GTA-wide $18.00/SF median. Per-listing data flows in as the full PDF set is processed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<\!-- Alert subscription form -->
+<section style="padding-top:16px;">
+  <div class="container">
+    <div class="calc-inputs" style="max-width:none;">
+      <div class="section-header" style="text-align:left; margin:0 0 20px 0;">
+        <div class="eyebrow">Set your comp filter</div>
+        <h2 style="margin:0;">Tell us what matters. We'll alert only on matches.</h2>
+      </div>
+
+      <div class="pref-grid">
+        <div class="pref-field">
+          <span class="lbl">Deal type</span>
+          <div class="pill-group">
+            <span class="pill on">Leased</span>
+            <span class="pill on">Sold (condo)</span>
+            <span class="pill">Off-market</span>
+          </div>
+        </div>
+
+        <div class="pref-field">
+          <span class="lbl">Size band (SF)</span>
+          <div class="range-row">
+            <input type="number" value="5000" step="500">
+            <span class="sep">to</span>
+            <input type="number" value="25000" step="500">
+          </div>
+        </div>
+
+        <div class="pref-field">
+          <span class="lbl">Submarkets</span>
+          <div class="pill-group">
+            <span class="pill on">Mississauga</span>
+            <span class="pill on">Brampton</span>
+            <span class="pill">Vaughan</span>
+            <span class="pill">Markham</span>
+            <span class="pill">Oakville</span>
+            <span class="pill">Burlington</span>
+            <span class="pill">Milton</span>
+            <span class="pill">Scarborough</span>
+            <span class="pill">Durham</span>
+          </div>
+        </div>
+
+        <div class="pref-field">
+          <span class="lbl">Follow these landlord portfolios</span>
+          <div class="pill-group">
+            <span class="pill on">ACME Industrial Holdings</span>
+            <span class="pill">Continental Business Parks</span>
+            <span class="pill on">Prologis Canada</span>
+            <span class="pill">Meridian Properties</span>
+            <span class="pill">Crestpoint</span>
+            <span class="pill">Dream Industrial REIT</span>
+            <span class="pill">Pure Industrial</span>
+            <span class="pill">Summit REIT</span>
+          </div>
+          <span class="lbl" style="margin-top:6px; color:var(--text-dim); text-transform:none; letter-spacing:0; font-weight:400; font-size:0.82rem;">You'll be notified any time one of these landlords closes a deal — in any building they own.</span>
+        </div>
+
+        <div class="pref-field">
+          <span class="lbl">Minimum clear height</span>
+          <input type="number" value="22" min="14" max="40">
+        </div>
+
+        <div class="pref-field">
+          <span class="lbl">Minimum truck-level doors</span>
+          <input type="number" value="2" min="0" max="20">
+        </div>
+
+        <div class="pref-field">
+          <span class="lbl">Power (min kVA)</span>
+          <input type="number" value="150" step="25">
+        </div>
+
+        <div class="pref-field">
+          <span class="lbl">Notify by</span>
+          <div class="pill-group">
+            <span class="pill on">Email</span>
+            <span class="pill on">In-app</span>
+            <span class="pill">SMS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="justify-content:flex-start; margin-top:20px;">
+        <button class="btn btn-primary">Save filter &amp; subscribe</button>
+        <button class="btn btn-secondary">Preview matches</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<\!-- Matches so far / live feed -->
+<section>
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 20px 0;">
+      <div class="eyebrow">Live feed</div>
+      <h2 style="margin:0;">Last 30 days &middot; 14 deals match your filter.</h2>
+      <p style="margin-top:6px; max-width:640px;">Every closed lease or sale from TRREB MLS, filtered against your subscription. New matches float to the top and are pushed to your inbox within the hour.</p>
+    </div>
+
+    <div class="alert-feed">
+
+      <div class="alert-item new">
+        <div>
+          <div class="head">
+            <h3>6820 Kitimat Rd, Unit 5, Mississauga &mdash; leased</h3>
+            <span class="badge-new">New</span>
+            <span class="tag">ACME portfolio</span>
+          </div>
+          <p class="meta">Closed 2 days ago &middot; 12,800 SF &middot; 5-yr term &middot; Landlord: <strong>ACME Industrial Holdings</strong></p>
+          <div class="specs">
+            <span class="tag">$16.20 net</span><span class="tag">$6.40 TMI</span><span class="tag">$22.60 all-in</span><span class="tag">3 mo free</span><span class="tag">$6/SF TI</span><span class="tag">26' clear</span><span class="tag">3 TL doors</span>
+          </div>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">A+</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">in-band</div></div>
+      </div>
+
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>2150 Argentia Rd, Unit 12, Mississauga &mdash; leased</h3>
+            <span class="tag">Prologis portfolio</span>
+          </div>
+          <p class="meta">Closed 5 days ago &middot; 9,400 SF &middot; 7-yr term &middot; Landlord: <strong>Prologis Canada</strong></p>
+          <div class="specs">
+            <span class="tag">$17.50 net</span><span class="tag">$7.20 TMI</span><span class="tag">$24.70 all-in</span><span class="tag">4 mo free</span><span class="tag">$10/SF TI</span><span class="tag">28' clear</span><span class="tag">2 TL doors</span>
+          </div>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">A</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">above mid</div></div>
+      </div>
+
+      <div class="alert-item new">
+        <div>
+          <div class="head">
+            <h3>7500 Martin Grove Rd, Unit 3, Brampton &mdash; leased</h3>
+            <span class="badge-new">New</span>
+            <span class="tag">ACME portfolio</span>
+          </div>
+          <p class="meta">Closed 4 days ago &middot; 14,100 SF &middot; 5-yr term &middot; Landlord: <strong>ACME Industrial Holdings</strong></p>
+          <div class="specs">
+            <span class="tag">$15.80 net</span><span class="tag">$6.10 TMI</span><span class="tag">$21.90 all-in</span><span class="tag">2 mo free</span><span class="tag">$4/SF TI</span><span class="tag">24' clear</span><span class="tag">3 TL doors</span>
+          </div>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">A</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">market rate</div></div>
+      </div>
+
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>5800 Explorer Dr, Unit 8, Mississauga &mdash; sold (condo)</h3>
+            <span class="tag">Sold</span>
+          </div>
+          <p class="meta">Closed 9 days ago &middot; 11,200 SF &middot; Sale price $4.76M &middot; Landlord: <strong>Individual owner</strong></p>
+          <div class="specs">
+            <span class="tag">$425/SF</span><span class="tag">42 DOM</span><span class="tag">Asking $440</span><span class="tag">24' clear</span><span class="tag">2 TL doors</span><span class="tag">Condo fee $4.90/SF/yr</span>
+          </div>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">B+</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">3.4% below ask</div></div>
+      </div>
+
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>3401 Derry Rd E, Unit 14, Mississauga &mdash; leased</h3>
+            <span class="tag">Prologis portfolio</span>
+          </div>
+          <p class="meta">Closed 12 days ago &middot; 16,800 SF &middot; 10-yr term &middot; Landlord: <strong>Prologis Canada</strong></p>
+          <div class="specs">
+            <span class="tag">$18.20 net</span><span class="tag">$7.40 TMI</span><span class="tag">$25.60 all-in</span><span class="tag">6 mo free</span><span class="tag">$14/SF TI</span><span class="tag">32' clear</span><span class="tag">4 TL doors + 1 DID</span>
+          </div>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">A+</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">prestige ~6% above</div></div>
+      </div>
+
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>1080 Brevik Pl, Unit 2, Mississauga &mdash; leased</h3>
+            <span class="tag">ACME portfolio</span>
+          </div>
+          <p class="meta">Closed 16 days ago &middot; 7,200 SF &middot; 5-yr term &middot; Landlord: <strong>ACME Industrial Holdings</strong></p>
+          <div class="specs">
+            <span class="tag">$15.50 net</span><span class="tag">$6.00 TMI</span><span class="tag">$21.50 all-in</span><span class="tag">1 mo free</span><span class="tag">$2/SF TI</span><span class="tag">22' clear</span><span class="tag">2 TL doors</span>
+          </div>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">B+</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">at market</div></div>
+      </div>
+
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>6299 Airport Rd, Unit 22, Mississauga &mdash; leased</h3>
+            <span class="tag">ACME portfolio</span>
+          </div>
+          <p class="meta">Closed 22 days ago &middot; 18,500 SF &middot; 7-yr term &middot; Landlord: <strong>ACME Industrial Holdings</strong></p>
+          <div class="specs">
+            <span class="tag">$16.50 net</span><span class="tag">$6.30 TMI</span><span class="tag">$22.80 all-in</span><span class="tag">3 mo free</span><span class="tag">$8/SF TI</span><span class="tag">26' clear</span><span class="tag">4 TL doors</span>
+          </div>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">A</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">market</div></div>
+      </div>
+
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>3950 Nashua Dr, Unit 6, Mississauga &mdash; leased</h3>
+            <span class="tag">Prologis portfolio</span>
+          </div>
+          <p class="meta">Closed 27 days ago &middot; 11,600 SF &middot; 5-yr term &middot; Landlord: <strong>Prologis Canada</strong></p>
+          <div class="specs">
+            <span class="tag">$17.80 net</span><span class="tag">$7.10 TMI</span><span class="tag">$24.90 all-in</span><span class="tag">4 mo free</span><span class="tag">$9/SF TI</span><span class="tag">28' clear</span><span class="tag">3 TL doors</span>
+          </div>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">A</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">above market</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<\!-- Landlord portfolio deep-dive -->
+<section>
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 20px 0;">
+      <div class="eyebrow">Landlord portfolio focus</div>
+      <h2 style="margin:0;">Every deal ACME Industrial Holdings has closed this year.</h2>
+      <p style="margin-top:6px; max-width:640px;">You follow ACME. Here's the full 2026 deal book across all 14 buildings in their portfolio — median rent, concessions, and term trends.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Deals closed YTD</h3>
+        <p style="font-family:var(--font-mono); font-size:2rem; color:var(--text); margin:6px 0 2px 0;">11</p>
+        <p style="font-size:0.85rem;">Across 9 buildings</p>
+      </div>
+      <div class="card">
+        <h3>Median starting rent</h3>
+        <p style="font-family:var(--font-mono); font-size:2rem; color:var(--text); margin:6px 0 2px 0;">$16.10</p>
+        <p style="font-size:0.85rem;">vs. $15.20 in 2025 (+5.9%)</p>
+      </div>
+      <div class="card">
+        <h3>Median free rent</h3>
+        <p style="font-family:var(--font-mono); font-size:2rem; color:var(--text); margin:6px 0 2px 0;">2.5 mo</p>
+        <p style="font-size:0.85rem;">Holding steady vs. last year</p>
+      </div>
+      <div class="card">
+        <h3>Median term</h3>
+        <p style="font-family:var(--font-mono); font-size:2rem; color:var(--text); margin:6px 0 2px 0;">5.5 yrs</p>
+        <p style="font-size:0.85rem;">Range 3 – 10 years</p>
+      </div>
+      <div class="card">
+        <h3>Renewal retention</h3>
+        <p style="font-family:var(--font-mono); font-size:2rem; color:var(--text); margin:6px 0 2px 0;">74%</p>
+        <p style="font-size:0.85rem;">8 of 11 renewals retained</p>
+      </div>
+      <div class="card">
+        <h3>Median days on market</h3>
+        <p style="font-family:var(--font-mono); font-size:2rem; color:var(--text); margin:6px 0 2px 0;">58</p>
+        <p style="font-size:0.85rem;">Down from 87 in 2024</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<\!-- Methodology -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Methodology</div>
+      <h2>Where every comp comes from.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>TRREB MLS closed-deal feed</h3><p>Every leased and sold listing closed through TRREB MLS is ingested into industrio within four hours. We scrub for duplicates, confirm square footage against the listing, and enrich with landlord ownership data.</p></div>
+      <div class="card"><h3>Landlord-portfolio mapping</h3><p>We maintain a mapping of each major landlord to every building they own — including numbered companies and joint-venture structures — so a "follow ACME" alert fires regardless of which legal entity signs the lease.</p></div>
+      <div class="card"><h3>Off-market channels</h3><p>Our relationships with small-bay tenant reps and industrial sub-brokers surface deals that never hit MLS. These are tagged separately so you can filter if you prefer MLS-only.</p></div>
+      <div class="card"><h3>Rent normalization</h3><p>Every rent is normalized to effective rent across the term — factoring free rent, TI, escalations, and OpEx. A/A+/B/B+ letter grades tell you at a glance where the deal landed vs. the submarket median.</p></div>
+      <div class="card"><h3>Alert delivery</h3><p>Email or in-app push within 60 minutes of the deal posting to MLS. Optional daily digest mode if you'd rather batch.</p></div>
+      <div class="card"><h3>Your data, your filters</h3><p>You can subscribe to unlimited filters under a single account. Pro plans get unlimited portfolio-follow alerts; Enterprise adds API access and custom landlord groupings.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Subscribe once. Let the deals come to you.</h2>
+      <p>Comps alerts are included in every Pro plan. Enterprise adds API access and unlimited landlord-portfolio follow lists.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">See pricing</a>
+        <a href="map.html" class="btn btn-secondary">Set other alerts</a>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="vow-strip">
+  <div class="vow-inner">
+    <p><strong>VOW Brokerage Disclosure.</strong> industrio is operated by industrio Realty Inc., Brokerage, a Member of the Toronto Regional Real Estate Board. Listings displayed are from the TRREB MLS&reg; System under TRREB's Virtual Office Website rules. <strong>The information provided herein must only be used by consumers that have a bona fide interest in the purchase, sale, or lease of real estate</strong> of the type being offered via this VOW and may not be used for any commercial or other purpose. Information deemed reliable but not guaranteed accurate by TRREB. MLS&reg;, Multiple Listing Service&reg; and their logos are owned by CREA.</p>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Comp data from TRREB MLS and industrio's off-market channels.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Pill toggle
+document.querySelectorAll('.pill').forEach(function(p){
+  p.addEventListener('click', function(){ p.classList.toggle('on'); });
+});
+</script>
+
+</body>
+</html>

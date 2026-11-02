@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zoning Lookup — industrio</title>
+<meta name="description" content="Pick your industrial use and see which GTA zoning designations permit it — by municipality, as-of-right vs. minor variance vs. prohibited.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Zoning lookup</span>
+    <h1>Tell us your use. We'll tell you <span class="gradient-text">where it's zoned.</span></h1>
+    <p class="lead">Pick what you're doing inside the building. industrio shows you which zoning designations permit it across the GTA — as-of-right, by minor variance, or prohibited — with a direct link to each municipality's by-law.</p>
+  </div>
+</header>
+
+<section style="padding-top:16px;">
+  <div class="container">
+    <div class="zoning-tool">
+      <div class="zoning-picker">
+        <label class="zoning-label">What will you do inside the building?</label>
+        <select id="useSelect">
+          <option value="">— Select a use —</option>
+          <optgroup label="Manufacturing &amp; assembly">
+            <option value="light-manufacturing">Light manufacturing / assembly</option>
+            <option value="heavy-manufacturing">Heavy manufacturing / fabrication</option>
+            <option value="food-processing">Food processing / commissary kitchen</option>
+            <option value="cannabis">Cannabis production / processing</option>
+          </optgroup>
+          <optgroup label="Logistics &amp; storage">
+            <option value="warehouse">Warehouse &amp; distribution</option>
+            <option value="last-mile">Last-mile logistics / courier depot</option>
+            <option value="cold-storage">Cold storage / refrigerated warehouse</option>
+            <option value="self-storage">Self-storage</option>
+            <option value="outdoor-storage">Outdoor / trailer storage</option>
+          </optgroup>
+          <optgroup label="Service &amp; trade">
+            <option value="auto-service">Auto service / repair garage</option>
+            <option value="auto-body">Auto body / paint shop</option>
+            <option value="contractor">Contractor's yard / tradesman shop</option>
+            <option value="vehicle-rental">Vehicle rental / fleet ops</option>
+          </optgroup>
+          <optgroup label="Knowledge &amp; flex">
+            <option value="research">Research &amp; development / lab</option>
+            <option value="office-industrial">Ancillary office within industrial</option>
+            <option value="showroom">Showroom with warehouse</option>
+            <option value="studio">Film / photo / recording studio</option>
+          </optgroup>
+        </select>
+        <p class="zoning-hint">Zoning is municipal and by-law versions change. Treat this as a planning shortlist — always confirm with the city's planning department or a zoning consultant before signing.</p>
+      </div>
+
+      <div id="zoningResults" class="zoning-results">
+        <div class="zoning-empty">Pick a use above to see the permitted zoning designations across the GTA.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">How zoning maps to your deal</div>
+      <h2>Every site check should answer three questions.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>Is the use permitted as-of-right?</h3><p>If yes, you can typically apply for a building permit without planning approval — the fastest path to move-in.</p></div>
+      <div class="card"><h3>Does it require a minor variance?</h3><p>Minor variances go to the Committee of Adjustment. Budget 8–14 weeks, neighbour notice, and a planner's fee — plus some risk of refusal.</p></div>
+      <div class="card"><h3>Is it prohibited or legal non-conforming?</h3><p>Prohibited means a full zoning by-law amendment (months of process); legal non-conforming use can continue but not expand.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Want the full municipal overlay?</h2>
+      <p>Pro subscribers get property-level zoning overlays on every listing, with direct links to the governing by-law, setback rules, and height/coverage limits.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">See pricing</a>
+        <a href="map.html" class="btn btn-secondary">Open the map</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Zoning data is a planning aid, not legal advice. Confirm with the municipality before signing.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="zoning.js"></script>
+
+</body>
+</html>

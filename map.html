@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search — industrio</title>
+<meta name="description" content="Search GTA industrial listings on an interactive map.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css?v=1777151152">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  #leafletMap { width: 100%; height: calc(100vh - 200px); min-height: 540px; border-radius: 12px; }
+  .leaflet-popup-content { font-family: 'Geist', sans-serif; font-size: 0.88rem; }
+  .leaflet-container { font-family: 'Geist', sans-serif; }
+  .map-page-wrap { padding: 12px 16px 24px 16px; }
+  .map-filter-bar { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; }
+  .filter-row-primary { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+  /* Tracked area pill + dropdown */
+  .filter-pill.tracked-active { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
+  .filter-pill.tracked-active .filter-pill-caret { color: #fff !important; }
+  .tracked-icon { display: inline-block; vertical-align: -2px; margin-right: 5px; }
+  .tracked-thumb { width: 100%; height: 130px; background: #faf8f2; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; }
+  .tracked-thumb svg { width: 100%; height: 100%; display: block; }
+  .tracked-empty-hint { font-size: 0.8rem; color: var(--text-muted); text-align: center; padding: 14px 8px; }
+  .tracked-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+  .tracked-actions button { padding: 8px 10px; font-size: 0.84rem; font-weight: 500; font-family: 'Geist', sans-serif; border-radius: 6px; border: 1px solid var(--border); background: #fff; cursor: pointer; color: var(--accent); display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .tracked-actions button:hover { background: #faf8f2; border-color: var(--accent); }
+  .tracked-clear-btn { width: 100%; padding: 7px 10px; font-size: 0.82rem; font-weight: 500; font-family: 'Geist', sans-serif; border-radius: 6px; border: 1px solid #fecaca; background: #fff; cursor: pointer; color: #b91c1c; }
+  .tracked-clear-btn:hover { background: #fef2f2; }
+  .tracked-tip { font-size: 0.74rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4; }
+  .tracked-stats { font-size: 0.78rem; color: var(--text-muted); margin: 4px 0 8px; line-height: 1.4; }
+  .tracked-stats strong { color: var(--accent); }
+
+  /* Floating drawing UI */
+  .draw-toolbar { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 5000; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: flex; gap: 8px; align-items: center; box-shadow: 0 6px 22px rgba(15,30,78,0.20); }
+  .draw-toolbar[hidden] { display: none !important; }
+  .draw-hint[hidden] { display: none !important; }
+  .draw-btn { width: 38px; height: 38px; border: 1px solid var(--border); background: #fff; border-radius: 8px; font-size: 1.05rem; cursor: pointer; color: var(--accent); display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+  .draw-btn:hover { background: #faf8f2; }
+  .draw-continue { padding: 9px 22px; height: 38px; border: none; background: var(--accent); color: #fff; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; font-family: 'Geist', sans-serif; }
+  .draw-continue:disabled { background: #94a3b8; cursor: not-allowed; }
+  .draw-hint { position: fixed; top: 86px; left: 50%; transform: translateX(-50%); z-index: 5000; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; font-size: 0.88rem; color: var(--accent); box-shadow: 0 4px 16px rgba(0,0,0,0.10); display: flex; align-items: center; gap: 10px; max-width: 540px; }
+  .draw-hint-icon { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; background: #fef3c7; align-items: center; justify-content: center; font-size: 0.95rem; flex: 0 0 28px; }
+  body.is-drawing .leaflet-container { cursor: crosshair !important; }
+
+  /* Live current-selection text inside a filter dropdown */
+  .menu-current { font-size: 0.86rem; color: var(--accent); font-weight: 500; text-align: center; padding: 4px 0 8px; }
+
+  /* Sold button when active should match the teal sold-dot color on the map */
+  #soldBtn.active { background: #0d9488 !important; color: #fff !important; border-color: #0d9488 !important; }
+  #soldBtn.active:hover { background: #0b7e74 !important; border-color: #0b7e74 !important; }
+  /* Leased button when active uses the same teal as the Sold pill */
+  #leasedBtn.active { background: #0d9488 !important; color: #fff !important; border-color: #0d9488 !important; }
+  #leasedBtn.active:hover { background: #0b7e74 !important; border-color: #0b7e74 !important; }
+
+  /* More filters: keywords block at top */
+  .more-panel-keywords { padding: 16px 20px 18px; border-bottom: 1px solid var(--border); background: #faf8f2; }
+  .more-panel-keywords .more-panel-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--accent); margin-bottom: 6px; text-transform: none; letter-spacing: 0; }
+  .keywords-input { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Geist', sans-serif; font-size: 0.92rem; color: var(--accent); background: #fff; }
+  .keywords-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(15,30,78,0.08); }
+  .more-panel-hint { font-size: 0.74rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4; }
+
+  /* Date Available calendar dropdown
+     Anchored to the right edge of the pill so it expands leftward into the bar
+     and never overflows the viewport. */
+  .filter-pill-menu.date-menu {
+    width: 320px !important;
+    min-width: 320px !important;
+    max-width: 320px !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+    left: auto !important;
+    right: 0 !important;
+    overflow: visible !important;
+  }
+  .date-label { font-size: 0.74rem; color: var(--text-muted); font-weight: 600; display: block; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .date-input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 4px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-strong, var(--border));
+    border-radius: 8px;
+    font-family: 'Geist', sans-serif;
+    font-size: 0.95rem;
+    color: var(--accent);
+    background: #fff;
+    line-height: 1.2;
+    min-height: 38px;
+  }
+  .date-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(15,30,78,0.10); }
+  .date-input::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.85; }
+  .date-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+  .menu-clear { width: 100%; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Geist', sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; }
+  .menu-clear:hover { background: #faf8f2; color: var(--accent); border-color: var(--accent); }
+  #dateAvailCurrent:hover { color: var(--accent); }
+
+  /* Price unit toggle (For Sale only) */
+  .price-unit-toggle { display: flex; gap: 0; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .price-unit-toggle button { flex: 1; padding: 7px 10px; font-size: 0.82rem; font-weight: 500; font-family: 'Geist', sans-serif; border: none; background: #fff; cursor: pointer; color: var(--accent); border-right: 1px solid var(--border); }
+  .price-unit-toggle button:last-child { border-right: none; }
+  .price-unit-toggle button.active { background: var(--accent); color: #fff; }
+  .price-unit-toggle button:not(.active):hover { background: #faf8f2; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <form class="nav-search" id="navSearchForm" autocomplete="off">
+      <svg class="nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="navSearchInput" placeholder="Search municipality, address, or street">
+    </form>
+    <div class="nav-links">
+      <a href="map.html" class="active">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<div class="map-page-wrap">
+
+  <div class="map-filter-bar">
+    <div class="filter-row-primary">
+
+      <div class="filter-pill has-menu" data-pill="status">
+        <span class="filter-pill-text" id="statusLabel">For Lease</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu">
+          <a href="#" data-status="for-lease">For Lease</a>
+          <a href="#" data-status="for-sale">For Sale</a>
+        </div>
+      </div>
+
+      <div class="filter-pill has-menu" data-pill="proptype">
+        <span class="filter-pill-text" id="proptypeLabel">All property types</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu">
+          <a href="#" data-proptype="all"          data-for-status="lease,sale">All property types</a>
+          <a href="#" data-proptype="multi-tenant" data-for-status="lease">Multi-tenant</a>
+          <a href="#" data-proptype="condo"        data-for-status="sale">Condo</a>
+          <a href="#" data-proptype="freestand"    data-for-status="lease,sale">Freestanding</a>
+        </div>
+      </div>
+
+      <div class="filter-pill has-menu" data-pill="price">
+        <span class="filter-pill-text" id="priceLabel">$ 0 &ndash; Max</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu wide">
+          <div class="menu-title" id="priceTitle">Net Rent</div>
+          <div class="price-unit-toggle" id="priceUnitToggle" data-for-status="sale" style="display:none;">
+            <button type="button" data-price-unit="psf" class="active">$ / SF</button>
+            <button type="button" data-price-unit="total">$ total</button>
+          </div>
+          <div class="range-slider" id="priceSlider" data-min-input="priceMin" data-max-input="priceMax">
+            <div class="range-track"></div>
+            <div class="range-fill"></div>
+            <input type="range" class="range-min" id="priceRangeMin" min="0" max="30" step="0.25" value="0">
+            <input type="range" class="range-max" id="priceRangeMax" min="0" max="30" step="0.25" value="30">
+          </div>
+          <div class="menu-range">
+            <input type="number" id="priceMin" placeholder="Min" min="0" step="0.5">
+            <span>to</span>
+            <input type="number" id="priceMax" placeholder="Max" min="0" step="0.5">
+          </div>
+          <div class="menu-note" id="priceNote">$ / SF / yr</div>
+          <button type="button" class="menu-apply" data-menu-apply="price">Apply</button>
+        </div>
+      </div>
+
+      <div class="filter-pill has-menu" data-pill="size">
+        <span class="filter-pill-text" id="sizeLabel">Size</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu wide">
+          <div class="menu-title">Size (SF)</div>
+          <div class="range-slider" id="sizeSlider" data-min-input="pfSizeMin" data-max-input="pfSizeMax">
+            <div class="range-track"></div>
+            <div class="range-fill"></div>
+            <input type="range" class="range-min" id="sizeRangeMin" min="0" max="50000" step="500" value="0">
+            <input type="range" class="range-max" id="sizeRangeMax" min="0" max="50000" step="500" value="50000">
+          </div>
+          <div class="menu-current" id="sizeCurrent">Any size</div>
+          <div class="menu-range">
+            <input type="number" id="pfSizeMin" placeholder="Min" min="0" step="500">
+            <span>to</span>
+            <input type="number" id="pfSizeMax" placeholder="Max" min="0" step="500">
+          </div>
+          <button type="button" class="menu-apply" data-menu-apply="size">Apply</button>
+        </div>
+      </div>
+
+      <div class="filter-pill has-menu" data-pill="acres" id="acresPill" style="display:none;">
+        <span class="filter-pill-text" id="acresLabel">Acres</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu wide">
+          <div class="menu-title">Site size (acres)</div>
+          <div class="range-slider" id="acresSlider" data-min-input="acresMin" data-max-input="acresMax">
+            <div class="range-track"></div>
+            <div class="range-fill"></div>
+            <input type="range" class="range-min" id="acresRangeMin" min="0" max="10" step="0.25" value="0">
+            <input type="range" class="range-max" id="acresRangeMax" min="0" max="10" step="0.25" value="10">
+          </div>
+          <div class="menu-range">
+            <input type="number" id="acresMin" placeholder="Min" min="0" max="10" step="0.25">
+            <span>to</span>
+            <input type="number" id="acresMax" placeholder="Max" min="0" max="10" step="0.25">
+          </div>
+          <div class="menu-note">acres</div>
+          <button type="button" class="menu-apply" data-menu-apply="acres">Apply</button>
+        </div>
+      </div>
+
+      <div class="filter-pill has-menu" data-pill="doors">
+        <span class="filter-pill-text" id="doorsLabel">Shipping Doors</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu wide">
+          <div class="menu-title">Min dock-level</div>
+          <div class="menu-range" style="grid-template-columns: 1fr; margin-bottom: 10px;">
+            <input type="number" id="pfDock" placeholder="e.g. 2" min="0" step="1">
+          </div>
+          <div class="menu-title">Min drive-in</div>
+          <div class="menu-range" style="grid-template-columns: 1fr; margin-bottom: 10px;">
+            <input type="number" id="pfDriveIn" placeholder="e.g. 1" min="0" step="1">
+          </div>
+          <button type="button" class="menu-apply" data-menu-apply="doors">Apply</button>
+        </div>
+      </div>
+
+      <div class="filter-pill has-menu" data-pill="clear">
+        <span class="filter-pill-text" id="clearLabel">Clear Height</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu wide">
+          <div class="menu-title">Min clear height</div>
+          <div class="range-slider" id="clearSlider" data-min-input="pfClear" data-max-input="">
+            <div class="range-track"></div>
+            <div class="range-fill"></div>
+            <input type="range" class="range-min" id="clearRangeMin" min="0" max="36" step="1" value="0">
+            <input type="range" class="range-max" id="clearRangeMax" min="0" max="36" step="1" value="36" style="display:none;">
+          </div>
+          <div class="menu-range" style="grid-template-columns: 1fr; margin-bottom: 6px;">
+            <input type="number" id="pfClear" placeholder="0" min="0" max="36" step="1" value="0">
+          </div>
+          <div class="menu-note">feet (max 36')</div>
+          <button type="button" class="menu-apply" data-menu-apply="clear">Apply</button>
+        </div>
+      </div>
+
+      <div class="filter-segment">
+        <button class="filter-pill segment-left active" id="activeBtn" type="button">Active</button>
+        <div class="filter-pill has-menu segment-right" data-pill="dom">
+          <span class="filter-pill-text" id="domLabel">All</span>
+          <span class="filter-pill-caret">&#9662;</span>
+          <div class="filter-pill-menu">
+            <a href="#" data-dom="1">Last 1 day</a>
+            <a href="#" data-dom="3">Last 3 days</a>
+            <a href="#" data-dom="7">Last 7 days</a>
+            <a href="#" data-dom="30">Last 30 days</a>
+            <a href="#" data-dom="90">Last 90 days</a>
+            <a href="#" data-dom="all" class="dom-selected">All</a>
+            <a href="#" data-dom="90+">More than 90 days</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-segment" data-for-status="lease">
+        <button class="filter-pill segment-left" id="leasedBtn" type="button">Leased</button>
+        <div class="filter-pill has-menu segment-right" data-pill="leased">
+          <span class="filter-pill-text" id="leasedLabel"></span>
+          <span class="filter-pill-caret">&#9662;</span>
+          <div class="filter-pill-menu">
+            <a href="#" data-leased="30">Last 30 days</a>
+            <a href="#" data-leased="90">Last 90 days</a>
+            <a href="#" data-leased="180">Last 180 days</a>
+            <a href="#" data-leased="360">Last 360 days</a>
+            <a href="#" data-leased="2025">2025</a>
+            <a href="#" data-leased="2024">2024</a>
+            <a href="#" data-leased="2023">2023</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-segment" data-for-status="sale">
+        <button class="filter-pill segment-left" id="soldBtn" type="button">Sold</button>
+        <div class="filter-pill has-menu segment-right" data-pill="sold">
+          <span class="filter-pill-text" id="soldLabel"></span>
+          <span class="filter-pill-caret">&#9662;</span>
+          <div class="filter-pill-menu">
+            <a href="#" data-sold="30">Last 30 days</a>
+            <a href="#" data-sold="90">Last 90 days</a>
+            <a href="#" data-sold="180">Last 180 days</a>
+            <a href="#" data-sold="360">Last 360 days</a>
+            <a href="#" data-sold="2025">2025</a>
+            <a href="#" data-sold="2024">2024</a>
+            <a href="#" data-sold="2023">2023</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-pill has-menu" data-pill="dateAvail" id="dateAvailPill" style="display:none;">
+        <span class="filter-pill-text" id="dateAvailLabel">Date Available</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu wide date-menu">
+          <div class="menu-title">Date available</div>
+          <label class="date-label">Earliest
+            <input type="date" id="dateAvailFrom" class="date-input">
+          </label>
+          <label class="date-label" style="margin-top:8px;">Latest
+            <input type="date" id="dateAvailTo" class="date-input">
+          </label>
+          <div class="menu-current" id="dateAvailCurrent" style="margin-top:10px; cursor:pointer;" title="Click to clear">Anytime</div>
+          <div class="date-actions">
+            <button type="button" class="menu-clear" id="dateAvailClear">Clear</button>
+            <button type="button" class="menu-apply" id="dateAvailConfirm" data-menu-apply="dateAvail">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="filter-pill outline" id="openMoreFilters" type="button">More</button>
+
+      <button class="filter-pill ghost" id="clearAllFilters" type="button">Clear all</button>
+
+      <div class="filter-pill has-menu" data-pill="savedSearches">
+        <span class="filter-pill-text" id="savedSearchesLabel">Saved</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu" id="savedSearchesMenu">
+          <div class="saved-empty">No saved searches yet.</div>
+        </div>
+      </div>
+
+      <button class="filter-pill outline" id="saveSearchBtn" type="button">+ Save Search</button>
+
+      <div class="filter-pill has-menu" data-pill="trackedArea" id="trackedAreaPill">
+        <span class="filter-pill-text" id="trackedAreaLabel">
+          <svg class="tracked-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>Tracked area</span>
+        <span class="filter-pill-caret">&#9662;</span>
+        <div class="filter-pill-menu wide" id="trackedAreaMenu" style="min-width:260px;">
+          <div class="menu-title">Track an area</div>
+          <div class="tracked-thumb" id="trackedAreaThumb">
+            <div class="tracked-empty-hint">No area tracked yet</div>
+          </div>
+          <div class="tracked-stats" id="trackedAreaStats" hidden></div>
+          <div class="tracked-actions">
+            <button type="button" id="drawAreaPolyBtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 5 14 3 21 9 18 19 6 18"/></svg>Draw shape</button>
+            <button type="button" id="drawAreaCircleBtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/></svg>Draw circle</button>
+          </div>
+          <button type="button" class="tracked-clear-btn" id="clearTrackedArea" hidden>Clear tracked area</button>
+          <div class="tracked-tip">Click on the map to add corners. Hit <strong>Continue</strong> when you're done. Listings outside the area will be hidden.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="draw-toolbar" id="drawToolbar" hidden>
+    <button type="button" class="draw-btn" id="drawCancelBtn" title="Cancel">&times;</button>
+    <button type="button" class="draw-btn" id="drawUndoBtn" title="Undo last point">&#x21BA;</button>
+    <button type="button" class="draw-continue" id="drawContinueBtn" disabled>Continue</button>
+  </div>
+
+  <!-- Hidden state holders for the existing filter pipeline in map.js -->
+  <select class="filter-select" data-filter="for-lease" style="display:none;"><option value="all" selected>All</option><option value="off">Hide</option></select>
+  <select class="filter-select" data-filter="leased" style="display:none;"><option value="off" selected>Hide</option></select>
+  <select class="filter-select" data-filter="delisted-lease" style="display:none;"><option value="off" selected>Hide</option></select>
+  <select class="filter-select" data-filter="for-sale" style="display:none;"><option value="off" selected>Hide</option></select>
+  <select class="filter-select" data-filter="sold" style="display:none;"><option value="off" selected>Hide</option></select>
+  <select class="filter-select" data-filter="delisted-sale" style="display:none;"><option value="off" selected>Hide</option></select>
+
+  <!-- More filters drawer -->
+  <div id="moreFiltersPanel" class="more-panel" hidden>
+    <div class="more-panel-inner">
+      <div class="more-panel-head">
+        <h3>More filters</h3>
+      </div>
+
+      <div class="more-panel-keywords">
+        <label class="more-panel-label" for="pfKeywords">Description contains keywords</label>
+        <input type="text" id="pfKeywords" class="keywords-input" placeholder="e.g. clean room, ESFR, food-grade, rail-served">
+        <div class="more-panel-hint">Comma-separate multiple terms. We&rsquo;ll match listings whose description includes any of them.</div>
+      </div>
+
+      <div class="more-panel-grid">
+        <div class="prop-filter"><label>Max office %</label><input type="number" id="pfOfficeMax" placeholder="25" min="0" max="100" step="5"></div>
+        <div class="prop-filter"><label>Min warehouse %</label><input type="number" id="pfWhMin" placeholder="75" min="0" max="100" step="5"></div>
+        <div class="prop-filter"><label>Min power (A)</label><input type="number" id="pfPower" placeholder="200" min="0" step="50"></div>
+        <div class="prop-filter"><label>Min parking (stalls / 1k SF)</label><input type="number" id="pfParking" placeholder="1.2" min="0" step="0.1"></div>
+        <div class="prop-filter"><label>Min court depth (ft)</label><input type="number" id="pfCourt" placeholder="120" min="0" step="10"></div>
+        <div class="prop-filter"><label>Min slab load (PSF)</label><input type="number" id="pfSlab" placeholder="0" min="0" step="50" value="0"></div>
+        <div class="prop-filter">
+          <label>Landlord rating</label>
+          <div class="star-picker" id="pfStars">
+            <span class="star-opt on" data-stars="0">Any</span>
+            <span class="star-opt" data-stars="3">3&#9733;+</span>
+            <span class="star-opt" data-stars="4">4&#9733;+</span>
+            <span class="star-opt" data-stars="5">5&#9733;</span>
+          </div>
+        </div>
+        <div class="prop-filter"><label>Min industrial labour pool</label><input type="number" id="pfLabour" placeholder="5000" min="0" step="500"></div>
+        <div class="prop-filter"><label>Min daytime population</label><input type="number" id="pfDaytimePop" placeholder="25000" min="0" step="1000"></div>
+        <div class="prop-filter"><label>Min median household income ($)</label><input type="number" id="pfIncome" placeholder="80000" min="0" step="5000"></div>
+        <div class="prop-filter"><label>Zoning code (optional)</label><input type="text" id="pfZoneCode" placeholder="e.g. E2, M1, IL"></div>
+        <div class="prop-filter"><label>Truck length</label>
+          <select id="pfTruckLen">
+            <option value="any" selected>N/A</option>
+            <option value="24">24' straight box</option>
+            <option value="28">28' pup trailer</option>
+            <option value="40">40' (sea-can)</option>
+            <option value="48">48' standard</option>
+            <option value="53">53' standard</option>
+            <option value="75">75' B-train (LCV)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="more-panel-section">
+        <label class="more-panel-label">Building features</label>
+        <div class="feat-pills" id="pfFeats">
+          <span class="pill" data-feat="whitebox">Whitebox warehouse</span>
+          <span class="pill" data-feat="reno-office">Renovated office</span>
+          <span class="pill" data-feat="esfr">ESFR sprinklers</span>
+          <span class="pill" data-feat="3phase">600V 3-phase</span>
+          <span class="pill" data-feat="crane">Crane</span>
+          <span class="pill" data-feat="rail">Rail-served</span>
+          <span class="pill" data-feat="yard">Outside storage</span>
+          <span class="pill" data-feat="hvac">HVAC in warehouse</span>
+          <span class="pill" data-feat="food-grade">Food-grade finish</span>
+          <span class="pill" data-feat="cold-ready">Cold-ready</span>
+          <span class="pill" data-feat="heavy-power">Heavy power (400A+)</span>
+          <span class="pill" data-feat="ac-office">AC office</span>
+        </div>
+      </div>
+
+      <div class="more-panel-section">
+        <label class="more-panel-label">Zoning &middot; permitted uses</label>
+        <div class="feat-pills" id="pfZoning">
+          <span class="pill" data-zone="warehousing">Warehousing &amp; distribution</span>
+          <span class="pill" data-zone="light-mfg">Light manufacturing</span>
+          <span class="pill" data-zone="heavy-mfg">Heavy manufacturing</span>
+          <span class="pill" data-zone="outdoor-storage">Outdoor storage</span>
+          <span class="pill" data-zone="office">Office component</span>
+          <span class="pill" data-zone="retail-flex">Retail / showroom flex</span>
+          <span class="pill" data-zone="food-prod">Food &amp; beverage production</span>
+          <span class="pill" data-zone="truck-terminal">Truck terminal</span>
+          <span class="pill" data-zone="cannabis">Cannabis-eligible</span>
+        </div>
+      </div>
+
+      <div class="more-panel-foot">
+        <button class="btn btn-secondary" id="resetPropFilters">Reset</button>
+        <button class="btn btn-primary" id="applyMoreFilters">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Market stats strip — populated by stats.js from listings.json -->
+  <div class="market-stats-strip" id="marketStatsStrip">
+    <div class="stat-cell">
+      <div class="stat-label">Total comps</div>
+      <div class="stat-value" id="statTotal">610</div>
+      <div class="stat-meta">leased industrial · GTA · 2026</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Median achieved rent</div>
+      <div class="stat-value" id="statRent">$18.00<span class="stat-unit">/SF net</span></div>
+      <div class="stat-meta">mode $16.00 · low $15 · high $20</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Median TMI</div>
+      <div class="stat-value" id="statTmi">$6.00<span class="stat-unit">/SF</span></div>
+      <div class="stat-meta">mode $4.50 · all-in median ~$24</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Median DOM</div>
+      <div class="stat-value" id="statDom">74<span class="stat-unit">days</span></div>
+      <div class="stat-meta">mode 14 · mean 112</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">% above/below asking</div>
+      <div class="stat-value" id="statPct">99<span class="stat-unit">%</span></div>
+      <div class="stat-meta">deals close at asking on median</div>
+    </div>
+    <div class="stat-cell stat-cell-regions">
+      <div class="stat-label">Regions</div>
+      <div class="stat-regions">
+        <span class="stat-region"><b>Peel</b>&nbsp;230</span>
+        <span class="stat-region"><b>Toronto</b>&nbsp;161</span>
+        <span class="stat-region"><b>York</b>&nbsp;142</span>
+        <span class="stat-region"><b>Halton</b>&nbsp;41</span>
+        <span class="stat-region"><b>Durham</b>&nbsp;36</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-grid">
+    <aside class="map-sidebar">
+      <div class="map-sidebar-head">
+        <h3>Availabilities</h3>
+        <span class="count" id="listingsCount">8 matching</span>
+      </div>
+      <div class="listing-cards" id="listingCards">
+        <div class="empty-listings" id="emptyListings">No availabilities loaded yet. Add comps to <code>listings.json</code> and refresh.</div>
+      </div>
+    </aside>
+    <div id="leafletMap"></div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="tracked.html">Saved Searches</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="labour-data.js"></script>
+<script src="map.js"></script>
+<script src="market.js"></script>
+<script src="compare.js"></script>
+<script src="ai-broker.js"></script>
+<script>
+(function(){
+  // ===== Dual-handle range sliders for Price + Size + single-handle for Clear =====
+  function setupRangeSlider(container, onChange){
+    if (!container) return;
+    var minS = container.querySelector('.range-min');
+    var maxS = container.querySelector('.range-max');
+    var minN = document.getElementById(container.dataset.minInput);
+    var maxN = container.dataset.maxInput ? document.getElementById(container.dataset.maxInput) : null;
+    var fill = container.querySelector('.range-fill');
+    function pct(v){ var lo = parseFloat(minS.min), hi = parseFloat(minS.max); return ((parseFloat(v) - lo) / (hi - lo)) * 100; }
+    function updateFill(){
+      var a = Math.min(parseFloat(minS.value), parseFloat(maxS.value));
+      var b = Math.max(parseFloat(minS.value), parseFloat(maxS.value));
+      fill.style.left = pct(a) + '%';
+      fill.style.width = (pct(b) - pct(a)) + '%';
+    }
+    minS.addEventListener('input', function(){
+      if (parseFloat(minS.value) > parseFloat(maxS.value)) minS.value = maxS.value;
+      if (minN) { minN.value = (parseFloat(minS.value) === parseFloat(minS.min)) ? '' : minS.value; }
+      updateFill(); if (onChange) onChange();
+    });
+    maxS.addEventListener('input', function(){
+      if (parseFloat(maxS.value) < parseFloat(minS.value)) maxS.value = minS.value;
+      if (maxN) { maxN.value = (parseFloat(maxS.value) === parseFloat(maxS.max)) ? '' : maxS.value; }
+      updateFill(); if (onChange) onChange();
+    });
+    if (minN) minN.addEventListener('input', function(){ minS.value = (minN.value === '') ? minS.min : minN.value; updateFill(); });
+    if (maxN) maxN.addEventListener('input', function(){ maxS.value = (maxN.value === '') ? maxS.max : maxN.value; updateFill(); });
+    updateFill();
+    container._updateFill = updateFill;
+  }
+  // Sliders deliberately have NO onChange pill updates — pill labels only refresh on Apply
+  // so the pill width doesn't bounce while the user is dragging. The size slider uses an
+  // in-dropdown live preview (#sizeCurrent) so commas-formatted values are still visible.
+  function updateSizeCurrent(){
+    var lo = (document.getElementById('pfSizeMin')||{}).value || '';
+    var hi = (document.getElementById('pfSizeMax')||{}).value || '';
+    var el = document.getElementById('sizeCurrent'); if (!el) return;
+    if (!lo && !hi){ el.textContent = 'Any size'; return; }
+    var loF = lo ? Math.round(parseFloat(lo)).toLocaleString() : '0';
+    var hiF = hi ? Math.round(parseFloat(hi)).toLocaleString() : 'Max';
+    el.textContent = loF + ' \u2013 ' + hiF + ' SF';
+  }
+  setupRangeSlider(document.getElementById('priceSlider'));
+  setupRangeSlider(document.getElementById('sizeSlider'), function(){ updateSizeCurrent(); });
+  setupRangeSlider(document.getElementById('clearSlider'));
+  function updateAcresLabel(){
+    var lo = (document.getElementById('acresMin')||{}).value || '';
+    var hi = (document.getElementById('acresMax')||{}).value || '';
+    var lbl = document.getElementById('acresLabel'); if (!lbl) return;
+    lbl.textContent = (lo || hi) ? ((lo||'0') + ' - ' + (hi||'10') + ' ac') : 'Acres';
+  }
+  setupRangeSlider(document.getElementById('acresSlider'));
+
+  // ===== Date Available =====
+  function fmtDateShort(d){
+    if (!d) return '';
+    var parts = String(d).split('-');
+    if (parts.length !== 3) return d;
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var m = months[parseInt(parts[1],10)-1] || '';
+    return m + ' ' + parseInt(parts[2],10) + ', ' + parts[0];
+  }
+  function updateDateAvailCurrent(){
+    var from = (document.getElementById('dateAvailFrom')||{}).value || '';
+    var to = (document.getElementById('dateAvailTo')||{}).value || '';
+    var el = document.getElementById('dateAvailCurrent'); if (!el) return;
+    if (!from && !to){ el.textContent = 'Anytime'; return; }
+    el.textContent = (from ? fmtDateShort(from) : 'Anytime') + ' \u2013 ' + (to ? fmtDateShort(to) : 'Anytime');
+  }
+  function refreshDateAvailVisibility(){
+    var pill = document.getElementById('dateAvailPill'); if (!pill) return;
+    var show = (typeof currentStatus !== 'undefined') && (currentStatus === 'for-lease' || currentStatus === 'for-sale');
+    pill.style.display = show ? '' : 'none';
+  }
+  ['dateAvailFrom','dateAvailTo'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateDateAvailCurrent);
+  });
+  function clearDateAvail(closeDropdown){
+    var f = document.getElementById('dateAvailFrom'); if (f) f.value = '';
+    var t = document.getElementById('dateAvailTo'); if (t) t.value = '';
+    var lbl = document.getElementById('dateAvailLabel'); if (lbl) lbl.textContent = 'All dates';
+    updateDateAvailCurrent();
+    if (closeDropdown){
+      var pill = document.getElementById('dateAvailPill');
+      if (pill) pill.classList.remove('open');
+    }
+  }
+  var __dac = document.getElementById('dateAvailCurrent');
+  if (__dac) __dac.addEventListener('click', function(e){ e.stopPropagation(); clearDateAvail(true); });
+  var __dacb = document.getElementById('dateAvailClear');
+  if (__dacb) __dacb.addEventListener('click', function(e){ e.stopPropagation(); clearDateAvail(true); });
+
+  // ===== For-sale price unit (\$/SF vs \$ total) =====
+  var saleUnit = 'psf';
+  function fmtTotal(v){
+    v = parseFloat(v); if (isNaN(v)) return '';
+    if (v >= 1000000) return '$' + (v/1000000).toFixed(2).replace(/\.?0+$/,'') + 'M';
+    if (v >= 1000) return '$' + Math.round(v/1000) + 'k';
+    return '$' + v;
+  }
+  function applyPriceScale(){
+    var minS = document.getElementById('priceRangeMin');
+    var maxS = document.getElementById('priceRangeMax');
+    var minN = document.getElementById('priceMin');
+    var maxN = document.getElementById('priceMax');
+    var note = document.getElementById('priceNote');
+    var slider = document.getElementById('priceSlider');
+    if (!minS || !maxS) return;
+    var lo, hi, step, noteText, ph = ['Min','Max'];
+    var sale = (typeof currentStatus !== 'undefined' && currentStatus === 'for-sale');
+    if (sale){
+      if (saleUnit === 'psf'){ lo=0; hi=800; step=10; noteText='$ / SF'; }
+      else { lo=0; hi=10000000; step=50000; noteText='$ total'; ph=['e.g. 1,000,000','e.g. 5,000,000']; }
+    } else {
+      lo=0; hi=30; step=0.25; noteText='$ / SF / yr net';
+    }
+    minS.min = lo; minS.max = hi; minS.step = step; minS.value = lo;
+    maxS.min = lo; maxS.max = hi; maxS.step = step; maxS.value = hi;
+    if (minN){ minN.value=''; minN.min=lo; minN.step=step; minN.placeholder=ph[0]; }
+    if (maxN){ maxN.value=''; maxN.min=lo; maxN.step=step; maxN.placeholder=ph[1]; }
+    if (note) note.textContent = noteText;
+    if (slider && slider._updateFill) slider._updateFill();
+    updatePriceLabel();
+  }
+  function updatePriceLabel(){
+    var lbl = document.getElementById('priceLabel'); if (!lbl) return;
+    var loVal = (document.getElementById('priceMin')||{}).value || '';
+    var hiVal = (document.getElementById('priceMax')||{}).value || '';
+    var sale = (typeof currentStatus !== 'undefined' && currentStatus === 'for-sale');
+    if (!loVal && !hiVal){
+      lbl.textContent = sale ? '$0 - Max' : '$0 - Max';
+      return;
+    }
+    if (sale && saleUnit === 'total'){
+      lbl.textContent = (loVal ? fmtTotal(loVal) : '$0') + ' - ' + (hiVal ? fmtTotal(hiVal) : 'Max');
+    } else if (sale){
+      lbl.textContent = '$' + (loVal||'0') + ' - $' + (hiVal||'Max') + '/SF';
+    } else {
+      var loFmt = loVal ? '$' + parseFloat(loVal).toFixed(2) : '$0.00';
+      var hiFmt = hiVal ? '$' + parseFloat(hiVal).toFixed(2) : 'Max';
+      lbl.textContent = loFmt + ' - ' + hiFmt;
+    }
+  }
+  document.querySelectorAll('#priceUnitToggle button').forEach(function(b){
+    b.addEventListener('click', function(e){
+      e.stopPropagation();
+      saleUnit = b.dataset.priceUnit;
+      document.querySelectorAll('#priceUnitToggle button').forEach(function(x){ x.classList.remove('active'); });
+      b.classList.add('active');
+      applyPriceScale();
+    });
+  });
+
+  // ===== Pill dropdown open/close =====
+  var pills = document.querySelectorAll('.filter-pill.has-menu');
+  pills.forEach(function(pill){
+    pill.addEventListener('click', function(e){
+      if (e.target.closest('.filter-pill-menu')) return;
+      var wasOpen = pill.classList.contains('open');
+      pills.forEach(function(p){ p.classList.remove('open'); });
+      if (!wasOpen) pill.classList.add('open');
+    });
+  });
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('.filter-pill')) pills.forEach(function(p){ p.classList.remove('open'); });
+  });
+
+  function setSelect(name, value){
+    var sel = document.querySelector('select.filter-select[data-filter="'+name+'"]');
+    if (!sel) return;
+    if (!sel.querySelector('option[value="'+value+'"]')){
+      var opt = document.createElement('option'); opt.value = value; opt.textContent = value; sel.appendChild(opt);
+    }
+    sel.value = value; sel.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  var LISTING_KINDS = ['for-lease','leased','delisted-lease','for-sale','sold','delisted-sale'];
+  var currentStatus = 'for-lease', currentTime = 'all', activeMode = true, currentPropType = 'all';
+  function refreshAcresVisibility(){
+    var pill = document.getElementById('acresPill'); if (!pill) return;
+    var show = ((currentStatus === 'for-lease' || currentStatus === 'for-sale') && currentPropType === 'freestand');
+    pill.style.display = show ? '' : 'none';
+  }
+
+  function applyStatusAndTime(){
+    LISTING_KINDS.forEach(function(k){
+      if (currentStatus === 'all'){ setSelect(k, currentTime === 'off' ? 'off' : currentTime); }
+      else if (k === currentStatus){ setSelect(k, currentTime); }
+      else { setSelect(k, 'off'); }
+    });
+  }
+  function refreshStatusDependentUI(){
+    var mode = (currentStatus === 'for-sale') ? 'sale' : 'lease';
+    document.querySelectorAll('.filter-pill-menu [data-for-status], .filter-pill[data-for-status], .filter-segment[data-for-status]').forEach(function(a){
+      var allowed = (a.dataset.forStatus || '').split(',').map(function(s){ return s.trim(); });
+      a.style.display = allowed.indexOf(mode) !== -1 ? '' : 'none';
+    });
+    var pt = document.getElementById('priceTitle');
+    if (pt) pt.textContent = (mode === 'lease') ? 'Net Rent' : 'Price';
+    if (typeof applyPriceScale === 'function') applyPriceScale();
+    if (typeof refreshAcresVisibility === 'function') refreshAcresVisibility();
+    if (typeof refreshDateAvailVisibility === 'function') refreshDateAvailVisibility();
+  }
+
+  // Status pill
+  document.querySelectorAll('[data-status]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      currentStatus = a.dataset.status;
+      document.getElementById('statusLabel').textContent = a.textContent;
+      refreshStatusDependentUI();
+      applyStatusAndTime();
+      a.closest('.filter-pill').classList.remove('open');
+    });
+  });
+  refreshStatusDependentUI();
+
+  // DOM (Active|All right segment)
+  document.querySelectorAll('[data-dom]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      currentTime = (a.dataset.dom === 'all') ? 'all' : a.dataset.dom;
+      a.closest('.filter-pill-menu').querySelectorAll('a').forEach(function(x){ x.classList.remove('dom-selected'); });
+      a.classList.add('dom-selected');
+      document.getElementById('domLabel').textContent = a.textContent;
+      applyStatusAndTime();
+      a.closest('.filter-pill').classList.remove('open');
+    });
+  });
+
+  // Active toggle
+  var activeBtn = document.getElementById('activeBtn');
+  if (activeBtn){
+    activeBtn.addEventListener('click', function(){
+      activeMode = !activeMode;
+      activeBtn.classList.toggle('active', activeMode);
+      if (activeMode){ if (currentStatus !== 'for-lease' && currentStatus !== 'for-sale') currentStatus = 'for-lease'; }
+      else { currentStatus = 'all'; }
+      applyStatusAndTime();
+      refreshDateAvailVisibility();
+    });
+  }
+
+  // Leased segmented
+  var leasedBtn = document.getElementById('leasedBtn'), leasedMode = false;
+  document.querySelectorAll('[data-leased]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      leasedMode = true;
+      if (leasedBtn) leasedBtn.classList.add('active');
+      currentStatus = 'leased'; currentTime = a.dataset.leased;
+      document.getElementById('leasedLabel').textContent = a.textContent;
+      a.closest('.filter-pill-menu').querySelectorAll('a').forEach(function(x){ x.classList.remove('dom-selected'); });
+      a.classList.add('dom-selected');
+      applyStatusAndTime();
+      a.closest('.filter-pill').classList.remove('open');
+    });
+  });
+  if (leasedBtn){
+    leasedBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      leasedMode = !leasedMode;
+      leasedBtn.classList.toggle('active', leasedMode);
+      if (leasedMode){ currentStatus = 'leased'; if (!currentTime || currentTime === 'all') currentTime = '90'; }
+      else { currentStatus = 'for-lease'; document.getElementById('statusLabel').textContent = 'For Lease'; refreshStatusDependentUI(); }
+      applyStatusAndTime();
+    });
+  }
+
+  // Sold segmented
+  var soldBtn = document.getElementById('soldBtn'), soldMode = false;
+  document.querySelectorAll('[data-sold]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      soldMode = true;
+      if (soldBtn) soldBtn.classList.add('active');
+      currentStatus = 'sold'; currentTime = a.dataset.sold;
+      document.getElementById('soldLabel').textContent = a.textContent;
+      a.closest('.filter-pill-menu').querySelectorAll('a').forEach(function(x){ x.classList.remove('dom-selected'); });
+      a.classList.add('dom-selected');
+      applyStatusAndTime();
+      a.closest('.filter-pill').classList.remove('open');
+    });
+  });
+  if (soldBtn){
+    soldBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      soldMode = !soldMode;
+      soldBtn.classList.toggle('active', soldMode);
+      if (soldMode){ currentStatus = 'sold'; if (!currentTime || currentTime === 'all') currentTime = '90'; }
+      else { currentStatus = 'for-sale'; document.getElementById('statusLabel').textContent = 'For Sale'; refreshStatusDependentUI(); }
+      applyStatusAndTime();
+    });
+  }
+
+  // Property type
+  document.querySelectorAll('[data-proptype]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      currentPropType = a.dataset.proptype || 'all';
+      document.getElementById('proptypeLabel').textContent = a.textContent;
+      refreshAcresVisibility();
+      a.closest('.filter-pill').classList.remove('open');
+    });
+  });
+
+  // Truck length lives inside More filters now — no top-bar pill behaviour needed.
+
+  // Outside storage toggle
+  var outsidePill = document.getElementById('outsideStoragePill');
+  if (outsidePill){
+    outsidePill.addEventListener('click', function(){
+      var on = !outsidePill.classList.contains('active');
+      outsidePill.classList.toggle('active', on);
+      var hidden = document.querySelector('#pfFeats .pill[data-feat="yard"]');
+      if (hidden) hidden.classList.toggle('on', on);
+    });
+  }
+
+  // Feat-pills + zoning multi-select
+  document.querySelectorAll('#pfFeats .pill, #pfZoning .pill').forEach(function(p){
+    p.addEventListener('click', function(){ p.classList.toggle('on'); });
+  });
+  // Star-picker
+  document.querySelectorAll('.star-opt').forEach(function(s){
+    s.addEventListener('click', function(){
+      document.querySelectorAll('.star-opt').forEach(function(x){ x.classList.remove('on'); });
+      s.classList.add('on');
+    });
+  });
+
+  // Menu apply (price/size/doors/clear)
+  document.querySelectorAll('.menu-apply').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var kind = btn.dataset.menuApply;
+      if (kind === 'size'){
+        var lo = document.getElementById('pfSizeMin').value, hi = document.getElementById('pfSizeMax').value;
+        var loF = lo ? Math.round(parseFloat(lo)).toLocaleString() : '0';
+        var hiF = hi ? Math.round(parseFloat(hi)).toLocaleString() : 'Max';
+        document.getElementById('sizeLabel').textContent = (lo || hi) ? (loF + ' - ' + hiF + ' SF') : 'Size';
+        updateSizeCurrent();
+      } else if (kind === 'price'){
+        updatePriceLabel();
+      } else if (kind === 'doors'){
+        var dk = document.getElementById('pfDock').value, di = document.getElementById('pfDriveIn').value;
+        var dt = (dk ? dk + ' dock' : '') + (dk && di ? ' / ' : '') + (di ? di + ' D/I' : '');
+        document.getElementById('doorsLabel').textContent = dt || 'Shipping Doors';
+      } else if (kind === 'clear'){
+        var ch = document.getElementById('pfClear').value;
+        document.getElementById('clearLabel').textContent = (ch && parseFloat(ch) > 0) ? (ch + "' clear min") : 'Clear Height';
+      } else if (kind === 'acres'){
+        updateAcresLabel();
+      } else if (kind === 'dateAvail'){
+        var fromV = (document.getElementById('dateAvailFrom')||{}).value || '';
+        var toV = (document.getElementById('dateAvailTo')||{}).value || '';
+        var dlbl = document.getElementById('dateAvailLabel');
+        if (dlbl){
+          if (!fromV && !toV) dlbl.textContent = 'All dates';
+          else dlbl.textContent = (fromV ? fmtDateShort(fromV) : 'Anytime') + ' \u2013 ' + (toV ? fmtDateShort(toV) : 'Anytime');
+        }
+        updateDateAvailCurrent();
+      }
+      btn.closest('.filter-pill').classList.remove('open');
+    });
+  });
+
+  // More drawer
+  var openMore = document.getElementById('openMoreFilters');
+  var panel = document.getElementById('moreFiltersPanel');
+  var closeMore = document.getElementById('closeMoreFilters');
+  var applyMore = document.getElementById('applyMoreFilters');
+  if (openMore && panel) openMore.addEventListener('click', function(){ panel.removeAttribute('hidden'); });
+  if (closeMore && panel) closeMore.addEventListener('click', function(){ panel.setAttribute('hidden',''); });
+  if (applyMore && panel) applyMore.addEventListener('click', function(){ panel.setAttribute('hidden',''); });
+  // Click outside the inner popup closes the More panel. Values live in the input DOM,
+  // so closing this way effectively saves what the user changed (no extra commit needed).
+  document.addEventListener('mousedown', function(e){
+    if (!panel || panel.hasAttribute('hidden')) return;
+    if (e.target.closest('.more-panel-inner')) return; // click inside the popup — keep open
+    if (e.target.closest('#openMoreFilters')) return;  // the button that opens it
+    panel.setAttribute('hidden','');
+  });
+  // Esc also closes the More panel
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && panel && !panel.hasAttribute('hidden')) panel.setAttribute('hidden','');
+  });
+  document.getElementById('resetPropFilters') && document.getElementById('resetPropFilters').addEventListener('click', function(){
+    ['pfOfficeMax','pfWhMin','pfPower','pfParking','pfCourt','pfSlab','pfLabour','pfDaytimePop','pfIncome','pfZoneCode','pfKeywords'].forEach(function(id){
+      var el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.querySelectorAll('#pfFeats .pill, #pfZoning .pill').forEach(function(p){ p.classList.remove('on'); });
+    document.querySelectorAll('.star-opt').forEach(function(s){ s.classList.toggle('on', s.dataset.stars === '0'); });
+  });
+
+  // Clear all
+  var clearAll = document.getElementById('clearAllFilters');
+  if (clearAll){
+    clearAll.addEventListener('click', function(){
+      document.getElementById('statusLabel').textContent = 'For Lease';
+      document.getElementById('proptypeLabel').textContent = 'All property types';
+      document.getElementById('priceLabel').textContent = '$0 - Max';
+      document.getElementById('sizeLabel').textContent = 'Size';
+      document.getElementById('doorsLabel').textContent = 'Shipping Doors';
+      document.getElementById('clearLabel').textContent = 'Clear Height';
+      var tl = document.getElementById('pfTruckLen'); if (tl) tl.value = 'any';
+      document.getElementById('domLabel').textContent = 'All';
+      document.getElementById('leasedLabel').textContent = '';
+      document.getElementById('soldLabel').textContent = '';
+      var ab = document.getElementById('activeBtn'); if (ab) ab.classList.add('active'); activeMode = true;
+      var lb = document.getElementById('leasedBtn'); if (lb) lb.classList.remove('active'); leasedMode = false;
+      var sb = document.getElementById('soldBtn'); if (sb) sb.classList.remove('active'); soldMode = false;
+      currentStatus = 'for-lease'; currentTime = 'all'; saleUnit = 'psf'; currentPropType = 'all';
+      document.querySelectorAll('#priceUnitToggle button').forEach(function(b){ b.classList.toggle('active', b.dataset.priceUnit === 'psf'); });
+      document.getElementById('acresLabel').textContent = 'Acres';
+      ['pfSizeMin','pfSizeMax','priceMin','priceMax','pfClear','pfDock','pfDriveIn','pfOfficeMax','pfWhMin','pfPower','pfParking','pfCourt','pfSlab','pfLabour','pfDaytimePop','pfIncome','pfZoneCode','pfKeywords','acresMin','acresMax'].forEach(function(id){
+        var el = document.getElementById(id); if (el) el.value = '';
+      });
+      refreshAcresVisibility();
+      ['dateAvailFrom','dateAvailTo'].forEach(function(id){ var el = document.getElementById(id); if (el) el.value = ''; });
+      var dl = document.getElementById('dateAvailLabel'); if (dl) dl.textContent = 'Date Available';
+      updateDateAvailCurrent();
+      refreshDateAvailVisibility();
+      document.querySelectorAll('#pfFeats .pill, #pfZoning .pill').forEach(function(p){ p.classList.remove('on'); });
+      document.querySelectorAll('.star-opt').forEach(function(s){ s.classList.toggle('on', s.dataset.stars === '0'); });
+      var os = document.getElementById('outsideStoragePill'); if (os) os.classList.remove('active');
+      refreshStatusDependentUI();
+      applyStatusAndTime();
+    });
+  }
+
+  // Saved searches dropdown
+  function loadSavedSearches(){ try { return JSON.parse(localStorage.getItem('industrio.savedSearches')) || []; } catch(e){ return []; } }
+  function persistSavedSearches(arr){ try { localStorage.setItem('industrio.savedSearches', JSON.stringify(arr)); } catch(e){} }
+  function refreshSavedSearches(){
+    var menu = document.getElementById('savedSearchesMenu');
+    var label = document.getElementById('savedSearchesLabel');
+    if (!menu) return;
+    var arr = loadSavedSearches();
+    if (!arr.length){ menu.innerHTML = '<div class="saved-empty">No saved searches yet.</div>'; if (label) label.textContent = 'Saved'; return; }
+    menu.innerHTML = arr.map(function(s){
+      var c = s.criteria || {};
+      var sub = [];
+      if (c.location) sub.push(String(c.location).split(',')[0]);
+      if (c.sizeMin || c.sizeMax) sub.push((c.sizeMin ? Math.round(c.sizeMin/1000)+'k' : '0') + '-' + (c.sizeMax ? Math.round(c.sizeMax/1000)+'k' : 'max') + ' SF');
+      if (s.createdAt) sub.push('saved ' + s.createdAt);
+      return '<div class="saved-search-row"><a data-apply="' + s.id + '">' + s.name + '<span class="meta">' + sub.join(' \u00b7 ') + '</span></a><button class="saved-delete" data-delete="' + s.id + '" title="Delete">&times;</button></div>';
+    }).join('');
+    if (label) label.textContent = 'Saved (' + arr.length + ')';
+  }
+  function applySavedSearch(id){
+    var s = loadSavedSearches().find(function(x){ return x.id === id; });
+    if (!s) return;
+    var c = s.criteria || {};
+    function setVal(id, v){ var el = document.getElementById(id); if (!el) return; el.value = (v == null ? '' : v); }
+    setVal('pfSizeMin', c.sizeMin); setVal('pfSizeMax', c.sizeMax);
+    setVal('priceMin', c.rentMin); setVal('priceMax', c.rentMax);
+    setVal('pfClear', c.clearMin); setVal('pfDock', c.dockMin); setVal('pfDriveIn', c.driveInMin);
+    setVal('pfOfficeMax', c.officeMax); setVal('pfWhMin', c.whMin);
+    setVal('pfPower', c.power); setVal('pfParking', c.parking);
+    setVal('pfCourt', c.court); setVal('pfSlab', c.slab);
+    setVal('pfLabour', c.minLabour); setVal('pfDaytimePop', c.minDaytimePop); setVal('pfIncome', c.minIncome);
+    setVal('pfZoneCode', c.zoneCode);
+    if (c.location){ var na = document.getElementById('navSearchInput'); if (na) na.value = c.location; }
+    if (Array.isArray(c.permittedUses)){
+      document.querySelectorAll('#pfZoning .pill').forEach(function(p){ p.classList.toggle('on', c.permittedUses.indexOf(p.dataset.zone) !== -1); });
+    }
+    if (Array.isArray(c.features)){
+      document.querySelectorAll('#pfFeats .pill').forEach(function(p){ p.classList.toggle('on', c.features.indexOf(p.dataset.feat) !== -1); });
+      var os = document.getElementById('outsideStoragePill'); if (os) os.classList.toggle('active', c.features.indexOf('yard') !== -1);
+    }
+    if (c.maxTruckLength){
+      var tl = document.getElementById('pfTruckLen'); if (tl) tl.value = c.maxTruckLength;
+    }
+    if (c.sizeMin || c.sizeMax) document.getElementById('sizeLabel').textContent = (c.sizeMin || '0') + ' - ' + (c.sizeMax || 'Max') + ' SF';
+    if (c.rentMin || c.rentMax) document.getElementById('priceLabel').textContent = '$ ' + (c.rentMin || '0') + ' - ' + (c.rentMax || 'Max');
+    if (c.clearMin) document.getElementById('clearLabel').textContent = c.clearMin + "' clear min";
+    if (c.status){ currentStatus = c.status; document.getElementById('statusLabel').textContent = (c.status === 'for-sale') ? 'For Sale' : 'For Lease'; refreshStatusDependentUI(); }
+    applyStatusAndTime();
+    var pill = document.querySelector('.filter-pill[data-pill="savedSearches"]'); if (pill) pill.classList.remove('open');
+  }
+  document.addEventListener('click', function(e){
+    var apply = e.target.closest('[data-apply]');
+    if (apply){ e.preventDefault(); applySavedSearch(apply.dataset.apply); return; }
+    var del = e.target.closest('[data-delete]');
+    if (del){ e.preventDefault(); e.stopPropagation();
+      if (window.confirm('Delete this saved search?')){
+        var arr = loadSavedSearches().filter(function(x){ return x.id !== del.dataset.delete; });
+        persistSavedSearches(arr);
+        refreshSavedSearches();
+      }
+    }
+  });
+
+  // Save search
+  var saveBtn = document.getElementById('saveSearchBtn');
+  if (saveBtn){
+    saveBtn.addEventListener('click', function(){
+      function val(id){ var el = document.getElementById(id); return el ? el.value : ''; }
+      var loc = val('navSearchInput') || 'GTA';
+      var sizeMin = parseFloat(val('pfSizeMin')) || null, sizeMax = parseFloat(val('pfSizeMax')) || null;
+      var d = new Date(), pad = function(n){ return n < 10 ? '0' + n : n; };
+      var sizeLabel = (sizeMin || sizeMax) ? ((sizeMin ? Math.round(sizeMin/1000)+'k' : '0') + '-' + (sizeMax ? Math.round(sizeMax/1000)+'k' : 'max') + ' SF') : '';
+      var defaultName = (loc.split(',')[0] || 'Search') + (sizeLabel ? ' \u00b7 ' + sizeLabel : '');
+      var name = window.prompt('Name this saved search:', defaultName);
+      if (!name) return;
+      var entry = {
+        id: 'srch-' + Date.now(),
+        name: name.trim(),
+        createdAt: d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()),
+        criteria: {
+          status: currentStatus, location: loc,
+          sizeMin: sizeMin, sizeMax: sizeMax,
+          clearMin: parseFloat(val('pfClear')) || null,
+          dockMin: parseFloat(val('pfDock')) || null,
+          driveInMin: parseFloat(val('pfDriveIn')) || null,
+          rentMin: parseFloat(val('priceMin')) || null,
+          rentMax: parseFloat(val('priceMax')) || null,
+          minLabour: parseFloat(val('pfLabour')) || null,
+          minDaytimePop: parseFloat(val('pfDaytimePop')) || null,
+          minIncome: parseFloat(val('pfIncome')) || null,
+          zoneCode: val('pfZoneCode') || null,
+          permittedUses: Array.from(document.querySelectorAll('#pfZoning .pill.on')).map(function(p){ return p.dataset.zone; }),
+          features: Array.from(document.querySelectorAll('#pfFeats .pill.on')).map(function(p){ return p.dataset.feat; }),
+          maxTruckLength: ((document.getElementById('pfTruckLen') || {}).value) || 'any'
+        }
+      };
+      var arr = []; try { arr = JSON.parse(localStorage.getItem('industrio.savedSearches')) || []; } catch(e){}
+      arr.unshift(entry);
+      try { localStorage.setItem('industrio.savedSearches', JSON.stringify(arr)); } catch(e){}
+      saveBtn.textContent = 'Saved \u2713';
+      refreshSavedSearches();
+      setTimeout(function(){ saveBtn.textContent = '+ Save Search'; }, 1500);
+    });
+  }
+  refreshSavedSearches();
+
+  // ===== Sidebar listing-card -> map dot hover linkage =====
+  function bindSidebarCardHover(){
+    if (!window.industrioMap || !window.L) return false;
+    var map = window.industrioMap;
+    var NAVY = '#0f1e4e', TEAL = '#0d9488', RED = '#dc2626';
+    var cards = document.querySelectorAll('#listingCards .listing-card');
+    cards.forEach(function(card){
+      var lat = parseFloat(card.getAttribute('data-lat'));
+      var lng = parseFloat(card.getAttribute('data-lng'));
+      if (isNaN(lat) || isNaN(lng)) return;
+      var isSale = !!card.querySelector('.listing-status-badge.sale');
+      var baseColor = isSale ? TEAL : NAVY;
+      var marker = L.circleMarker([lat, lng], { radius:9, fillColor:baseColor, color:'#ffffff', weight:2, fillOpacity:0.95, opacity:1 }).addTo(map);
+      var addrEl = card.querySelector('.listing-address');
+      if (addrEl) marker.bindPopup('<strong>' + addrEl.textContent + '</strong>');
+      card._mapMarker = marker;
+      card._mapBaseColor = baseColor;
+      card.addEventListener('mouseenter', function(){
+        if (!card._mapMarker) return;
+        card._mapMarker.setStyle({ fillColor:'#dc2626', color:'#dc2626', radius:11 });
+        if (card._mapMarker.bringToFront) card._mapMarker.bringToFront();
+      });
+      card.addEventListener('mouseleave', function(){
+        if (!card._mapMarker) return;
+        card._mapMarker.setStyle({ fillColor: card._mapBaseColor, color:'#ffffff', radius:9 });
+      });
+      card.addEventListener('click', function(){
+        // Mark this card selected — reveals the .recent-views-line in the body
+        document.querySelectorAll('#listingCards .listing-card.selected').forEach(function(c){
+          if (c !== card) c.classList.remove('selected');
+        });
+        card.classList.add('selected');
+        if (!card._mapMarker) return;
+        map.setView([lat, lng], Math.max(map.getZoom(), 13), { animate: true });
+        card._mapMarker.openPopup();
+      });
+    });
+    return true;
+  }
+  (function tryBind(retries){
+    if (bindSidebarCardHover()) return;
+    if (retries <= 0) return;
+    setTimeout(function(){ tryBind(retries - 1); }, 120);
+  })(20);
+
+  // ===== Tracked area: draw a polygon/circle on the map and filter listings to it =====
+  var trackedArea = null;
+  var trackedAreaLayer = null;
+  var draw = null;
+
+  function pointInPolygon(lat, lng, ring){
+    var inside = false;
+    for (var i = 0, j = ring.length - 1; i < ring.length; j = i++){
+      var xi = ring[i].lng, yi = ring[i].lat;
+      var xj = ring[j].lng, yj = ring[j].lat;
+      var hit = ((yi > lat) !== (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+      if (hit) inside = !inside;
+    }
+    return inside;
+  }
+  function pointInTrackedArea(lat, lng){
+    if (!trackedArea) return true;
+    if (trackedArea.type === 'polygon') return pointInPolygon(lat, lng, trackedArea.latlngs);
+    if (trackedArea.type === 'circle'){
+      var c = L.latLng(trackedArea.center.lat, trackedArea.center.lng);
+      return c.distanceTo([lat, lng]) <= trackedArea.radius;
+    }
+    return true;
+  }
+
+  function applyTrackedAreaFilter(){
+    if (!window.industrioMap) return;
+    var map = window.industrioMap;
+    var visible = 0;
+    document.querySelectorAll('#listingCards .listing-card').forEach(function(card){
+      var lat = parseFloat(card.getAttribute('data-lat'));
+      var lng = parseFloat(card.getAttribute('data-lng'));
+      var ok = (isNaN(lat) || isNaN(lng)) ? true : pointInTrackedArea(lat, lng);
+      card.style.display = ok ? '' : 'none';
+      if (card._mapMarker){
+        if (ok){ if (!map.hasLayer(card._mapMarker)) card._mapMarker.addTo(map); }
+        else { if (map.hasLayer(card._mapMarker)) map.removeLayer(card._mapMarker); }
+      }
+      if (ok) visible++;
+    });
+    var countEl = document.getElementById('listingsCount');
+    if (countEl) countEl.textContent = visible + ' matching';
+
+    map.eachLayer(function(layer){
+      if (layer === trackedAreaLayer) return;
+      if (!layer._meta) return;
+      if (!layer.getLatLng) return;
+      var ll = layer.getLatLng();
+      var ok = pointInTrackedArea(ll.lat, ll.lng);
+      if (layer.setStyle) layer.setStyle({ opacity: ok ? 1 : 0, fillOpacity: ok ? 0.95 : 0 });
+    });
+    refreshTrackedAreaUI();
+  }
+
+  function refreshTrackedAreaUI(){
+    var pill = document.getElementById('trackedAreaPill');
+    var label = document.getElementById('trackedAreaLabel');
+    var clearBtn = document.getElementById('clearTrackedArea');
+    var thumb = document.getElementById('trackedAreaThumb');
+    var stats = document.getElementById('trackedAreaStats');
+    if (pill) pill.classList.toggle('tracked-active', !!trackedArea);
+    var iconSvg = '<svg class="tracked-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>';
+    if (label) label.innerHTML = iconSvg + (trackedArea ? 'Tracked area \u25CF' : 'Tracked area');
+    if (clearBtn) clearBtn.hidden = !trackedArea;
+    if (!thumb) return;
+    if (!trackedArea){
+      thumb.innerHTML = '<div class="tracked-empty-hint">No area tracked yet</div>';
+      if (stats){ stats.hidden = true; stats.innerHTML = ''; }
+      return;
+    }
+    var pts = [];
+    if (trackedArea.type === 'polygon') pts = trackedArea.latlngs.slice();
+    else {
+      var cc = trackedArea.center;
+      var dLat = trackedArea.radius / 111000;
+      var dLng = trackedArea.radius / (111000 * Math.cos(cc.lat * Math.PI / 180));
+      pts = [{ lat:cc.lat-dLat, lng:cc.lng-dLng }, { lat:cc.lat+dLat, lng:cc.lng+dLng }];
+    }
+    var minLat=Infinity, maxLat=-Infinity, minLng=Infinity, maxLng=-Infinity;
+    pts.forEach(function(p){
+      if (p.lat<minLat) minLat=p.lat; if (p.lat>maxLat) maxLat=p.lat;
+      if (p.lng<minLng) minLng=p.lng; if (p.lng>maxLng) maxLng=p.lng;
+    });
+    var dy=maxLat-minLat||0.005, dx=maxLng-minLng||0.005;
+    var pad=Math.max(dx,dy)*0.20;
+    minLat-=pad; maxLat+=pad; minLng-=pad; maxLng+=pad;
+    var W=240, H=128;
+    function pxlng(lng){ return ((lng-minLng)/(maxLng-minLng))*W; }
+    function pxlat(lat){ return H - ((lat-minLat)/(maxLat-minLat))*H; }
+    var shape='';
+    if (trackedArea.type === 'polygon'){
+      var d = trackedArea.latlngs.map(function(p,i){ return (i?'L':'M')+pxlng(p.lng).toFixed(1)+','+pxlat(p.lat).toFixed(1); }).join(' ')+' Z';
+      shape = '<path d="'+d+'" fill="#0f1e4e" fill-opacity="0.16" stroke="#0f1e4e" stroke-width="1.5"/>';
+    } else {
+      var cx=pxlng(trackedArea.center.lng), cy=pxlat(trackedArea.center.lat);
+      var edgeLng=trackedArea.center.lng+(trackedArea.radius/(111000*Math.cos(trackedArea.center.lat*Math.PI/180)));
+      var r=Math.abs(pxlng(edgeLng)-cx);
+      shape = '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="#0f1e4e" fill-opacity="0.16" stroke="#0f1e4e" stroke-width="1.5"/>';
+    }
+    var dots='', inside=0, total=0;
+    document.querySelectorAll('#listingCards .listing-card').forEach(function(card){
+      var lat=parseFloat(card.getAttribute('data-lat')), lng=parseFloat(card.getAttribute('data-lng'));
+      if (isNaN(lat)||isNaN(lng)) return;
+      total++;
+      var ok = pointInTrackedArea(lat,lng);
+      if (ok) inside++;
+      var color = ok ? '#dc2626' : '#cbd5e1';
+      dots += '<circle cx="'+pxlng(lng).toFixed(1)+'" cy="'+pxlat(lat).toFixed(1)+'" r="3" fill="'+color+'" stroke="#fff" stroke-width="0.8"/>';
+    });
+    thumb.innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"><rect width="'+W+'" height="'+H+'" fill="#faf8f2"/>'+shape+dots+'</svg>';
+    if (stats){
+      stats.hidden = false;
+      var areaText = trackedArea.type === 'circle'
+        ? ((trackedArea.radius/1000).toFixed(2)+' km radius')
+        : (trackedArea.latlngs.length+'-sided area');
+      stats.innerHTML = '<strong>'+inside+'</strong> of '+total+' listings inside &middot; '+areaText;
+    }
+  }
+
+  function showDrawUI(initialHint){
+    var t=document.getElementById('drawToolbar'); if (t) t.hidden = false;
+    var h=document.getElementById('drawHint'); if (h) h.hidden = false;
+    document.body.classList.add('is-drawing');
+    setDrawHint(initialHint);
+    var c = document.getElementById('drawContinueBtn'); if (c) c.disabled = true;
+  }
+  function hideDrawUI(){
+    var t = document.getElementById('drawToolbar'); if (t) t.hidden = true;
+    var h = document.getElementById('drawHint'); if (h) h.hidden = true;
+    document.body.classList.remove('is-drawing');
+  }
+  function setDrawHint(text){ var h = document.getElementById('drawHintText'); if (h) h.textContent = text; }
+
+  function cancelDraw(){ if (draw && draw.cleanup) draw.cleanup(); draw = null; hideDrawUI(); }
+  function clearTrackedArea(){
+    if (trackedAreaLayer && window.industrioMap) window.industrioMap.removeLayer(trackedAreaLayer);
+    trackedAreaLayer = null; trackedArea = null;
+    applyTrackedAreaFilter();
+  }
+
+  function startPolygonDraw(){
+    if (!window.industrioMap || !window.L) return;
+    cancelDraw();
+    document.querySelectorAll('.filter-pill.has-menu').forEach(function(p){ p.classList.remove('open'); });
+    var map = window.industrioMap;
+    map.doubleClickZoom.disable();
+    var points = [];
+    var line = L.polyline([], { color:'#3b82f6', weight:2 }).addTo(map);
+    var fill = L.polygon([], { color:'transparent', weight:0, fillColor:'#3b82f6', fillOpacity:0.18 }).addTo(map);
+    var vertGroup = L.layerGroup().addTo(map);
+    function refresh(){
+      line.setLatLngs(points.concat(points.length >= 3 ? [points[0]] : []));
+      fill.setLatLngs(points.length >= 3 ? points : []);
+      var cont = document.getElementById('drawContinueBtn');
+      if (cont) cont.disabled = points.length < 3;
+      if (points.length >= 3) setDrawHint('Success! Press Continue to save your shape.');
+      else if (points.length === 0) setDrawHint('Click on the map to start drawing.');
+      else setDrawHint('Click to add corners (need at least 3).');
+    }
+    function onClick(e){
+      points.push(e.latlng);
+      L.circleMarker(e.latlng, { radius:7, fillColor:'#dc2626', color:'#bfdbfe', weight:4, fillOpacity:1, opacity:1 }).addTo(vertGroup);
+      refresh();
+    }
+    map.on('click', onClick);
+    showDrawUI('Click on the map to start drawing.');
+    draw = {
+      type: 'polygon',
+      undo: function(){
+        if (!points.length) return;
+        points.pop();
+        var children = vertGroup.getLayers();
+        if (children.length) vertGroup.removeLayer(children[children.length - 1]);
+        refresh();
+      },
+      finalize: function(){
+        if (points.length < 3) return;
+        var latlngs = points.slice();
+        cancelDraw();
+        if (trackedAreaLayer) map.removeLayer(trackedAreaLayer);
+        trackedAreaLayer = L.polygon(latlngs, { color:'#0f1e4e', weight:2, fillColor:'#0f1e4e', fillOpacity:0.10 }).addTo(map);
+        trackedArea = { type:'polygon', latlngs: latlngs.map(function(ll){ return { lat:ll.lat, lng:ll.lng }; }) };
+        applyTrackedAreaFilter();
+      },
+      cleanup: function(){
+        map.off('click', onClick);
+        map.doubleClickZoom.enable();
+        if (map.hasLayer(line)) map.removeLayer(line);
+        if (map.hasLayer(fill)) map.removeLayer(fill);
+        if (map.hasLayer(vertGroup)) map.removeLayer(vertGroup);
+      }
+    };
+  }
+
+  function startCircleDraw(){
+    if (!window.industrioMap || !window.L) return;
+    cancelDraw();
+    document.querySelectorAll('.filter-pill.has-menu').forEach(function(p){ p.classList.remove('open'); });
+    var map = window.industrioMap;
+    var center = null, ghost = null, centerVert = null, step = 0;
+    function onClick(e){
+      if (step === 0){
+        center = e.latlng;
+        centerVert = L.circleMarker(center, { radius:7, fillColor:'#dc2626', color:'#bfdbfe', weight:4, fillOpacity:1 }).addTo(map);
+        ghost = L.circle(center, { radius:1, color:'#3b82f6', weight:2, fillColor:'#3b82f6', fillOpacity:0.18 }).addTo(map);
+        step = 1;
+        setDrawHint('Move the cursor and click to set the radius.');
+      } else {
+        var radius = center.distanceTo(e.latlng);
+        if (radius < 50) return;
+        var savedCenter = center, savedRadius = radius;
+        cancelDraw();
+        if (trackedAreaLayer) map.removeLayer(trackedAreaLayer);
+        trackedAreaLayer = L.circle(savedCenter, { radius:savedRadius, color:'#0f1e4e', weight:2, fillColor:'#0f1e4e', fillOpacity:0.10 }).addTo(map);
+        trackedArea = { type:'circle', center:{ lat:savedCenter.lat, lng:savedCenter.lng }, radius:savedRadius };
+        applyTrackedAreaFilter();
+      }
+    }
+    function onMove(e){
+      if (step === 1 && ghost){
+        var r = center.distanceTo(e.latlng);
+        ghost.setRadius(r);
+        setDrawHint('Radius: ' + (r/1000).toFixed(2) + ' km. Click to confirm.');
+      }
+    }
+    map.on('click', onClick);
+    map.on('mousemove', onMove);
+    showDrawUI('Click the center point of your circle.');
+    draw = {
+      type: 'circle',
+      undo: function(){
+        if (step !== 1) return;
+        if (centerVert && map.hasLayer(centerVert)) map.removeLayer(centerVert);
+        if (ghost && map.hasLayer(ghost)) map.removeLayer(ghost);
+        center = null; centerVert = null; ghost = null; step = 0;
+        setDrawHint('Click the center point of your circle.');
+      },
+      finalize: function(){},
+      cleanup: function(){
+        map.off('click', onClick);
+        map.off('mousemove', onMove);
+        if (centerVert && map.hasLayer(centerVert)) map.removeLayer(centerVert);
+        if (ghost && map.hasLayer(ghost)) map.removeLayer(ghost);
+      }
+    };
+  }
+
+  var btnPoly = document.getElementById('drawAreaPolyBtn');
+  if (btnPoly) btnPoly.addEventListener('click', function(e){ e.stopPropagation(); startPolygonDraw(); });
+  var btnCircle = document.getElementById('drawAreaCircleBtn');
+  if (btnCircle) btnCircle.addEventListener('click', function(e){ e.stopPropagation(); startCircleDraw(); });
+  var btnClearArea = document.getElementById('clearTrackedArea');
+  if (btnClearArea) btnClearArea.addEventListener('click', function(e){ e.stopPropagation(); clearTrackedArea(); });
+  var btnDrawCancel = document.getElementById('drawCancelBtn');
+  if (btnDrawCancel) btnDrawCancel.addEventListener('click', cancelDraw);
+  var btnDrawUndo = document.getElementById('drawUndoBtn');
+  if (btnDrawUndo) btnDrawUndo.addEventListener('click', function(){ if (draw && draw.undo) draw.undo(); });
+  var btnDrawContinue = document.getElementById('drawContinueBtn');
+  if (btnDrawContinue) btnDrawContinue.addEventListener('click', function(){ if (draw && draw.finalize) draw.finalize(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && draw) cancelDraw();
+    if (draw && draw.type === 'polygon' && (e.key === 'Backspace' || e.key === 'Delete')){
+      if (document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+      e.preventDefault(); draw.undo();
+    }
+  });
+  function bindAreaLayerHook(retries){
+    if (window.industrioMap){
+      window.industrioMap.on('layeradd', function(){ if (trackedArea) setTimeout(applyTrackedAreaFilter, 0); });
+      return;
+    }
+    if (retries <= 0) return;
+    setTimeout(function(){ bindAreaLayerHook(retries - 1); }, 120);
+  }
+  bindAreaLayerHook(20);
+
+  // Nav search → pan map via Nominatim
+  var navForm = document.getElementById('navSearchForm');
+  var navInput = document.getElementById('navSearchInput');
+  if (navForm && navInput){
+    navForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var q = navInput.value.trim(); if (!q) return;
+      if (!/ON|Ontario|Toronto|GTA|Canada/i.test(q)) q = q + ', Ontario, Canada';
+      fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=ca&q=' + encodeURIComponent(q))
+        .then(function(r){ return r.json(); })
+        .then(function(arr){
+          if (!arr || !arr.length) return;
+          if (window.industrioMap) window.industrioMap.setView([parseFloat(arr[0].lat), parseFloat(arr[0].lon)], 14, { animate: true });
+        }).catch(function(){});
+    });
+  }
+
+  applyStatusAndTime();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Landlords — industrio</title>
+<meta name="description" content="Aggregated, verified tenant demand for GTA industrial space. See who's looking, match against your availabilities, reach out directly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<\!-- Side-switcher -->
+<div class="side-bar">
+  <div class="side-bar-inner">
+    <span class="side-bar-tag">You&rsquo;re viewing the landlord side</span>
+    <a href="index.html" class="side-bar-link">Switch to tenant view &rarr;</a>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="for-landlords.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+      <span class="landlord-badge">Landlord</span>
+    </a>
+    <div class="nav-links">
+      <a href="for-landlords.html" class="active">Overview</a>
+      <a href="landlord-dashboard.html">Dashboard</a>
+      <a href="landlord-dashboard.html#inventory">Inventory</a>
+      <a href="landlord-dashboard.html#demand">Tenant demand</a>
+      <a href="landlord-dashboard.html#outreach">Outreach</a>
+      <a href="landlord-dashboard.html#analytics">Analytics</a>
+    </div>
+    <a href="landlord-dashboard.html" class="nav-cta">Open dashboard</a>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">For landlords</span>
+    <h1>See every tenant actively looking. <span class="gradient-text">Match them to your space.</span></h1>
+    <p class="lead">industrio is the aggregated, verified demand signal for small-bay industrial. Upload your availabilities once. When a tenant's criteria match your space, you get notified — and you can reach out directly.</p>
+    <div class="btn-row" style="margin-top: 20px;">
+      <a href="landlord-dashboard.html" class="btn btn-primary">Open dashboard</a>
+      <a href="mailto:landlords@industrio.ai" class="btn btn-secondary">Talk to our team</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">How it works for landlords</div>
+      <h2>Three feeds. One lease-up engine.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>1. Upload your availabilities</h3><p>Add every building and every unit you have available. We sync with your listings — or take a simple CSV. Each unit shows rent, size, clear height, door count, power, and availability date.</p></div>
+      <div class="card"><h3>2. See live tenant demand</h3><p>Every lease-verified tenant on industrio who is actively searching shows up in your feed — filtered to the criteria they've set: size, submarket, rent, clear height, power, parking, and more. You see anonymized profiles unless they open up.</p></div>
+      <div class="card"><h3>3. Reach out when there's a match</h3><p>When a tenant's criteria match one of your units, we flag it. You can initiate a direct message through industrio (routed to the tenant inbox) or send a tour invite — one click.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Why landlords join</div>
+      <h2>Faster lease-up. Fewer vacant months.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>Real demand, pre-filtered</h3><p>Stop listening to brokers tell you what tenants "might" want. industrio shows the criteria tenants have put in writing and verified against a real lease. No tire-kickers.</p></div>
+      <div class="card"><h3>Shorter time-to-lease</h3><p>Landlords on industrio close matches 31% faster on median than MLS-only listings — because tenants arrive already qualified and already know your building.</p></div>
+      <div class="card"><h3>Respond to your reviews</h3><p>Every published tenant review includes a landlord right-of-reply. Put your side on the record; future tenants see both perspectives.</p></div>
+      <div class="card"><h3>Benchmark your portfolio</h3><p>Compare your own rent, TMI, free rent, and retention against anonymized submarket medians. See where your portfolio is competitive and where it isn't.</p></div>
+      <div class="card"><h3>Keep your data private</h3><p>Your availabilities are visible to verified tenants with matching criteria only. Your rent and concession data is never sold, never syndicated.</p></div>
+      <div class="card"><h3>No commissions to us</h3><p>industrio charges a flat subscription — we take zero commission on any deal. Work with brokers, work direct, whatever fits your business.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Sample demand snapshot</div>
+      <h2>What's on industrio right now.</h2>
+      <p>A sample of the anonymized, lease-verified tenant searches filtered to the Mississauga / Brampton corridor.</p>
+    </div>
+
+    <div class="alert-feed">
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>3PL &middot; 12,000–15,000 SF &middot; Mississauga / Brampton</h3>
+            <span class="tag">Budget $20–24 all-in</span>
+            <span class="tag">24' clear min</span>
+            <span class="tag">3 TL doors</span>
+          </div>
+          <p class="meta">Looking since 12 days ago &middot; 5-yr term preferred &middot; lease expiry Q4 2026</p>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">Open</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Matches 2 of your units</div></div>
+      </div>
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>Metal fabricator &middot; 10,000–14,000 SF &middot; GTA West</h3>
+            <span class="tag">600V 3&phi;</span>
+            <span class="tag">2 TL + 1 DID</span>
+            <span class="tag">22'+ clear</span>
+          </div>
+          <p class="meta">Looking since 4 days ago &middot; 7-yr term preferred &middot; lease expiry Q2 2026</p>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">Open</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">No match in your portfolio</div></div>
+      </div>
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>Food distributor &middot; 8,000–12,000 SF &middot; Mississauga</h3>
+            <span class="tag">Cold-ready</span>
+            <span class="tag">Food-grade finish</span>
+            <span class="tag">Budget $22–26 all-in</span>
+          </div>
+          <p class="meta">Looking since 19 days ago &middot; 10-yr term preferred &middot; relocation</p>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.2rem;">Open</span><div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Matches 1 of your units</div></div>
+      </div>
+    </div>
+    <p style="margin-top:16px; color:var(--text-muted); font-size:0.9rem;">Log in to your landlord dashboard for the full feed, filters, and direct messaging.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Ready to hit the market from the other side?</h2>
+      <p>Upload your availabilities, set your match rules, and start seeing verified tenant demand today. Onboarding takes about 20 minutes.</p>
+      <div class="btn-row">
+        <a href="landlord-dashboard.html" class="btn btn-primary">Open dashboard</a>
+        <a href="mailto:landlords@industrio.ai" class="btn btn-secondary">Book a walk-through</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence. Two sides — tenants and landlords — one transparent marketplace.</p>
+      </div>
+      <div><h4>Landlord side</h4><ul>
+        <li><a href="for-landlords.html">Overview</a></li>
+        <li><a href="landlord-dashboard.html">Dashboard</a></li>
+        <li><a href="landlord-dashboard.html#inventory">Inventory</a></li>
+        <li><a href="landlord-dashboard.html#demand">Tenant demand</a></li>
+        <li><a href="landlord-dashboard.html#analytics">Analytics</a></li>
+      </ul></div>
+      <div><h4>Tenant side</h4><ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="mailto:landlords@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Tenant demand data is lease-verified and shown anonymized until the tenant opens the conversation.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

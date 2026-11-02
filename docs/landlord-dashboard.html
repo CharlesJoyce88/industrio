@@ -1,0 +1,381 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landlord Dashboard — industrio</title>
+<meta name="description" content="Landlord dashboard: see live tenant demand, manage availabilities, match your inventory, and reach out directly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="side-bar">
+  <div class="side-bar-inner">
+    <span class="side-bar-tag">You&rsquo;re viewing the landlord side</span>
+    <a href="index.html" class="side-bar-link">Switch to tenant view &rarr;</a>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="for-landlords.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+      <span class="landlord-badge">Landlord</span>
+    </a>
+    <div class="nav-links">
+      <a href="for-landlords.html">Overview</a>
+      <a href="landlord-dashboard.html" class="active">Dashboard</a>
+      <a href="#inventory">Inventory</a>
+      <a href="#demand">Tenant demand</a>
+      <a href="#outreach">Outreach</a>
+      <a href="#analytics">Analytics</a>
+    </div>
+    <a href="mailto:landlords@industrio.ai" class="nav-cta">Account</a>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero" style="padding: 36px 0 24px 0;">
+  <div class="container" style="text-align:left;">
+    <span class="hero-eyebrow">Welcome back, Rachel &mdash; ACME Industrial Holdings</span>
+    <h1 style="font-size: clamp(1.6rem, 2.8vw, 2.2rem); margin-top:4px;">14 buildings &middot; 2.1M SF &middot; <span class="gradient-text">5 units available</span></h1>
+    <p class="lead" style="margin-left: 0; max-width: 720px;">There are <strong>37 verified tenant searches</strong> active on industrio. <strong>9 of them match</strong> a unit in your portfolio. Three are new this week.</p>
+  </div>
+</header>
+
+<\!-- KPI row -->
+<section style="padding-top: 0;">
+  <div class="container">
+    <div class="grid grid-4">
+      <div class="card">
+        <p style="color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:600; margin:0 0 4px 0;">Matched tenant searches</p>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--accent); margin:0 0 2px 0;">9</p>
+        <p style="font-size:0.82rem; margin:0;">+3 this week</p>
+      </div>
+      <div class="card">
+        <p style="color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:600; margin:0 0 4px 0;">Units available</p>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--text); margin:0 0 2px 0;">5</p>
+        <p style="font-size:0.82rem; margin:0;">Total 58,400 SF</p>
+      </div>
+      <div class="card">
+        <p style="color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:600; margin:0 0 4px 0;">Conversations in progress</p>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--text); margin:0 0 2px 0;">4</p>
+        <p style="font-size:0.82rem; margin:0;">2 tours scheduled</p>
+      </div>
+      <div class="card">
+        <p style="color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:600; margin:0 0 4px 0;">Portfolio star rating</p>
+        <p style="font-size:1.4rem; color:var(--text); margin:0 0 2px 0;"><span class="stars" style="font-size:1.3rem;">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.1</p>
+        <p style="font-size:0.82rem; margin:0;">56 reviews</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<\!-- Tenant demand feed -->
+<section id="demand">
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 16px 0;">
+      <div class="eyebrow">Live tenant demand</div>
+      <h2 style="margin:0;">9 verified tenants actively looking &mdash; matched to your portfolio.</h2>
+      <p style="margin-top:6px; max-width:680px;">Each card is a lease-verified tenant whose criteria overlap with at least one of your available units. Start a conversation directly from here; the tenant's identity is revealed once they accept.</p>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+      <span class="pill on">All (9)</span>
+      <span class="pill">New this week (3)</span>
+      <span class="pill">Exact-size match (4)</span>
+      <span class="pill">Replied (1)</span>
+      <span class="pill">Tour booked (2)</span>
+    </div>
+
+    <div class="alert-feed">
+
+      <div class="alert-item new">
+        <div>
+          <div class="head">
+            <h3>3PL &middot; 12,000 &ndash; 15,000 SF &middot; Mississauga / Brampton</h3>
+            <span class="badge-new">New</span>
+            <span class="tag">Matches 2400 Meadowvale</span>
+            <span class="tag">Matches 1200 Aimco</span>
+          </div>
+          <p class="meta">Anonymized tenant #T-4821 &middot; Looking 12 d &middot; Budget $20&ndash;24 all-in &middot; 5-yr term &middot; Lease expiry Q4 2026</p>
+          <div class="specs">
+            <span class="tag">24' clear min</span><span class="tag">3 TL doors</span><span class="tag">1.2 stalls / 1,000</span><span class="tag">Light racking</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <a href="#outreach" class="btn btn-primary" style="padding:8px 14px; font-size:0.85rem;">Reach out</a>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">Match score 94</div>
+        </div>
+      </div>
+
+      <div class="alert-item new">
+        <div>
+          <div class="head">
+            <h3>Food distributor &middot; 8,000 &ndash; 12,000 SF &middot; Mississauga</h3>
+            <span class="badge-new">New</span>
+            <span class="tag">Matches 7100 Pacific Circle</span>
+          </div>
+          <p class="meta">Anonymized tenant #T-4897 &middot; Looking 4 d &middot; Budget $22&ndash;26 all-in &middot; 10-yr term &middot; Relocation</p>
+          <div class="specs">
+            <span class="tag">Cold-ready</span><span class="tag">Food-grade finish</span><span class="tag">22' clear min</span><span class="tag">2 TL doors</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <a href="#outreach" class="btn btn-primary" style="padding:8px 14px; font-size:0.85rem;">Reach out</a>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">Match score 87</div>
+        </div>
+      </div>
+
+      <div class="alert-item new">
+        <div>
+          <div class="head">
+            <h3>Electrical contractor &middot; 6,500 &ndash; 9,000 SF &middot; Brampton</h3>
+            <span class="badge-new">New</span>
+            <span class="tag">Matches 8800 Airport Rd #4</span>
+          </div>
+          <p class="meta">Anonymized tenant #T-4903 &middot; Looking 2 d &middot; Budget $18&ndash;22 all-in &middot; 5-yr term &middot; First lease</p>
+          <div class="specs">
+            <span class="tag">20' clear</span><span class="tag">2 TL doors</span><span class="tag">Yard for trucks</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <a href="#outreach" class="btn btn-primary" style="padding:8px 14px; font-size:0.85rem;">Reach out</a>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">Match score 81</div>
+        </div>
+      </div>
+
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>Distributor &middot; 13,000 &ndash; 18,000 SF &middot; GTA West</h3>
+            <span class="tag">Matches 6299 Airport Rd</span>
+            <span class="tag">Conversation open</span>
+          </div>
+          <p class="meta">Charles R. (Northbridge Capital) &middot; Looking 21 d &middot; Budget $21&ndash;24 all-in &middot; 5&ndash;7 yr term &middot; Lease expiry March 2029</p>
+          <div class="specs">
+            <span class="tag">26' clear</span><span class="tag">3 TL doors</span><span class="tag">600A 3&phi;</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <a href="#outreach" class="btn btn-secondary" style="padding:8px 14px; font-size:0.85rem;">View thread</a>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">Tour May 8</div>
+        </div>
+      </div>
+
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>Parts supplier &middot; 10,000 &ndash; 14,000 SF &middot; Mississauga</h3>
+            <span class="tag">Matches 2400 Meadowvale</span>
+          </div>
+          <p class="meta">Anonymized tenant #T-4760 &middot; Looking 33 d &middot; Budget $20&ndash;23 all-in &middot; 5-yr term &middot; Relocation</p>
+          <div class="specs">
+            <span class="tag">24' clear</span><span class="tag">3 TL doors</span><span class="tag">Showroom 15%</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <a href="#outreach" class="btn btn-primary" style="padding:8px 14px; font-size:0.85rem;">Reach out</a>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">Match score 79</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<\!-- Inventory -->
+<section id="inventory">
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 16px 0;">
+      <div class="eyebrow">Your availability inventory</div>
+      <h2 style="margin:0;">5 units, 58,400 SF live on industrio.</h2>
+      <p style="margin-top:6px; max-width:680px;">Each unit's profile drives the matching engine. Keep specs current — more accurate specs produce higher match scores and fewer wasted tours.</p>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+      <a href="#" class="btn btn-primary" style="padding:8px 14px; font-size:0.85rem;">+ Add a unit</a>
+      <a href="#" class="btn btn-secondary" style="padding:8px 14px; font-size:0.85rem;">Import from CSV</a>
+      <a href="#" class="btn btn-secondary" style="padding:8px 14px; font-size:0.85rem;">Sync from MLS</a>
+    </div>
+
+    <div class="alert-feed">
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>2400 Meadowvale Blvd, Unit 7 &mdash; Mississauga</h3>
+            <span class="tag">Active</span>
+            <span class="tag">12,400 SF</span>
+          </div>
+          <p class="meta">Net $15.50 &middot; TMI $6.20 &middot; All-in $21.70 &middot; Available Jun 1 &middot; 26' clear &middot; 3 TL doors &middot; 600A 3&phi;</p>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.1rem;">3 matches</span><div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">24 days on market</div></div>
+      </div>
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>1200 Aimco Blvd, Unit 14 &mdash; Mississauga</h3>
+            <span class="tag">Active</span>
+            <span class="tag">14,200 SF</span>
+          </div>
+          <p class="meta">Net $16.25 &middot; TMI $6.50 &middot; All-in $22.75 &middot; Available Jul 15 &middot; 22' clear &middot; 3 TL doors &middot; 400A</p>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.1rem;">2 matches</span><div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">11 days on market</div></div>
+      </div>
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>7100 Pacific Circle, Unit 3 &mdash; Mississauga</h3>
+            <span class="tag">Active</span>
+            <span class="tag">13,800 SF</span>
+          </div>
+          <p class="meta">Net $15.90 &middot; TMI $6.00 &middot; All-in $21.90 &middot; Available Sep 1 &middot; 24' clear &middot; 4 TL doors &middot; Cold-ready</p>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.1rem;">2 matches</span><div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">6 days on market</div></div>
+      </div>
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>8800 Airport Rd, Unit 4 &mdash; Brampton</h3>
+            <span class="tag">Active</span>
+            <span class="tag">9,800 SF</span>
+          </div>
+          <p class="meta">Net $14.75 &middot; TMI $5.80 &middot; All-in $20.55 &middot; Available Aug 1 &middot; 24' clear &middot; 2 TL doors &middot; Yard 50 ft</p>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.1rem;">1 match</span><div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">38 days on market</div></div>
+      </div>
+      <div class="alert-item">
+        <div>
+          <div class="head">
+            <h3>6299 Airport Rd, Unit 22 &mdash; Mississauga</h3>
+            <span class="tag">Pending</span>
+            <span class="tag">18,500 SF</span>
+          </div>
+          <p class="meta">Net $16.50 &middot; TMI $6.30 &middot; All-in $22.80 &middot; Reserved pending LOI &middot; 26' clear &middot; 4 TL doors</p>
+        </div>
+        <div style="text-align:right;"><span class="score" style="font-size:1.1rem;">1 match</span><div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">Conversation open</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<\!-- Outreach thread -->
+<section id="outreach">
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 16px 0;">
+      <div class="eyebrow">Outreach threads</div>
+      <h2 style="margin:0;">4 active conversations.</h2>
+      <p style="margin-top:6px; max-width:680px;">Direct-message tenants in-app. When they accept, their identity is revealed and you can move to tours and LOI. Every message is timestamped and team-visible.</p>
+    </div>
+
+    <div class="reply-list">
+      <article class="reply-block">
+        <div class="reply-header">
+          <div>
+            <h3 style="margin:0;">Thread with Charles R. &mdash; Northbridge Capital</h3>
+            <div style="font-size:0.88rem; color:var(--text-muted); margin-top:4px;">Re: 6299 Airport Rd, Unit 22 &middot; 8 messages &middot; Last reply 2 days ago &middot; Tour scheduled May 8</div>
+          </div>
+          <span class="notif-badge">Open</span>
+        </div>
+        <div class="review-plus-reply">
+          <div class="side tenant">
+            <div class="side-label">Tenant (latest)</div>
+            <p>"Tour confirmed for Wednesday May 8 at 10:00. We'll bring our ops lead and our broker. Can you prep a TMI history for the unit going back to 2023?"</p>
+            <div style="font-size:0.78rem; color:var(--text-muted);">Apr 21, 2026</div>
+          </div>
+          <div class="side landlord">
+            <div class="side-label">Your next action</div>
+            <p>Export the 2023&ndash;2025 reconciliations and pull them into the thread before Tuesday. Flag any anomalies with a short note so the tenant has context before walking the space.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<\!-- Analytics -->
+<section id="analytics">
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 16px 0;">
+      <div class="eyebrow">Portfolio analytics</div>
+      <h2 style="margin:0;">Your numbers vs. the market.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Median days on market</h3>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--text); margin:6px 0 2px 0;">42</p>
+        <p style="font-size:0.85rem;">Submarket median 58 &middot; <span style="color:#15803d;">16 days faster</span></p>
+      </div>
+      <div class="card">
+        <h3>Renewal retention</h3>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--text); margin:6px 0 2px 0;">74%</p>
+        <p style="font-size:0.85rem;">Submarket median 61% &middot; <span style="color:#15803d;">top quartile</span></p>
+      </div>
+      <div class="card">
+        <h3>Median free rent offered</h3>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--text); margin:6px 0 2px 0;">2.5 mo</p>
+        <p style="font-size:0.85rem;">Submarket median 3.0 mo &middot; <span style="color:#15803d;">holds more value</span></p>
+      </div>
+      <div class="card">
+        <h3>Median starting rent (2026)</h3>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--text); margin:6px 0 2px 0;">$16.10</p>
+        <p style="font-size:0.85rem;">Submarket median $16.40 &middot; within band</p>
+      </div>
+      <div class="card">
+        <h3>Review velocity</h3>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--text); margin:6px 0 2px 0;">4.1 &#9733;</p>
+        <p style="font-size:0.85rem;">56 verified reviews &middot; <span style="color:#15803d;">+0.3 vs. 2024</span></p>
+      </div>
+      <div class="card">
+        <h3>Vacancy rate (portfolio)</h3>
+        <p style="font-family:var(--font-mono); font-size:1.8rem; color:var(--text); margin:6px 0 2px 0;">3.4%</p>
+        <p style="font-size:0.85rem;">GTA small-bay 4.8% &middot; <span style="color:#15803d;">outperforming</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence. Two sides, one transparent marketplace.</p>
+      </div>
+      <div><h4>Landlord side</h4><ul>
+        <li><a href="for-landlords.html">Overview</a></li>
+        <li><a href="landlord-dashboard.html">Dashboard</a></li>
+        <li><a href="#inventory">Inventory</a></li>
+        <li><a href="#demand">Tenant demand</a></li>
+        <li><a href="#analytics">Analytics</a></li>
+      </ul></div>
+      <div><h4>Tenant side</h4><ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="mailto:landlords@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Your availability and analytics data is visible only to your organization.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

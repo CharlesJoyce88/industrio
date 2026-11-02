@@ -1,0 +1,317 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Templates — industrio</title>
+<meta name="description" content="Industrial leasing and purchase templates — Offer to Lease, LOI, Agreement of Purchase and Sale, Estoppel, TMI audit request, and more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Document library</span>
+    <h1>The document templates <span class="gradient-text">your lawyer charges to draft.</span></h1>
+    <p class="lead">Every industrial leasing and purchase document a tenant or buyer typically needs — drafted by Ontario commercial counsel, customizable with AI, and free to download as a starting point. Have your lawyer review the final before signing.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Leasing</div>
+      <h2>Lease negotiation &amp; administration.</h2>
+      <p>From first offer to signed lease, plus everything you need to administer the tenancy.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="tag" style="background:rgba(21,128,61,0.08);color:var(--accent);border-color:rgba(21,128,61,0.25);">Lease — most used</span>
+        <h3 style="margin-top:12px;">Offer to Lease (OTL)</h3>
+        <p>The binding offer that locks in base rent, term, free rent, TI, deposits, and conditions. Ontario-standard, tenant-friendly default language.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="offer-to-lease" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="offer-to-lease" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Lease</span>
+        <h3 style="margin-top:12px;">Letter of Intent (LOI)</h3>
+        <p>Non-binding outline of key commercial terms. Useful for early-stage negotiations or multi-party RFPs, without the full offer commitment.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="loi-lease" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="loi-lease" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Lease</span>
+        <h3 style="margin-top:12px;">Industrial Net Lease</h3>
+        <p>Full triple-net lease agreement covering rent, TMI, maintenance, insurance, use, compliance, and surrender — tenant-negotiated defaults.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="industrial-lease" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="industrial-lease" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Renewal</span>
+        <h3 style="margin-top:12px;">Lease Renewal / Extension</h3>
+        <p>Renewal or extension of an existing lease. Use with current market comp data to negotiate rent reset, TI, and free-rent period.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="renewal" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="renewal" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Sublet</span>
+        <h3 style="margin-top:12px;">Sublease Agreement</h3>
+        <p>Sublet part or all of your space to a third party — with a back-to-back flow-through to the head lease.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="sublease" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="sublease" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Admin</span>
+        <h3 style="margin-top:12px;">Estoppel Certificate</h3>
+        <p>Standard tenant estoppel confirming lease terms, rent, deposits, and defaults — usually required for landlord financing or sale.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="estoppel" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="estoppel" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Admin</span>
+        <h3 style="margin-top:12px;">Commencement Date Confirmation</h3>
+        <p>Short agreement setting the actual occupancy and rent-commencement dates once fixturing is complete.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="commencement" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="commencement" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Admin</span>
+        <h3 style="margin-top:12px;">Lease Assignment</h3>
+        <p>Assign your lease to a new tenant (typically on a business sale) with landlord consent and release of guarantor obligations where negotiated.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="assignment" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="assignment" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Purchase &amp; condo</div>
+      <h2>Buying an industrial unit.</h2>
+      <p>From LOI to closing, including condo-specific documents for small-bay strata units.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="tag" style="background:rgba(21,128,61,0.08);color:var(--accent);border-color:rgba(21,128,61,0.25);">Purchase — most used</span>
+        <h3 style="margin-top:12px;">Agreement of Purchase &amp; Sale</h3>
+        <p>OREA-style APS customized for industrial condos and standalone buildings. Includes standard conditions: financing, inspection, environmental, status certificate.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="aps" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="aps" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Purchase</span>
+        <h3 style="margin-top:12px;">Letter of Intent (LOI)</h3>
+        <p>Non-binding intent to purchase with headline price, closing, conditions, and exclusivity — useful before investing in full due diligence.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="loi-purchase" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="loi-purchase" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Condo</span>
+        <h3 style="margin-top:12px;">Status Certificate Request</h3>
+        <p>Formal request to the condo corporation for the status certificate, including reserve fund study, budget, bylaws, and special-assessment history.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="status-cert" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="status-cert" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Seller</span>
+        <h3 style="margin-top:12px;">Vendor Disclosure Statement</h3>
+        <p>For sellers: comprehensive disclosure covering title, encumbrances, tenant schedules, known defects, environmental, and litigation.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="vendor-disclosure" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="vendor-disclosure" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Due diligence &amp; operations</div>
+      <h2>Checklists, audits, and condition reports.</h2>
+      <p>The documents that keep landlords honest and surface problems before they become yours.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="tag">Due diligence</span>
+        <h3 style="margin-top:12px;">Phase I ESA Scope of Work</h3>
+        <p>Request-for-proposal scope for a Phase I Environmental Site Assessment, written to Canadian Standards Association (CSA) Z768.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="phase1-rfp" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="phase1-rfp" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">OpEx</span>
+        <h3 style="margin-top:12px;">TMI / OpEx Audit Request</h3>
+        <p>Formal letter to the landlord exercising your lease's audit right on operating cost reconciliations, including document list.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="opex-audit" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="opex-audit" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Tour</span>
+        <h3 style="margin-top:12px;">Building Condition Checklist</h3>
+        <p>Pre-tour and post-tour checklist: roof, HVAC, floor slab, dock equipment, power, washrooms, lighting, fire suppression.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="condition-check" style="padding:8px 14px;font-size:0.85rem;">Download PDF</button>
+          <button class="btn btn-secondary" data-tpl-ai="condition-check" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="tag">Compliance</span>
+        <h3 style="margin-top:12px;">Zoning &amp; Use Verification</h3>
+        <p>Letter to the municipal zoning examiner confirming the intended use is permitted, plus outdoor storage and signage allowances.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-tpl="zoning-check" style="padding:8px 14px;font-size:0.85rem;">Download DOCX</button>
+          <button class="btn btn-secondary" data-tpl-ai="zoning-check" style="padding:8px 14px;font-size:0.85rem;">Customize with AI</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Every template, smarter with AI.</h2>
+      <p>Pro and Enterprise subscribers can customize any template against their actual lease, financials, and target submarket in one click. Still send it to your lawyer to sign off — but start at 80% complete, not blank page.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">See pricing</a>
+        <a href="ai-broker.html" class="btn btn-secondary">Meet the AI broker</a>
+      </div>
+    </div>
+    <p class="text-center" style="color:var(--text-muted);font-size:0.82rem;margin-top:24px;">
+      Templates are drafted by Ontario commercial counsel. They are starting points, not legal advice. Every document should be reviewed by your own lawyer before execution.
+    </p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function toast(html){
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = html;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity=0; setTimeout(function(){ t.remove(); }, 400); }, 3800);
+  }
+  document.addEventListener('click', function(e){
+    var d = e.target.closest('[data-tpl]');
+    if (d){ toast('<strong>Preparing download</strong><br><span style="color:var(--text-dim);font-size:0.85rem;">' + d.textContent + ' — template would download here in the real product.</span>'); return; }
+    var a = e.target.closest('[data-tpl-ai]');
+    if (a){ toast('<strong>✦ AI customization</strong><br><span style="color:var(--text-dim);font-size:0.85rem;">Pro/Enterprise feature — AI drafts a tenant-specific version using your saved criteria.</span>'); }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,505 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lease Abstract &amp; Tracker — industrio</title>
+<meta name="description" content="Upload your lease. industrio abstracts every key date and term, tracks your monthly payments, and warns you before you miss a deadline.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<script src="lease-upload.js" defer></script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Lease abstract &amp; tracker</span>
+    <h1>Your lease, decoded and <span class="gradient-text">on a calendar.</span></h1>
+    <p class="lead">Drop your signed lease in. industrio abstracts the key terms, tracks every payment and date, and pings you 18 months before expiry with a renewal playbook.</p>
+  </div>
+</header>
+
+<section style="padding-top:16px;">
+  <div class="container">
+    <div class="confidential-banner">
+      <span class="lock">&#128274;</span>
+      <p><strong>Confidential to your profile.</strong> Your uploaded lease stays in your private tenant workspace. industrio never shares it with landlords, brokers, the landlord side of the platform, or any other user &mdash; and we never use it to train AI models. Only you and teammates you explicitly invite can see it. You can delete it at any time from your account settings.</p>
+    </div>
+    <div class="lease-upload-card">
+      <div class="lease-upload-grid">
+        <div>
+          <label class="lease-upload-zone" for="leaseFile">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="lease-upload-zone-title">Drop your lease here</div>
+            <div class="lease-upload-zone-sub">PDF or DOCX &mdash; abstract ready in under 60 seconds</div>
+            <input type="file" id="leaseFile" accept=".pdf,.docx" hidden>
+          </label>
+
+        </div>
+
+        <aside class="lease-upload-side">
+          <div class="lease-upload-pledge">
+            <div class="lease-upload-pledge-title">
+              <span class="lock-icon">&#128274;</span> Our pledge
+            </div>
+            <ul>
+              <li><strong>Your document stays in your workspace.</strong> We never share the lease PDF with anyone &mdash; not landlords, not brokers, not other tenants.</li>
+              <li><strong>We never train AI on your lease.</strong></li>
+              <li><strong>You own and can delete</strong> your data anytime.</li>
+              <li><strong>If you opt in</strong> to anonymous benchmarks below, only the rent <em>range</em> for your submarket+size class is used &mdash; never your address, your tenant name, or your exact terms.</li>
+            </ul>
+            <a href="data-policy.html" class="lease-upload-policy-link">Read the full data-handling policy &rarr;</a>
+          </div>
+        </aside>
+      </div>
+
+      <div class="lease-upload-attest">
+        <label class="lease-upload-check">
+          <input type="checkbox" id="leaseAttestRights">
+          <span>
+            <strong>I have the right to share this data.</strong> I am the tenant on this lease (or authorized to act for the tenant), and either (a) my lease has no confidentiality clause covering economic terms, (b) the clause has a "professional advisor" exception that covers using a tool like industrio to summarize my own lease, or (c) I am uploading solely for my own analysis and benchmarking. I understand industrio uses my upload only to generate my private lease abstract and (if I opt in below) to compute aggregated, anonymized market benchmarks.
+          </span>
+        </label>
+
+        <label class="lease-upload-check">
+          <input type="checkbox" id="leaseAttestOptIn" checked>
+          <span>
+            <strong>Yes, contribute to anonymous market benchmarks.</strong> I agree that the <em>range</em> bucket of my net rent (e.g. "$15&ndash;17/SF") may be combined with others' to display aggregated submarket statistics. <strong>My address, tenant name, exact rent, and lease document are never displayed to any other user.</strong> Aggregated benchmarks are delayed by 12 months and require at least 5 underlying comps before any submarket statistic is shown. I can withdraw my contribution at any time and the comp will be removed from all aggregates.
+          </span>
+        </label>
+
+        <div class="lease-upload-actions">
+          <button type="button" class="btn btn-primary" id="leaseUploadSubmit" disabled>Generate my abstract</button>
+          <span class="lease-upload-actions-hint">By submitting you agree to our <a href="data-policy.html">data policy</a> and <a href="#">terms</a>.</span>
+        </div>
+      </div>
+
+      <div class="lease-upload-result" id="leaseUploadResult" hidden></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 8px 0;">
+      <div class="eyebrow" id="abstractEyebrow">Abstract — 45 Courtneypark Dr E, Unit 7</div>
+      <h2 style="margin:0;">Extracted automatically from your uploaded lease.</h2>
+    </div>
+
+    <div class="lease-picker" id="leasePicker" hidden>
+      <label for="leaseSelect">Showing abstract for</label>
+      <select id="leaseSelect"></select>
+      <span class="lease-picker-meta" id="leasePickerMeta"></span>
+    </div>
+
+    <div class="kv-grid" id="abstractGrid">
+      <div class="kv"><div class="kv-label">Commencement</div><div class="kv-value">April 1, 2024</div><div class="kv-sub">Possession April 1</div></div>
+      <div class="kv"><div class="kv-label">Expiry</div><div class="kv-value">March 31, 2029</div><div class="kv-sub">5-year initial term</div></div>
+      <div class="kv"><div class="kv-label">Renewal notice</div><div class="kv-value">Oct 1, 2028</div><div class="kv-sub">By written notice, 6 mo before expiry</div></div>
+      <div class="kv"><div class="kv-label">Size</div><div class="kv-value">11,600 SF</div><div class="kv-sub">Per Schedule B</div></div>
+      <div class="kv"><div class="kv-label">Starting net rent</div><div class="kv-value">$17.00 / SF</div><div class="kv-sub">Escalates $0.50/SF/yr</div></div>
+      <div class="kv"><div class="kv-label">TMI (estimate)</div><div class="kv-value">$7.10 / SF</div><div class="kv-sub">Reconciled annually</div></div>
+      <div class="kv"><div class="kv-label">All-in monthly</div><div class="kv-value">$23,297</div><div class="kv-sub">$279,564 / yr</div></div>
+      <div class="kv"><div class="kv-label">Security deposit</div><div class="kv-value">$46,594</div><div class="kv-sub">Last &amp; first month</div></div>
+      <div class="kv"><div class="kv-label">Free rent</div><div class="kv-value">2 months</div><div class="kv-sub">Months 1-2, net only</div></div>
+      <div class="kv"><div class="kv-label">TI allowance</div><div class="kv-value">$3.00 / SF</div><div class="kv-sub">$34,800 — claimed</div></div>
+      <div class="kv"><div class="kv-label">Option to renew</div><div class="kv-value">1 × 5 yrs</div><div class="kv-sub">At then-fair market rent</div></div>
+      <div class="kv"><div class="kv-label">Assignment</div><div class="kv-value">Landlord consent</div><div class="kv-sub">Not to be unreasonably withheld</div></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  // Lease picker dropdown — populated from localStorage.industrio.myLeases (saved by lease-upload.js)
+  function load(){ try { return JSON.parse(localStorage.getItem('industrio.myLeases') || '[]'); } catch(e){ return []; } }
+  function fmtDate(s){ if (!s) return ''; var d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString('en-CA', { year:'numeric', month:'short', day:'numeric' }); }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+  function fmtMoney(n){ return '$' + Number(n).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+  function buildOptions(arr){
+    var sel = document.getElementById('leaseSelect');
+    if (!sel) return;
+    sel.innerHTML = '';
+    // Sample/demo entry always available
+    var demoOpt = document.createElement('option');
+    demoOpt.value = '__demo__';
+    demoOpt.textContent = 'Sample · 45 Courtneypark Dr E, Unit 7 (demo)';
+    sel.appendChild(demoOpt);
+    // Real example — Chess Electric lease (extracted from actual signed PDF)
+    var chessOpt = document.createElement('option');
+    chessOpt.value = '__chess__';
+    chessOpt.textContent = 'Real example · 400 Matheson Blvd E, Unit 5 · Chess Electric · 2,001 SF · Feb 2023';
+    sel.appendChild(chessOpt);
+    arr.forEach(function(item, i){
+      var p = item.private || {};
+      var label = (p.address || '(uploaded ' + (p.file_name || 'lease') + ')')
+        + (p.size_sf ? ' · ' + Number(p.size_sf).toLocaleString() + ' SF' : '')
+        + (item.submitted_at ? ' · ' + fmtDate(item.submitted_at) : '');
+      var o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = label;
+      sel.appendChild(o);
+    });
+  }
+
+  function renderAbstract(item, eyebrow, meta){
+    var p = (item && item.private) || {};
+    var grid = document.getElementById('abstractGrid');
+    var eb = document.getElementById('abstractEyebrow');
+    if (eb) eb.textContent = 'Abstract — ' + (eyebrow || (p.address || 'Uploaded lease'));
+    var metaEl = document.getElementById('leasePickerMeta');
+    if (metaEl) metaEl.textContent = meta || '';
+
+    var net = parseFloat(p.net_rent);
+    var size = parseInt(p.size_sf, 10);
+    var ti = parseFloat(p.ti_psf);
+    var free = parseInt(p.free_rent, 10);
+    var term = parseInt(p.term_years, 10);
+    var allInPsf = (isNaN(net) ? 0 : net) + 6.20;  // est. additional rent
+    var monthly = (size && net) ? (size * (net + 6.20) / 12) : null;
+    var annual = (size && net) ? (size * (net + 6.20)) : null;
+    var totalGross = (size && net && term) ? (size * (net + 6.20) * term) : null;
+
+    var rows = [
+      ['Commencement', p.start_date ? fmtDate(p.start_date) : '—', p.start_date ? 'As entered' : ''],
+      ['Term', term ? term + ' years' : '—', term && p.start_date ? 'Expiry est. ' + (function(){ var d = new Date(p.start_date); d.setFullYear(d.getFullYear() + term); return d.toLocaleDateString('en-CA', { year:'numeric', month:'short', day:'numeric' }); })() : ''],
+      ['Size', size ? size.toLocaleString() + ' SF' : '—', ''],
+      ['Starting net rent', !isNaN(net) ? '$' + net.toFixed(2) + ' / SF' : '—', ''],
+      ['TMI (estimate)', '$6.20 / SF', 'Defaulted; edit if known'],
+      ['All-in $/SF/yr', !isNaN(net) ? '$' + allInPsf.toFixed(2) : '—', ''],
+      ['Monthly all-in', monthly != null ? fmtMoney(monthly) : '—', annual != null ? fmtMoney(annual) + ' / yr' : ''],
+      ['Total gross rent', totalGross != null ? fmtMoney(totalGross) : '—', term ? 'Over ' + term + '-year term · all-in' : ''],
+      ['Free rent', !isNaN(free) ? free + ' months' : '—', ''],
+      ['TI allowance', !isNaN(ti) ? '$' + ti.toFixed(2) + ' / SF' : '—', !isNaN(ti) && size ? '$' + (ti * size).toLocaleString('en-CA', {maximumFractionDigits:0}) + ' total' : ''],
+      ['City', p.city || '—', ''],
+      ['Source', p.file_name ? p.file_name : 'Manual entry', '']
+    ];
+
+    grid.innerHTML = rows.map(function(r){
+      return '<div class="kv"><div class="kv-label">' + esc(r[0]) + '</div>'
+        + '<div class="kv-value">' + esc(r[1]) + '</div>'
+        + (r[2] ? '<div class="kv-sub">' + esc(r[2]) + '</div>' : '')
+        + '</div>';
+    }).join('');
+  }
+
+  function showDemo(){
+    var eb = document.getElementById('abstractEyebrow');
+    if (eb) eb.textContent = 'Abstract — 45 Courtneypark Dr E, Unit 7';
+    var metaEl = document.getElementById('leasePickerMeta');
+    if (metaEl) metaEl.textContent = '(sample data — upload your own above)';
+    document.getElementById('abstractGrid').innerHTML = ''
+      + '<div class="kv"><div class="kv-label">Commencement</div><div class="kv-value">April 1, 2024</div><div class="kv-sub">Possession April 1</div></div>'
+      + '<div class="kv"><div class="kv-label">Expiry</div><div class="kv-value">March 31, 2029</div><div class="kv-sub">5-year initial term</div></div>'
+      + '<div class="kv"><div class="kv-label">Renewal notice</div><div class="kv-value">Oct 1, 2028</div><div class="kv-sub">By written notice, 6 mo before expiry</div></div>'
+      + '<div class="kv"><div class="kv-label">Size</div><div class="kv-value">11,600 SF</div><div class="kv-sub">Per Schedule B</div></div>'
+      + '<div class="kv"><div class="kv-label">Starting net rent</div><div class="kv-value">$17.00 / SF</div><div class="kv-sub">Escalates $0.50/SF/yr</div></div>'
+      + '<div class="kv"><div class="kv-label">TMI (estimate)</div><div class="kv-value">$7.10 / SF</div><div class="kv-sub">Reconciled annually</div></div>'
+      + '<div class="kv"><div class="kv-label">All-in monthly</div><div class="kv-value">$23,297</div><div class="kv-sub">$279,564 / yr</div></div>'
+      + '<div class="kv"><div class="kv-label">Security deposit</div><div class="kv-value">$46,594</div><div class="kv-sub">Last &amp; first month</div></div>'
+      + '<div class="kv"><div class="kv-label">Free rent</div><div class="kv-value">2 months</div><div class="kv-sub">Months 1-2, net only</div></div>'
+      + '<div class="kv"><div class="kv-label">TI allowance</div><div class="kv-value">$3.00 / SF</div><div class="kv-sub">$34,800 — claimed</div></div>'
+      + '<div class="kv"><div class="kv-label">Option to renew</div><div class="kv-value">1 × 5 yrs</div><div class="kv-sub">At then-fair market rent</div></div>'
+      + '<div class="kv"><div class="kv-label">Assignment</div><div class="kv-value">Landlord consent</div><div class="kv-sub">Not to be unreasonably withheld</div></div>';
+  }
+
+  function refresh(){
+    var arr = load();
+    var picker = document.getElementById('leasePicker');
+    var sel = document.getElementById('leaseSelect');
+    if (!picker || !sel) return;
+
+    // Remember what the user has currently picked so the polling doesn't yank it
+    var prev = sel.value;
+    var hadFocus = (document.activeElement === sel);
+
+    buildOptions(arr);
+    picker.hidden = false;
+
+    // Restore previous selection if it's still a valid option;
+    // otherwise pick the most recent upload, else demo.
+    var validValues = Array.prototype.map.call(sel.options, function(o){ return o.value; });
+    if (prev && validValues.indexOf(prev) !== -1){
+      sel.value = prev;
+    } else {
+      sel.value = arr.length ? '0' : '__demo__';
+    }
+
+    // Only fire onChange when we actually changed the selection (first load
+    // or external write that orphaned the prior value). Skip when the user's
+    // pick survived the rebuild — re-rendering the abstract every 4s would
+    // be wasteful and cause flicker.
+    if (sel.value !== prev) onChange();
+    if (hadFocus) sel.focus();
+  }
+
+  function onChange(){
+    var sel = document.getElementById('leaseSelect');
+    if (!sel) return;
+    if (sel.value === '__demo__'){ showDemo(); return; }
+    if (sel.value === '__chess__'){ showChess(); return; }
+    var arr = load();
+    var idx = parseInt(sel.value, 10);
+    var item = arr[idx];
+    if (!item){ showDemo(); return; }
+    var p = item.private || {};
+    var meta = (item.opt_in_benchmarks ? 'Contributing to benchmarks' : 'Private only') + ' · submitted ' + fmtDate(item.submitted_at);
+    renderAbstract(item, p.address || '(uploaded lease)', meta);
+  }
+
+  function showChess(){
+    var eb = document.getElementById('abstractEyebrow');
+    if (eb) eb.textContent = 'Abstract — 400 Matheson Blvd E, Unit 5 · Chess Electric Ltd.';
+    var metaEl = document.getElementById('leasePickerMeta');
+    if (metaEl) metaEl.textContent = '(extracted from real signed lease PDF · Dec 9, 2022)';
+    document.getElementById('abstractGrid').innerHTML = ''
+      + '<div class="kv"><div class="kv-label">Landlord</div><div class="kv-value">Pure Industrial</div><div class="kv-sub">400-450 Matheson Blvd E Holdings ULC</div></div>'
+      + '<div class="kv"><div class="kv-label">Tenant</div><div class="kv-value">Chess Electric Ltd.</div><div class="kv-sub">No personal indemnifier</div></div>'
+      + '<div class="kv"><div class="kv-label">Use</div><div class="kv-value">Office + electrical/instrument distribution</div><div class="kv-sub">No other use permitted</div></div>'
+      + '<div class="kv"><div class="kv-label">Commencement</div><div class="kv-value">Feb 1, 2023</div><div class="kv-sub">Fixturing Jan 3 – Jan 31 (rent-free)</div></div>'
+      + '<div class="kv"><div class="kv-label">Expiry</div><div class="kv-value">Jan 31, 2028</div><div class="kv-sub">5-year firm term</div></div>'
+      + '<div class="kv"><div class="kv-label">Size</div><div class="kv-value">2,001 SF</div><div class="kv-sub">BOMA, subject to re-measurement (§5.8)</div></div>'
+      + '<div class="kv"><div class="kv-label">Year 1 net rent</div><div class="kv-value">$18.25 / SF</div><div class="kv-sub">$3,043.19 / month</div></div>'
+      + '<div class="kv"><div class="kv-label">Year 5 net rent</div><div class="kv-value">$23.04 / SF</div><div class="kv-sub">$3,841.92 / month</div></div>'
+      + '<div class="kv"><div class="kv-label">Avg net rent (term)</div><div class="kv-value">$20.58 / SF</div><div class="kv-sub">~6% / yr escalator</div></div>'
+      + '<div class="kv"><div class="kv-label">Total Basic Rent</div><div class="kv-value">$205,883</div><div class="kv-sub">Over 5-year term</div></div>'
+      + '<div class="kv"><div class="kv-label">Lease structure</div><div class="kv-value">Net of net of net</div><div class="kv-sub">Tenant pays operating costs + taxes + utilities</div></div>'
+      + '<div class="kv"><div class="kv-label">TMI estimate</div><div class="kv-value">~$6.20 / SF</div><div class="kv-sub">Not fixed in lease — reconciled annually</div></div>'
+      + '<div class="kv"><div class="kv-label">Effective all-in</div><div class="kv-value">~$26.78 / SF</div><div class="kv-sub">Avg net + estimated TMI</div></div>'
+      + '<div class="kv"><div class="kv-label">Total gross rent</div><div class="kv-value">~$267,914</div><div class="kv-sub">Over 5-year term · $205,883 net + $62,031 est. TMI</div></div>'
+      + '<div class="kv"><div class="kv-label">Security deposit</div><div class="kv-value">$5,401.75</div><div class="kv-sub">Held without interest</div></div>'
+      + '<div class="kv"><div class="kv-label">Prepaid rent</div><div class="kv-value">$5,401.75</div><div class="kv-sub">Last month, incl. HST</div></div>'
+      + '<div class="kv"><div class="kv-label">Free rent</div><div class="kv-value">~28 days fixturing</div><div class="kv-sub">Jan 3 – Jan 31, 2023; basic rent abated</div></div>'
+      + '<div class="kv"><div class="kv-label">TI allowance</div><div class="kv-value">$2.00 / SF · max $4,002</div><div class="kv-sub">Lesser of $2/SF or actual cost</div></div>'
+      + '<div class="kv"><div class="kv-label">Plan-review fee</div><div class="kv-value">$1,500</div><div class="kv-sub">Tenant pays Landlord on Commencement</div></div>'
+      + '<div class="kv"><div class="kv-label">Renewal options</div><div class="kv-value">NONE</div><div class="kv-sub" style="color:#b91c1c;font-weight:600;">⚠ No contractual right to renew</div></div>'
+      + '<div class="kv"><div class="kv-label">Relocation right</div><div class="kv-value">Landlord may relocate</div><div class="kv-sub" style="color:#b45309;">60 days notice within Pure Industrial portfolio</div></div>'
+      + '<div class="kv"><div class="kv-label">Demolition right</div><div class="kv-value">Landlord may demolish</div><div class="kv-sub">Standard NNN clause (§17.4)</div></div>'
+      + '<div class="kv"><div class="kv-label">Overholding</div><div class="kv-value">2 × prevailing rent</div><div class="kv-sub">If holding past Jan 31, 2028</div></div>'
+      + '<div class="kv"><div class="kv-label">Assignment</div><div class="kv-value">Landlord consent</div><div class="kv-sub">Not to be unreasonably withheld</div></div>'
+      + '<div class="kv"><div class="kv-label">Insurance min.</div><div class="kv-value">$5,000,000</div><div class="kv-sub">Public liability + builder\'s risk</div></div>';
+
+    // Append benchmark + watch-list cards beneath the grid
+    var grid = document.getElementById('abstractGrid');
+    var bench = document.createElement('div');
+    bench.style.cssText = 'grid-column: 1 / -1; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 16px 18px; margin-top: 8px;';
+    bench.innerHTML = ''
+      + '<div style="font-size:0.74rem; text-transform:uppercase; letter-spacing:0.06em; color:#065f46; font-weight:700; margin-bottom:8px;">Industrio benchmark · Mississauga · &lt;5k SF · n=48 comps last 12 mo</div>'
+      + '<div style="font-size:0.92rem; color:var(--accent); line-height:1.55;">'
+      + 'Year 1 ($18.25) was <strong>at market</strong> when signed. Year 3 ($20.51) was <strong>+12% above</strong> avg ($18.30/SF). '
+      + 'Year 5 ($23.04) is <strong>+26% above</strong> current market avg. With <strong>no renewal option</strong>, the 2028 negotiation is fully open — '
+      + 'a market-rate renewal could reduce rent ~20%, or the landlord could push higher.'
+      + '</div>';
+    grid.appendChild(bench);
+
+    var watch = document.createElement('div');
+    watch.style.cssText = 'grid-column: 1 / -1; background: #fef3c7; border: 1px solid #fde68a; border-radius: 12px; padding: 16px 18px; margin-top: 8px;';
+    watch.innerHTML = ''
+      + '<div style="font-size:0.74rem; text-transform:uppercase; letter-spacing:0.06em; color:#92400e; font-weight:700; margin-bottom:8px;">⚠ Industrio watch-list (5 items the AI flagged)</div>'
+      + '<ol style="margin:0; padding-left:22px; font-size:0.88rem; color:var(--accent); line-height:1.6;">'
+      +   '<li><strong>Renewal alert (2026 trigger):</strong> No contractual renewal — start scoping alternatives by July 2026 (18 months before expiry).</li>'
+      +   '<li><strong>Aggressive escalator (~6%/yr):</strong> Compounded steps push rent past market by Year 3. Typical industrial leases run 2–3%.</li>'
+      +   '<li><strong>Relocation right (§17.3):</strong> Landlord can move you to another unit in their portfolio with 60 days notice. Pays moving costs but you have no veto.</li>'
+      +   '<li><strong>Demolition right (§17.4):</strong> Landlord can terminate by demolishing the building. Standard but worth noting.</li>'
+      +   '<li><strong>TMI not fixed:</strong> Operating costs reconciled annually with no cap. Pull last 2 years of reconciliation statements to flag any unusual increases.</li>'
+      + '</ol>';
+    grid.appendChild(watch);
+  }
+
+  function boot(){
+    var sel = document.getElementById('leaseSelect');
+    if (!sel) return;
+    sel.addEventListener('change', onChange);
+    refresh();
+    // Listen for storage events from lease-upload.js so a new upload
+    // immediately appears in the dropdown without a page reload.
+    window.addEventListener('storage', function(e){ if (e.key === 'industrio.myLeases') refresh(); });
+    // Also react if lease-upload.js writes from this same tab (no storage event)
+    setInterval(refresh, 4000);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+<section>
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 8px 0;">
+      <div class="eyebrow">Timeline</div>
+      <h2 style="margin:0;">What matters between now and expiry.</h2>
+      <p style="margin-top:6px; max-width:640px;">Every milestone derived from your abstract. We'll email you at each trigger; teammates you invite will see the same alerts.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item done">
+        <div class="timeline-date">Dec 9, 2022</div>
+        <div class="timeline-title">Lease signed</div>
+        <p class="timeline-desc">Tenant: Chess Electric Ltd. · Landlord: Pure Industrial · 5-year firm term · No personal indemnifier.</p>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-date">Jan 3, 2023</div>
+        <div class="timeline-title">Fixturing period began</div>
+        <p class="timeline-desc">28 days of access for Tenant's Work (carpet, walls, washroom, kitchen plumbing, network). Basic Rent and Operating Costs abated; utilities + admin fees still payable.</p>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-date">Feb 1, 2023</div>
+        <div class="timeline-title">Lease commenced · Year 1 rent in effect</div>
+        <p class="timeline-desc">$18.25/SF net · $3,043.19/mo basic · ~$4,077/mo all-in (incl. est. TMI $6.20/SF). Deposit $5,401.75 + Prepaid Rent $5,401.75 received by Landlord.</p>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-date">Feb 1, 2024</div>
+        <div class="timeline-title">Year 2 step-up</div>
+        <p class="timeline-desc">Net rent escalated to $19.35/SF (+6.0%) · $3,226.61/mo basic · ~$4,260/mo all-in.</p>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-date">Feb 1, 2025</div>
+        <div class="timeline-title">Year 3 step-up</div>
+        <p class="timeline-desc">Net rent escalated to $20.51/SF (+6.0%) · $3,420.04/mo basic · ~$4,454/mo all-in.</p>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-date">Mar 31, 2025</div>
+        <div class="timeline-title">TMI reconciliation (2024)</div>
+        <p class="timeline-desc">Actual $6.45/SF vs. $6.20/SF estimate — 4% over budget. Catch-up invoice ~$500. No audit dispute filed.</p>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-date">Feb 1, 2026</div>
+        <div class="timeline-title">Year 4 step-up (current)</div>
+        <p class="timeline-desc">Net rent escalated to $21.74/SF (+6.0%) · $3,625.15/mo basic · ~$4,659/mo all-in. Now at +12% above Mississauga sub-5k market average.</p>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-date">Mar 31, 2026</div>
+        <div class="timeline-title">TMI reconciliation (2025)</div>
+        <p class="timeline-desc">Actual $6.62/SF vs. $6.20/SF estimate — 6.8% over. Audit window: TMI audit requests for 2025 due by Jun 30, 2026.</p>
+      </div>
+      <div class="timeline-item active">
+        <div class="timeline-date">Apr 28, 2026</div>
+        <div class="timeline-title">Today — 21 months to expiry</div>
+        <p class="timeline-desc">Year 4 in effect. Watch-window: <strong>no renewal option</strong> in lease; renewal terms must be negotiated fresh. Begin scoping alternatives by Jul 2026 (18 months out).</p>
+      </div>
+      <div class="timeline-item critical">
+        <div class="timeline-critical-badge">⚠ Critical · No renewal option in lease</div>
+        <div class="timeline-date">Jul 31, 2026</div>
+        <div class="timeline-title">Renewal-strategy alert (18 months out)</div>
+        <p class="timeline-desc">No contractual renewal — industrio will pull fresh Mississauga sub-5k comps and the AI broker will draft a negotiation playbook + alternative-space tour list. <strong>This is the single most important date on the timeline</strong> — miss it and you lose your negotiating leverage.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Feb 1, 2027</div>
+        <div class="timeline-title">Year 5 step-up</div>
+        <p class="timeline-desc">Net rent escalates to $23.04/SF (+6.0%) — final term year. $3,841.92/mo basic · ~$4,876/mo all-in. ~26% above market avg at this point.</p>
+      </div>
+      <div class="timeline-item critical">
+        <div class="timeline-critical-badge">⚠ Critical · Last chance to act</div>
+        <div class="timeline-date">Jul 31, 2027</div>
+        <div class="timeline-title">Renewal-or-relocation decision (6 months out)</div>
+        <p class="timeline-desc">Hard deadline to decide: negotiate stay or sign elsewhere. Tenant work + moving lead-time is ~4-6 months for typical sub-5k industrial. <strong>If you reach this date without a signed renewal or a new lease elsewhere</strong>, you risk overholding (200% rent) or scrambling.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Jan 31, 2028</div>
+        <div class="timeline-title">Lease expiry</div>
+        <p class="timeline-desc">Surrender condition: broom-clean. Landlord may require removal of Tenant's Work (carpet, walls, washroom, kitchen plumbing) at its sole discretion. Overholding without a new deal = 200% of last-year rent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 8px 0;">
+      <div class="eyebrow">Payments</div>
+      <h2 style="margin:0;">Twelve months of rent, reconciled.</h2>
+      <p style="margin-top:6px; max-width:640px;">Connect your bank feed or import a CSV. industrio matches each payment to the billed amount and flags variances.</p>
+    </div>
+
+    <table class="pay-table">
+      <thead><tr><th>Month</th><th>Basic rent</th><th>TMI</th><th>Total billed</th><th>Paid</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr class="ok"><td>May 2025</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>On time</td></tr>
+        <tr class="ok"><td>Jun 2025</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>On time</td></tr>
+        <tr class="ok"><td>Jul 2025</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>On time</td></tr>
+        <tr class="ok"><td>Aug 2025</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>On time</td></tr>
+        <tr class="ok"><td>Sep 2025</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>On time</td></tr>
+        <tr class="ok"><td>Oct 2025</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>On time</td></tr>
+        <tr class="ok"><td>Nov 2025</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>On time</td></tr>
+        <tr class="late"><td>Dec 2025</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>Paid 4 days late</td></tr>
+        <tr class="ok"><td>Jan 2026</td><td class="num">$3,420.04</td><td class="num">$1,033.85</td><td class="num">$4,453.89</td><td class="num">$4,453.89</td><td>On time (final Year 3 month)</td></tr>
+        <tr class="ok"><td>Feb 2026</td><td class="num">$3,625.15</td><td class="num">$1,033.85</td><td class="num">$4,659.00</td><td class="num">$4,659.00</td><td>On time (Year 4 step-up applied)</td></tr>
+        <tr class="ok"><td>Mar 2026</td><td class="num">$3,625.15</td><td class="num">$1,033.85</td><td class="num">$4,659.00</td><td class="num">$4,659.00</td><td>On time</td></tr>
+        <tr class="late"><td>Mar 2026 *</td><td class="num">—</td><td class="num">$520.42</td><td class="num">$520.42</td><td class="num">$520.42</td><td>2025 TMI reconciliation true-up (6.8% over budget)</td></tr>
+        <tr class="ok"><td>Apr 2026</td><td class="num">$3,625.15</td><td class="num">$1,033.85</td><td class="num">$4,659.00</td><td class="num">$4,659.00</td><td>On time</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:8px;">12-month rolling view at $20.51/SF (Year 3) and $21.74/SF (Year 4) net rent + estimated $6.20/SF TMI on 2,001 SF. Annual reconciliation true-up posted Mar 2026.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin:0 0 8px 0;">
+      <div class="eyebrow">Automation</div>
+      <h2 style="margin:0;">Your alert rules.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>Renewal countdown</h3><p>18 months out: market comps briefing. 12 months: tour window opens. 6 months: notice deadline reminder.</p></div>
+      <div class="card"><h3>Competitor move alerts</h3><p>When a company in your industry signs a new lease within 30 km, we tell you the size, rent, and landlord.</p></div>
+      <div class="card"><h3>Landlord-touring alerts</h3><p>If your landlord lists your space for a competing prospect — before they serve non-renewal — you'll know.</p></div>
+      <div class="card"><h3>Payment variance</h3><p>We ping you (and accounting) the moment a payment posts short, duplicates, or misses the due date.</p></div>
+      <div class="card"><h3>TMI reconciliation watch</h3><p>Landlord late with the reconciliation? Once your anniversary hits, we auto-request it.</p></div>
+      <div class="card"><h3>Team access</h3><p>Invite colleagues. Each sees the abstract, timeline, and payment history with role-based permissions.</p></div>
+    </div>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <l

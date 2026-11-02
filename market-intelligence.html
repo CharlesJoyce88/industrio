@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Intelligence — industrio</title>
+<meta name="description" content="The analytics engine behind industrio — lease comps, rent benchmarks, vacancy trends, and space efficiency scoring.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Market Intelligence</span>
+    <h1>The numbers behind every <span class="gradient-text">lease decision.</span></h1>
+    <p class="lead">industrio's analytics engine ingests every industrial transaction in the GTA and surrounding submarkets, normalizes it, and benchmarks it against your space — so you negotiate from data, not anecdote.</p>
+  </div>
+</header>
+
+<!-- GTA leased industrial 2026 snapshot, sourced from Realm/TRREB -->
+<section style="padding-top: 0;">
+  <div class="container">
+    <div class="mi-snapshot">
+      <div class="mi-snapshot-head">
+        <div>
+          <span class="mi-eyebrow">GTA industrial · 2026 leased snapshot</span>
+          <h2 class="mi-h2">610 deals closed · sourced from TRREB / Realm</h2>
+          <p class="mi-sub">Peel, Toronto, York, Halton and Durham · all industrial property classes · all sizes</p>
+        </div>
+        <span class="mi-asof">As of <span id="miAsOf">May 2026</span></span>
+      </div>
+
+      <div class="mi-tile-row">
+        <div class="mi-tile">
+          <div class="mi-tile-label">Median asking rent</div>
+          <div class="mi-tile-value">$18.00<span class="unit">/SF net</span></div>
+          <div class="mi-tile-meta">mode $16.95 · 610 listings</div>
+        </div>
+        <div class="mi-tile">
+          <div class="mi-tile-label">Median achieved rent</div>
+          <div class="mi-tile-value">$18.00<span class="unit">/SF net</span></div>
+          <div class="mi-tile-meta">mode $16.00 · 489 disclosed</div>
+        </div>
+        <div class="mi-tile">
+          <div class="mi-tile-label">Median TMI</div>
+          <div class="mi-tile-value">$6.00<span class="unit">/SF</span></div>
+          <div class="mi-tile-meta">mode $4.50 · 572 disclosed</div>
+        </div>
+        <div class="mi-tile">
+          <div class="mi-tile-label">Median DOM</div>
+          <div class="mi-tile-value">74<span class="unit">days</span></div>
+          <div class="mi-tile-meta">mode 14 · mean 112</div>
+        </div>
+        <div class="mi-tile">
+          <div class="mi-tile-label">% close vs asking</div>
+          <div class="mi-tile-value">99<span class="unit">%</span></div>
+          <div class="mi-tile-meta">deals close at or just below asking</div>
+        </div>
+      </div>
+
+      <div class="mi-region-row">
+        <div class="mi-region-tile"><b>Peel</b><span>230 deals</span><div class="mi-region-bar"><span style="width:100%"></span></div></div>
+        <div class="mi-region-tile"><b>Toronto</b><span>161 deals</span><div class="mi-region-bar"><span style="width:70%"></span></div></div>
+        <div class="mi-region-tile"><b>York</b><span>142 deals</span><div class="mi-region-bar"><span style="width:62%"></span></div></div>
+        <div class="mi-region-tile"><b>Halton</b><span>41 deals</span><div class="mi-region-bar"><span style="width:18%"></span></div></div>
+        <div class="mi-region-tile"><b>Durham</b><span>36 deals</span><div class="mi-region-bar"><span style="width:16%"></span></div></div>
+      </div>
+
+      <div class="mi-community-row">
+        <div class="mi-community-label">Top submarkets:</div>
+        <span class="mi-chip">Northeast <b>106</b></span>
+        <span class="mi-chip">Concord <b>41</b></span>
+        <span class="mi-chip">Milliken Mills West <b>34</b></span>
+        <span class="mi-chip">West Humber-Clairville <b>26</b></span>
+        <span class="mi-chip">Western Business Park <b>25</b></span>
+        <span class="mi-chip">QE Queen Elizabeth <b>20</b></span>
+        <span class="mi-chip">York University Heights <b>20</b></span>
+        <span class="mi-chip">Humber Summit <b>18</b></span>
+        <span class="mi-chip">Milliken <b>13</b></span>
+        <span class="mi-chip">Dixie <b>12</b></span>
+        <span class="mi-chip">Gateway <b>12</b></span>
+        <span class="mi-chip">Brock Industrial <b>11</b></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Lease comps — last 24 months</h3>
+        <p>Every leased deal, cross-referenced to the listing: size, tenant, term, starting rent, and escalations.</p>
+      </div>
+      <div class="card">
+        <h3>Asking vs. achieved rents</h3>
+        <p>The real gap between what landlords quote and what tenants pay — by submarket, by size band, by quarter.</p>
+      </div>
+      <div class="card">
+        <h3>Operating cost benchmarks</h3>
+        <p>TMI benchmarked against comparable buildings, with audit-ready line-item comparisons.</p>
+      </div>
+      <div class="card">
+        <h3>Renewal negotiation benchmarks</h3>
+        <p>What recent tenants have achieved on renewals: rent reductions, free rent, TI allowances, and term trades.</p>
+      </div>
+      <div class="card">
+        <h3>Vacancy trends</h3>
+        <p>Submarket vacancy over time, size-banded, so you know whether to push harder or move faster.</p>
+      </div>
+      <div class="card">
+        <h3>Submarket comparisons</h3>
+        <p>Side-by-side economics for adjacent submarkets — rent, TMI, labour, and drive-time impact.</p>
+      </div>
+      <div class="card">
+        <h3>Space efficiency scoring</h3>
+        <p>Column grids, bay depths, and dock-to-clear-height ratios scored against your operational footprint.</p>
+      </div>
+      <div class="card">
+        <h3>Parking ratios</h3>
+        <p>Stalls per 1,000 SF mapped across the submarket, flagged against your headcount and shift patterns.</p>
+      </div>
+      <div class="card">
+        <h3>Power availability</h3>
+        <p>Amps, volts, and phase at the panel — plus upgrade feasibility where data is available.</p>
+      </div>
+      <div class="card">
+        <h3>Clear height distribution</h3>
+        <p>The market's height profile, by submarket and age of building, so you know what's actually achievable in your budget.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="split">
+      <div>
+        <div class="eyebrow" style="color:var(--accent); font-size:0.85rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px;">Effective rent modeling</div>
+        <h2>Starting rent is the first chapter. We read the whole book.</h2>
+        <p>industrio models effective rent across the full term — factoring free rent, step-ups, TI allowances, and operating cost escalations — so you can compare two very different offers on one honest line.</p>
+      </div>
+      <div class="visual">
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+          <span class="tag">5-year effective rent</span>
+          <span class="tag">2 offers compared</span>
+        </div>
+        <div class="data-list">
+          <div class="row"><span class="label">Offer A — starting rent</span><span class="value">$16.50</span></div>
+          <div class="row"><span class="label">Offer A — 3 mo free</span><span class="value">−$0.75</span></div>
+          <div class="row"><span class="label">Offer A — TI $8 / SF</span><span class="value">−$1.60</span></div>
+          <div class="row"><span class="label" style="color:var(--accent);">Offer A effective</span><span class="value">$14.15</span></div>
+          <div class="row"><span class="label">Offer B — starting rent</span><span class="value">$15.00</span></div>
+          <div class="row"><span class="label">Offer B — no free rent</span><span class="value">—</span></div>
+          <div class="row"><span class="label">Offer B — TI $3 / SF</span><span class="value">−$0.60</span></div>
+          <div class="row"><span class="label" style="color:var(--accent);">Offer B effective</span><span class="value">$14.40</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Pull a market report on your own address.</h2>
+      <p>industrio's Pro plan gives you unlimited submarket reports, rent benchmarks, and renewal analytics.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">See pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;">
+          <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+        </div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

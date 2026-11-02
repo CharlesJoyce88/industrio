@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer Docs — industrio</title>
+<meta name="description" content="Backend AI system prompts and agent workflows powering the industrio platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Developer docs</span>
+    <h1>The <span class="gradient-text">AI prompts</span> that power industrio</h1>
+    <p class="lead">These are the live system prompts our extraction, analysis, and agent models run on. We publish them because transparent analytics require transparent models.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container-narrow">
+
+    <h2 style="margin-top:0;">Data extraction &amp; analysis</h2>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">extraction</span><span class="tag">MLS</span></div>
+      <h3>1 · MLS Data Extraction</h3>
+      <pre>Extract all relevant industrial property attributes from this MLS listing. Return structured JSON with:
+
+• Address
+• Asking rent
+• Additional rent / TMI
+• Size (total, industrial %, office %)
+• Clear height
+• Shipping (number + type of doors)
+• Power (amps, volts, phase)
+• Parking count + ratio
+• Zoning
+• Availability date
+• Whitebox status
+• Photos (URLs)
+• Listing agent contact
+• Notes on condition
+• Any red flags
+
+Be concise and accurate.</pre>
+    </div>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">analysis</span><span class="tag">comps</span></div>
+      <h3>2 · Leased Comps Analysis</h3>
+      <pre>Analyze these leased comps and return:
+
+• Achieved rent
+• Free rent
+• Tenant improvement allowances
+• Lease term
+• Effective rent
+• Submarket comparison
+• Trend direction
+• Renewal vs new lease differences
+
+Provide a summary for a tenant negotiating a renewal.</pre>
+    </div>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">summary</span><span class="tag">tenant-facing</span></div>
+      <h3>3 · Space Summary</h3>
+      <pre>Create a concise, tenant-friendly summary of this industrial space under 20,000 SF. Include:
+
+• What the space is (whitebox? improved?)
+• Key specs (clear height, shipping, power, office %)
+• Parking
+• Neighbouring tenants
+• Pros
+• Cons
+• Ideal tenant types
+
+Tone: neutral, factual.</pre>
+    </div>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">reviews</span><span class="tag">scoring</span></div>
+      <h3>4 · Landlord Review Aggregation</h3>
+      <pre>Summarize all reviews for this landlord. Categorize into:
+
+• Responsiveness
+• Maintenance quality
+• Operating cost transparency
+• Renewal negotiation fairness
+• Building condition
+• Tenant mix compatibility
+
+Provide a 1–10 score for each category.</pre>
+    </div>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">environmental</span><span class="tag">risk</span></div>
+      <h3>5 · Environmental Scan</h3>
+      <pre>Analyze environmental data from Ontario well records and other sources. Identify:
+
+• Potential contamination
+• Historical spills
+• Groundwater issues
+• Former industrial uses
+• Any red flags
+
+Provide a risk rating from 1–5.</pre>
+    </div>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">location</span><span class="tag">demographics</span></div>
+      <h3>6 · Drive-Time &amp; Demographics</h3>
+      <pre>Analyze drive-time and demographic data for this address. Include:
+
+• 10/20/30 minute labour pool
+• Industrial labour concentration
+• Transit access
+• Traffic patterns
+• Proximity to suppliers/customers
+
+Provide a relocation suitability score.</pre>
+    </div>
+
+    <h2 style="margin-top:48px;">Email ingestion &amp; parsing</h2>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">ingestion</span><span class="tag">TRREB</span><span class="tag">email</span></div>
+      <h3>E1 &middot; Extract raw listing data from TRREB emails</h3>
+      <pre>Parse this TRREB email and extract all listing blocks. Identify each listing as For Lease, Leased, For Sale, or Sold. Return the raw text for each listing separately, including any attached data such as remarks, property details, and agent information.</pre>
+    </div>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">ingestion</span><span class="tag">attachments</span><span class="tag">PDF</span></div>
+      <h3>E2 &middot; Extract attachments</h3>
+      <pre>Identify and extract all attachments from this TRREB email, including PDFs, brochures, floor plans, and images. Save each attachment with a filename that includes the MLS number and the listing status.</pre>
+    </div>
+
+    <h2 style="margin-top:48px;">AI broker workflow</h2>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">filtering</span></div>
+      <h3>7 · Space Filtering</h3>
+      <pre>Based on the tenant's criteria (size, clear height, shipping, office %, parking, budget, location), filter all available spaces and return the top matches with reasons.</pre>
+    </div>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">outreach</span><span class="tag">email</span></div>
+      <h3>8 · Agent Outreach</h3>
+      <pre>Draft a professional email to the listing agent asking:
+
+• Is the space still available?
+• Are there any offers?
+• Can you provide floor plans, site plans, and updated photos?
+• When can tours be scheduled?
+
+Tone: concise, professional.</pre>
+    </div>
+
+    <div class="doc-block">
+      <div class="tag-row"><span class="tag">tour</span><span class="tag">package</span></div>
+      <h3>9 · Tour Package</h3>
+      <pre>Generate a tour package summarizing all selected spaces. Include:
+
+• Map
+• Key specs
+• Photos
+• Pros/cons
+• Drive-time
+• Environmental flags
+• Landlord scores
+• Questions to ask during the tour
+
+Format cleanly.</pre>
+    </div>
+
+    <div class="cta-block" style="margin-top:56px;">
+      <h2>Building on industrio's data?</h2>
+      <p>Enterprise customers get API access to the same structured outputs these prompts produce. Get in touch to discuss integration.</p>
+      <div class="btn-row">
+        <a href="mailto:api@industrio.ai" class="btn btn-primary">Request API access</a>
+        <a href="pricing.html" class="btn btn-secondary">See plans</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;">
+          <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+        </div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For landlords: how industrio handles tenant data &mdash; industrio</title>
+<meta name="description" content="Plain-language disclosure for landlords whose buildings appear on industrio. What we do with tenant-uploaded lease data, what we don't, and how to request a takedown.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+      <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero" style="padding:48px 0 24px 0;">
+  <div class="container">
+    <span class="hero-eyebrow">For landlords &middot; data disclosure</span>
+    <h1>How industrio handles your <span class="gradient-text">tenants&rsquo; data.</span></h1>
+    <p class="lead">If you&rsquo;re a landlord whose buildings appear on industrio &mdash; or whose tenants might use our tools &mdash; this is the plain-language version of what we do, what we don&rsquo;t do, and how to reach us with concerns or takedown requests.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container" style="max-width:880px;">
+
+    <div class="policy-card">
+      <h2>The two-line summary for landlords</h2>
+      <p style="font-size:1.05rem;">Tenants can upload their own lease to industrio for their own benchmarking and abstract generation. <strong>Their lease document is never shared with us, with you, or with any other user.</strong> Aggregated, anonymized rent ranges may be displayed to others &mdash; but no individual tenant, address, or exact rent is ever identifiable.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>1. What you can see on industrio about your buildings</h2>
+      <p>industrio maintains a building-level inventory of GTA small/mid-bay industrial assets &mdash; addresses, GLA, year built, ownership records, etc. Most of this data is sourced from <strong>public records, Northbridge research, and our own field verification</strong>. It would be visible to anyone walking past your property or reviewing land registry filings.</p>
+      <p>Listings (for-lease, for-sale) come from broker uploads &mdash; same as TRREB, LoopNet, or Spacelist. If a broker has marketed your space, it appears.</p>
+      <p>Aggregated rent benchmarks (e.g. &ldquo;average net rent in Mississauga for 10&ndash;15k SF: $16/SF&rdquo;) are computed from many tenants&rsquo; opt-in submissions. <strong>No individual tenant, building, or lease is identifiable in these aggregates</strong> &mdash; see section 3.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>2. What you cannot see on industrio</h2>
+      <ul>
+        <li><strong>Lists of your tenants who use industrio.</strong> We don&rsquo;t maintain such a list, and our terms prohibit producing one even on request.</li>
+        <li><strong>Specific tenant uploads.</strong> A tenant&rsquo;s lease document, abstract, or exact rent is never shown to you, even for a building you own.</li>
+        <li><strong>Other tenants&rsquo; lease terms in your buildings.</strong> The architecture of our system makes this structurally impossible &mdash; we don&rsquo;t store the link between a building and the tenants who&rsquo;ve uploaded their data.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>3. How aggregation actually works</h2>
+      <p>When a tenant opts in to contribute their lease to our market benchmarks, here&rsquo;s exactly what we do with it:</p>
+      <ul>
+        <li>We bucket their <strong>submarket</strong> (one of 8 GTA submarkets, e.g. &ldquo;Mississauga-East&rdquo;).</li>
+        <li>We bucket their <strong>size class</strong> (e.g. &ldquo;10,000&ndash;15,000 SF&rdquo;).</li>
+        <li>We bucket their <strong>net rent</strong> in $1/SF increments (e.g. &ldquo;$15&ndash;16/SF&rdquo;).</li>
+        <li>We strip everything else: address, unit number, tenant name, lease document, exact rent, TI, free rent, term, renewal terms.</li>
+        <li>The data point only contributes to a displayed benchmark cell when there are at least <strong>5 underlying comps from at least 3 different buildings</strong>. This makes individual deals statistically untraceable.</li>
+        <li>Benchmarks lag by <strong>12 months</strong>. A lease signed today doesn&rsquo;t affect publicly displayed numbers until next year.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>4. The legal framing</h2>
+      <p>We recognize most commercial leases contain confidentiality clauses covering economic terms. We&rsquo;ve designed the upload flow so that the activity falls within typical exceptions to those clauses:</p>
+      <ul>
+        <li>The tenant uploads <strong>their own document for their own analysis</strong> &mdash; comparable to feeding it to ChatGPT, a lawyer, or an accountant. This is generally not restricted by confidentiality clauses, which prohibit <em>disclosure</em>, not <em>analysis</em>.</li>
+        <li>The benchmark contribution is <strong>aggregated and de-identified</strong> &mdash; functionally similar to participating in industry surveys (CBRE/Avison Young/JLL all run these), which courts have not treated as breach.</li>
+        <li>Tenants <strong>attest at upload</strong> that they have authority to share, putting the legal responsibility on them, not on us.</li>
+        <li>Tenants <strong>can withdraw at any time</strong> and the data point is removed within 24 hours.</li>
+      </ul>
+      <p>None of this is legal advice. If you believe the architecture violates a specific lease in your portfolio, please write to us at <a href="mailto:landlords@industrio.ai">landlords@industrio.ai</a>; we will work with you in good faith.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>5. Takedown requests</h2>
+      <p>If you believe specific information about your building is being misused, displayed inaccurately, or breaching a contractual confidentiality obligation, we offer a fast takedown path:</p>
+      <ol>
+        <li>Email <a href="mailto:landlords@industrio.ai">landlords@industrio.ai</a> with a description of the concern and the specific building/listing/aggregate at issue.</li>
+        <li>We acknowledge within <strong>1 business day</strong>.</li>
+        <li>We remove or correct the disputed content within <strong>5 business days</strong> while we investigate.</li>
+        <li>We&rsquo;ll come back to you with a written response within 15 business days &mdash; either keeping the takedown permanent, or explaining why we believe the content is appropriate (with the option to escalate).</li>
+      </ol>
+      <p>We have not, to date, received a takedown request related to aggregated benchmarks (since no individual deal is identifiable in them). For specific listing data, takedown requests are handled the same way Spacelist/LoopNet handle them &mdash; we work with you to keep the platform accurate without becoming a marketing tool you didn&rsquo;t consent to.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>6. What we&rsquo;d like to do <em>with</em> landlords (vs. <em>around</em> them)</h2>
+      <p>industrio&rsquo;s positioning is tenant-side, but we&rsquo;d rather build with landlords than against them. A few ways we partner:</p>
+      <ul>
+        <li><strong>Verified building data.</strong> If you submit accurate specs (clear, doors, power, slab, parking, photos) we&rsquo;ll mark your building as &ldquo;landlord-verified&rdquo;. Tenants trust verified data and tour faster.</li>
+        <li><strong>Direct lead routing.</strong> Tenants who match your available units get routed to your listing agent, with full context (size, timing, broker status, requirements). Better leads, less qualification time.</li>
+        <li><strong>Lease comp benchmarking for your portfolio.</strong> If you contribute your own anonymized lease data into the same pool, you get full benchmarking access for your portfolio. Same rules, same anonymization.</li>
+        <li><strong>Landlord profile pages.</strong> Tenants research landlords before signing. We have a landlord-reviews layer; we&rsquo;d rather show your full track record (responsiveness, deal velocity, build-out quality) than a sparse stub. Reach out to claim your profile.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>7. FAQ</h2>
+      <p><strong>&ldquo;Is industrio scraping my listings?&rdquo;</strong> No. Listings come from broker uploads or direct feeds &mdash; same model as Spacelist or LoopNet. If your brokerage doesn&rsquo;t want a listing on industrio, the brokerage controls that.</p>
+      <p><strong>&ldquo;Are you in TRREB Commercial MLS?&rdquo;</strong> No. industrio is not a TRREB-feed consumer. We don&rsquo;t pull from TRREB or REALM.</p>
+      <p><strong>&ldquo;Can I see exactly what data you have on my building?&rdquo;</strong> Yes. Email <a href="mailto:landlords@industrio.ai">landlords@industrio.ai</a> with the address(es) and we&rsquo;ll send you the full record we hold for that building. We can also delete or correct on request.</p>
+      <p><strong>&ldquo;Can a tenant just upload my lease without telling me?&rdquo;</strong> Yes &mdash; just as they could feed it to ChatGPT, hire a lease auditor, or share it with their lawyer. The lease is their document and they have rights to use it for their own analysis. What they cannot do is publicly disclose your terms in a way that breaches confidentiality, and our architecture is specifically designed so that no individual disclosure occurs.</p>
+      <p><strong>&ldquo;What if I serve a court order?&rdquo;</strong> We comply with the law. Where legally permitted, we&rsquo;ll notify the affected tenant immediately. We push back on overly broad requests.</p>
+      <p><strong>&ldquo;What about CASL and PIPEDA?&rdquo;</strong> All our outbound communications respect express/implied consent under CASL. All personal information is handled per PIPEDA, with Canadian-region storage and a documented breach-notification process.</p>
+    </div>
+
+    <div class="policy-section" style="background:#faf8f2;border-radius:12px;padding:20px 22px;">
+      <h2 style="margin-top:0;">Talk to us directly</h2>
+      <p style="margin-bottom:8px;">A real person on our team handles every landlord inquiry. We&rsquo;d genuinely rather hear from you than have a problem fester.</p>
+      <p style="margin-bottom:0;"><strong>Email:</strong> <a href="mailto:landlords@industrio.ai">landlords@industrio.ai</a> &middot; we respond within 1 business day.</p>
+    </div>
+
+    <div style="margin-top:32px; padding-top:18px; border-top:1px solid var(--border); display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between;">
+      <a href="data-policy.html" class="btn btn-secondary">Read the tenant-side data policy &rarr;</a>
+      <a href="for-landlords.html" class="btn btn-primary">Landlord portal &rarr;</a>
+    </div>
+
+    <p style="font-size:0.78rem;color:var(--text-muted);margin-top:32px;">Last updated: April 2026. Version 1.0. Material changes are versioned and historical versions are available on request.</p>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio. All rights reserved.</span>
+      <span><a href="about.html">About</a> &middot; <a href="data-policy.html">Tenant data policy</a> &middot; <a href="landlord-disclosure.html">Landlord disclosure</a></span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

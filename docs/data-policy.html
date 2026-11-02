@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lease data policy &mdash; industrio</title>
+<meta name="description" content="How industrio handles confidential lease data uploaded by tenants. Plain-language policy for tenants and the landlords whose buildings appear on the platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+      <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero" style="padding:48px 0 24px 0;">
+  <div class="container">
+    <span class="hero-eyebrow">Data policy</span>
+    <h1>How we handle your <span class="gradient-text">lease data.</span></h1>
+    <p class="lead">Plain-language version of what industrio does, doesn&rsquo;t do, and can&rsquo;t do with the lease information you upload. The legalese version is in our terms of service; this is what actually happens.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container" style="max-width:880px;">
+
+    <div class="policy-card">
+      <h2>The two-line summary</h2>
+      <p style="font-size:1.05rem;">Your lease document stays private to your workspace. If you opt in, only an <strong>anonymized rent range</strong> contributes to the market benchmarks &mdash; never your address, tenant name, or exact dollar figures.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>1. What we ask you to upload</h2>
+      <p>You can give industrio your lease information two ways: (a) drop in the signed PDF/DOCX, or (b) type the key terms into our short form (address, size, net rent, term, TI, free rent). Both produce the same outputs &mdash; a private lease abstract for your workspace, and (if you opt in) one anonymized data point for our market benchmarks.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>2. What we do with the document itself</h2>
+      <ul>
+        <li><strong>It stays in your workspace.</strong> Only you and teammates you explicitly invite can see it. industrio never shares the document with landlords, brokers, the landlord-side of our platform, or any other user.</li>
+        <li><strong>We don&rsquo;t train AI on it.</strong> Our AI broker and lease-abstract tools use the document to generate <em>your</em> outputs. The document is not used as training data for any model, ours or anyone else&rsquo;s.</li>
+        <li><strong>It&rsquo;s encrypted at rest and in transit.</strong> AES-256 storage, TLS 1.3 in flight.</li>
+        <li><strong>You can delete it anytime.</strong> One click from your account settings, hard-deleted from our database within 30 days, plus from backups within 90 days.</li>
+        <li><strong>We retain it only as long as you keep your account active.</strong> If you close your account, your documents are purged.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>3. The opt-in: anonymized market benchmarks</h2>
+      <p>When you upload, you can opt in (or not) to contribute to industrio&rsquo;s market benchmarks. Here&rsquo;s exactly what that means:</p>
+      <ul>
+        <li><strong>What gets contributed:</strong> a single data point with three fields &mdash; <em>submarket</em> (e.g. &ldquo;Mississauga-East&rdquo;), <em>size class</em> (e.g. &ldquo;10,000&ndash;15,000 SF&rdquo;), and <em>rent range</em> bucketed in $1/SF increments (e.g. &ldquo;$15&ndash;16/SF net&rdquo;). That&rsquo;s the entire payload.</li>
+        <li><strong>What never gets contributed:</strong> your address, your unit number, your tenant or company name, your exact rent, your TI dollars, your free rent months, your renewal terms, your term length, the landlord, or any text from your lease.</li>
+        <li><strong>Aggregation rules:</strong> we do not display any market benchmark for a submarket+size cell unless we have at least <strong>5 underlying comps</strong> from at least <strong>3 different buildings</strong>. This makes individual deals statistically untraceable.</li>
+        <li><strong>Time delay:</strong> benchmarks lag by 12 months. A lease you signed today contributes to numbers shown next year. This further reduces commercial sensitivity.</li>
+        <li><strong>Withdrawal:</strong> remove your contribution from your account settings at any time. Within 24 hours your data point is purged from all aggregates and the next refresh is recomputed without it.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>4. What benchmarks look like in practice</h2>
+      <p>You&rsquo;ll see things like this in the Market Stats panel on the search page:</p>
+      <div class="policy-example">
+        <strong>Mississauga &middot; 10,000&ndash;15,000 SF</strong><br>
+        Avg net rent (last 12 mo): $15.80 / SF<br>
+        Range: $14.25 &ndash; $17.50<br>
+        Comps: 23 deals across 17 buildings
+      </div>
+      <p>You&rsquo;ll never see something like &ldquo;ACME Manufacturing at 1234 Industrial Dr is paying $15.50.&rdquo; That kind of identification is structurally impossible &mdash; we don&rsquo;t store the link between your data point and the displayed aggregate.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>5. About confidentiality clauses in your lease</h2>
+      <p>Most commercial leases contain some form of confidentiality clause covering economic terms. We&rsquo;ve designed the upload flow so that, in our reading of typical Canadian commercial leases:</p>
+      <ul>
+        <li><strong>Generating your private lease abstract</strong> is comparable to summarizing the document for your own use &mdash; the same as feeding it to ChatGPT, your accountant, or your lawyer. This is generally not restricted by confidentiality clauses, which prohibit <em>disclosure</em>, not <em>analysis</em>.</li>
+        <li><strong>Opting into the benchmarks</strong> typically falls under the &ldquo;professional advisor&rdquo; or &ldquo;aggregated/de-identified disclosure&rdquo; exceptions found in most modern CRE leases. Because what&rsquo;s contributed is structurally non-identifying, the disclosure is functionally similar to participating in industry surveys, which courts have not treated as breach.</li>
+        <li><strong>You attest</strong> at upload that you have the authority to share this data, or that you&rsquo;re using the tool for your own analysis. The legal responsibility for compliance with your specific lease&rsquo;s clause rests with you. If you&rsquo;re unsure, talk to your CRE counsel before opting in.</li>
+        <li><strong>If you withdraw</strong>, we remove your contribution within 24 hours, no questions.</li>
+      </ul>
+      <p>None of the above is legal advice. We&rsquo;re telling you how the system is designed; your specific lease and circumstances may need a lawyer.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>6. What landlords can and can&rsquo;t see</h2>
+      <ul>
+        <li><strong>Landlords on our platform see:</strong> aggregated submarket statistics computed from many tenants&rsquo; opt-ins. Same as what tenants see.</li>
+        <li><strong>Landlords cannot see:</strong> any individual tenant&rsquo;s upload. Even the landlord on <em>your</em> lease cannot see your upload &mdash; we have no path in our system that links a building to the contributors at that building.</li>
+        <li><strong>Landlords cannot request</strong> tenant lists. We don&rsquo;t have one in a queryable form, and even if we did, our policy and terms prohibit producing it.</li>
+        <li><strong>If a landlord serves a court order</strong>, we comply with the law, but we will (a) notify you immediately if legally permitted to do so, and (b) push back hard against overly broad requests.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>7. Third parties, jurisdictions, retention</h2>
+      <ul>
+        <li><strong>Hosting:</strong> Canadian-region servers (AWS ca-central-1) for all tenant-uploaded documents.</li>
+        <li><strong>AI providers:</strong> when we use a third-party LLM (e.g. Anthropic, OpenAI) to abstract your lease, we use enterprise tiers with no-training data agreements, and we send only the minimum text required for that operation.</li>
+        <li><strong>Sub-processors:</strong> a current list is published at /sub-processors and updated whenever it changes. You&rsquo;ll receive notice 30 days before any new sub-processor handles your data.</li>
+        <li><strong>Retention:</strong> documents kept while account active; benchmarks retain anonymized data points for 5 years (or until you withdraw).</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>8. Your rights</h2>
+      <p>Under <strong>PIPEDA</strong> (Canada&rsquo;s federal privacy law) and where applicable provincial equivalents, you have the right to:</p>
+      <ul>
+        <li>Access all data we hold about you, in machine-readable form.</li>
+        <li>Correct anything that&rsquo;s wrong.</li>
+        <li>Withdraw consent and have your data deleted, including from benchmarks.</li>
+        <li>Lodge a complaint with the <strong>Office of the Privacy Commissioner of Canada</strong> if you believe we&rsquo;re mishandling your data.</li>
+        <li>Receive notice of any data breach affecting your information within 72 hours of our awareness.</li>
+      </ul>
+      <p>Exercise any of these by emailing <a href="mailto:privacy@industrio.ai">privacy@industrio.ai</a>. We respond within 5 business days.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>9. Plain-language commitment</h2>
+      <p>We will not:</p>
+      <ul>
+        <li>Sell your lease data to a third party.</li>
+        <li>Display your address, tenant name, or exact rent to any other user.</li>
+        <li>Allow landlords to query our system for tenant identities.</li>
+        <li>Use your lease as training data for any AI model.</li>
+        <li>Hold on to your data after you delete your account.</li>
+      </ul>
+      <p>If we ever change any of the above, we&rsquo;ll notify everyone affected at least 30 days in advance and give you a clean way to delete your data before the change takes effect.</p>
+    </div>
+
+    <div class="policy-section" style="background:#faf8f2;border-radius:12px;padding:18px 20px;">
+      <h2 style="margin-top:0;">Questions?</h2>
+      <p style="margin-bottom:0;">Email <a href="mailto:privacy@industrio.ai">privacy@industrio.ai</a>. A real person reads it. Most questions get a same-day reply.</p>
+    </div>
+
+    <p style="font-size:0.78rem;color:var(--text-muted);margin-top:32px;">Last updated: April 2026. Version 1.0. Material changes are versioned and historical versions are available on request.</p>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio. All rights reserved.</span>
+      <span><a href="about.html">About</a> &middot; <a href="data-policy.html">Data policy</a> &middot; <a href="docs.html">Developer docs</a></span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operations Fit — industrio</title>
+<meta name="description" content="Score every shortlist building against your real operating needs — power, trucking, roof, and slab.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Operations fit</span>
+    <h1>Rent is fiction. <span class="gradient-text">Operations fit is real.</span></h1>
+    <p class="lead">Tell us your power draw, your biggest truck, your storage plan. We'll score every shortlist building on the three details that kill deals after move-in.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="ops-grid">
+
+      <\!-- POWER -->
+      <div class="ops-card">
+        <div class="ops-head">
+          <div class="ops-icon">&#9889;</div>
+          <div>
+            <h2>Power</h2>
+            <p>Many small-bay buildings supply 200 A at 600 V — enough for light assembly, tight for anything that runs compressors, CNCs, or heavy lighting.</p>
+          </div>
+        </div>
+
+        <div class="ops-inputs">
+          <label>Required service (kVA)<input type="number" id="pwrKVA" value="150" min="0" step="10"></label>
+          <label>Voltage
+            <select id="pwrVolt">
+              <option value="208">208 V (3&phi;)</option>
+              <option value="347">347 V</option>
+              <option value="600" selected>600 V (3&phi;)</option>
+            </select>
+          </label>
+          <label>Phase
+            <select id="pwrPhase">
+              <option value="1">Single phase</option>
+              <option value="3" selected>Three phase</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="pwrResults" class="ops-results"></div>
+      </div>
+
+      <\!-- TRUCK -->
+      <div class="ops-card">
+        <div class="ops-head">
+          <div class="ops-icon">&#128667;</div>
+          <div>
+            <h2>Truck compatibility</h2>
+            <p>Older 1980s-era buildings were built for 40' trailers. Push a 53' tandem through and the court jams, the apron grinds, and the door stop lets in snow.</p>
+          </div>
+        </div>
+
+        <div class="ops-inputs">
+          <label>Largest regular vehicle
+            <select id="truckType">
+              <option value="cubeVan">Cube van (~16 ft)</option>
+              <option value="straightTruck">Straight truck / dry van (24 – 28 ft)</option>
+              <option value="tandem40">40' tandem trailer</option>
+              <option value="tandem53" selected>53' tandem trailer</option>
+              <option value="btrain">B-train (~72 ft)</option>
+            </select>
+          </label>
+          <label>Average visits per week<input type="number" id="truckVisits" value="12" min="0" step="1"></label>
+        </div>
+
+        <div id="truckResults" class="ops-results"></div>
+      </div>
+
+      <\!-- ROOF / SLAB -->
+      <div class="ops-card">
+        <div class="ops-head">
+          <div class="ops-icon">&#9640;</div>
+          <div>
+            <h2>Roof &amp; slab load</h2>
+            <p>Want rooftop solar? Cantilever racking 30' high? A 20-ton press? The building doesn't know until you ask. We read the structural reports so you don't have to.</p>
+          </div>
+        </div>
+
+        <div class="ops-inputs">
+          <label>Need rooftop capacity for
+            <select id="roofNeed">
+              <option value="none">Just HVAC</option>
+              <option value="solar">Rooftop solar array</option>
+              <option value="heavy">Heavy rooftop equipment (&gt; 5 PSF added)</option>
+            </select>
+          </label>
+          <label>Need slab rated for
+            <select id="slabNeed">
+              <option value="250">Light (&le; 250 PSF — office / light storage)</option>
+              <option value="400" selected>Medium (400 PSF — rack + forklift)</option>
+              <option value="600">Heavy (600 PSF — presses, heavy racking)</option>
+              <option value="1000">Very heavy (&ge; 1,000 PSF — casting, heavy equipment)</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="roofResults" class="ops-results"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">How we score</div>
+      <h2>Three readings, one fit score per building.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>Pass</h3><p>The building meets or exceeds your requirement with no upgrade work. Ready for move-in as-is.</p></div>
+      <div class="card"><h3>Upgrade</h3><p>The building can be brought up to spec with a known scope — transformer upgrade, door enlargement, floor overlay — and we estimate the cost.</p></div>
+      <div class="card"><h3>Hard stop</h3><p>The deficiency cannot reasonably be cured (structural slab, hydro service ceiling at the pole, court geometry). Move on.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Score every building the AI broker shortlists.</h2>
+      <p>Pro subscribers feed their real operating spec in once. Every shortlist the AI broker returns comes pre-scored on power, trucking, roof, and slab.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">See pricing</a>
+        <a href="ai-broker.html" class="btn btn-secondary">Meet the AI broker</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Fit scores are indicative — a building condition assessment is still recommended.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="operations-fit.js"></script>
+
+</body>
+</html>

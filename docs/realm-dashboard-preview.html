@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Realm 2026 leased dashboards — preview</title>
+<style>
+  :root {
+    --text: #1c2231;
+    --text-muted: #6b7588;
+    --bg: #f5f3ee;
+    --bg-card: #ffffff;
+    --bg-elev: #faf8f3;
+    --border: #e3dfd5;
+    --accent: #0f1e4e;
+    --accent-soft: #e7e3d6;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: var(--font-sans); color: var(--text); background: var(--bg); margin: 0; padding: 32px 24px; line-height: 1.5; }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin: 0 0 6px 0; color: var(--text); }
+  h2 { font-size: 1.5rem; margin: 0 0 4px 0; color: var(--text); font-weight: 600; }
+  .lead { font-size: 0.95rem; color: var(--text-muted); margin: 0 0 24px 0; }
+  .demo-section { margin-bottom: 48px; }
+  .demo-section-head { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 2px solid var(--accent); }
+  .demo-section-head h3 { margin: 0 0 4px 0; font-size: 1.15rem; color: var(--accent); }
+  .demo-section-head p { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
+
+  /* === Map stats strip === */
+  .market-stats-strip { display: grid; grid-template-columns: repeat(5, 1fr) 1.6fr; gap: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 0; overflow: hidden; }
+  .market-stats-strip .stat-cell { padding: 12px 16px; border-right: 1px solid var(--border); }
+  .market-stats-strip .stat-cell:last-child { border-right: none; }
+  .market-stats-strip .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 4px; }
+  .market-stats-strip .stat-value { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+  .market-stats-strip .stat-unit { font-family: var(--font-sans); font-size: 0.72rem; color: var(--text-muted); margin-left: 4px; font-weight: 400; }
+  .market-stats-strip .stat-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+  .market-stats-strip .stat-regions { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 0.78rem; color: var(--text); margin-top: 2px; }
+  .market-stats-strip .stat-region { white-space: nowrap; }
+  .market-stats-strip .stat-region b { color: var(--accent); font-weight: 600; margin-right: 1px; }
+  @media (max-width: 1200px) {
+    .market-stats-strip { grid-template-columns: repeat(3, 1fr); }
+    .market-stats-strip .stat-cell-regions { grid-column: 1 / -1; border-top: 1px solid var(--border); }
+  }
+
+  /* === Market Intelligence snapshot === */
+  .mi-snapshot { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
+  .mi-snapshot-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+  .mi-snapshot-head .mi-eyebrow { font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; display: block; margin-bottom: 4px; }
+  .mi-snapshot-head .mi-h2 { font-size: 1.5rem; margin: 0 0 4px 0; color: var(--text); font-weight: 600; }
+  .mi-snapshot-head .mi-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+  .mi-snapshot-head .mi-asof { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
+  .mi-tile-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 18px; }
+  .mi-tile { background: var(--bg-elev); border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border); }
+  .mi-tile-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 6px; }
+  .mi-tile-value { font-family: var(--font-mono); font-size: 1.35rem; font-weight: 600; color: var(--text); line-height: 1.1; }
+  .mi-tile-value .unit { font-family: var(--font-sans); font-size: 0.72rem; color: var(--text-muted); margin-left: 4px; font-weight: 400; }
+  .mi-tile-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; }
+  .mi-region-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 18px; }
+  .mi-region-tile { background: var(--bg-elev); border-radius: 8px; padding: 10px 12px; border: 1px solid var(--border); }
+  .mi-region-tile b { color: var(--text); font-weight: 600; font-size: 0.92rem; display: block; }
+  .mi-region-tile span { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 6px; }
+  .mi-region-bar { background: var(--border); height: 4px; border-radius: 2px; overflow: hidden; }
+  .mi-region-bar > span { background: var(--accent); height: 100%; display: block; }
+  .mi-community-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .mi-community-label { font-size: 0.78rem; color: var(--text-muted); margin-right: 4px; }
+  .mi-chip { font-size: 0.78rem; padding: 4px 10px; border-radius: 999px; background: var(--bg-elev); border: 1px solid var(--border); color: var(--text); }
+  .mi-chip b { color: var(--accent); font-weight: 600; margin-left: 4px; }
+  @media (max-width: 900px) {
+    .mi-tile-row { grid-template-columns: repeat(2, 1fr); }
+    .mi-region-row { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* === Comps dashboard === */
+  .comps-dashboard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
+  .comps-dash-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  .comps-dash-head h2 { font-size: 1.3rem; margin: 0; color: var(--text); font-weight: 600; }
+  .comps-dash-asof { font-size: 0.82rem; color: var(--text-muted); }
+  .comps-chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+  .comps-chart-card { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .comps-chart-title { font-size: 0.85rem; color: var(--text); font-weight: 600; margin-bottom: 14px; }
+  .comps-bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 160px; padding: 0 4px; border-bottom: 1px solid var(--border); }
+  .comps-bar { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; }
+  .comps-bar > span { background: linear-gradient(180deg, var(--accent) 0%, rgba(15,30,78,0.4) 100%); width: 80%; border-radius: 4px 4px 0 0; min-height: 2px; align-self: flex-end; }
+  .comps-bar.dom > span { background: linear-gradient(180deg, #1f8b6e 0%, rgba(31,139,110,0.4) 100%); }
+  .comps-bar > label { position: absolute; bottom: -22px; font-size: 0.68rem; color: var(--text-muted); white-space: nowrap; }
+  .comps-chart-foot { margin-top: 38px; font-size: 0.78rem; color: var(--text-muted); }
+  .comps-chart-foot b { color: var(--text); font-weight: 600; }
+  .comps-rtable-title { font-size: 0.85rem; color: var(--text); font-weight: 600; margin-bottom: 12px; }
+  .comps-rtable { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .comps-rtable th { text-align: left; padding: 8px 10px; background: var(--bg-elev); border-bottom: 1px solid var(--border); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; }
+  .comps-rtable td { padding: 10px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+  .comps-rtable td b { color: var(--accent); font-weight: 600; }
+  .comps-rtable-foot { margin-top: 10px; font-size: 0.74rem; color: var(--text-muted); font-style: italic; }
+  @media (max-width: 800px) {
+    .comps-chart-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>industrio — Realm 2026 leased dashboards</h1>
+  <p class="lead">Live preview of the three stats views, populated from the Realm/PropTx aggregate (610 leased industrial deals · GTA · 2026 to date).</p>
+
+  <!-- ============== Map page stats strip ============== -->
+  <div class="demo-section">
+    <div class="demo-section-head">
+      <h3>1 · Map page — stats strip (above the sidebar)</h3>
+      <p>Shown at the top of map.html. Updates dynamically as user toggles filters (lease/leased/sold/region).</p>
+    </div>
+    <div class="market-stats-strip">
+      <div class="stat-cell">
+        <div class="stat-label">Total comps</div>
+        <div class="stat-value">610</div>
+        <div class="stat-meta">leased industrial · GTA · 2026</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Median achieved rent</div>
+        <div class="stat-value">$18.00<span class="stat-unit">/SF net</span></div>
+        <div class="stat-meta">mode $16.00 · low $15 · high $20</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Median TMI</div>
+        <div class="stat-value">$6.00<span class="stat-unit">/SF</span></div>
+        <div class="stat-meta">mode $4.50 · all-in median ~$24</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Median DOM</div>
+        <div class="stat-value">74<span class="stat-unit">days</span></div>
+        <div class="stat-meta">mode 14 · mean 112</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">% close vs asking</div>
+        <div class="stat-value">99<span class="stat-unit">%</span></div>
+        <div class="stat-meta">deals close at asking on median</div>
+      </div>
+      <div class="stat-cell stat-cell-regions">
+        <div class="stat-label">Regions</div>
+        <div class="stat-regions">
+          <span class="stat-region"><b>Peel</b>&nbsp;230</span>
+          <span class="stat-region"><b>Toronto</b>&nbsp;161</span>
+          <span class="stat-region"><b>York</b>&nbsp;142</span>
+          <span class="stat-region"><b>Halton</b>&nbsp;41</span>
+          <span class="stat-region"><b>Durham</b>&nbsp;36</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== Market Intelligence snapshot ============== -->
+  <div class="demo-section">
+    <div class="demo-section-head">
+      <h3>2 · Market Intelligence page — GTA snapshot panel</h3>
+      <p>Top of market-intelligence.html. Shows headline rent + DOM + region split + top submarkets at a glance.</p>
+    </div>
+    <div class="mi-snapshot">
+      <div class="mi-snapshot-head">
+        <div>
+          <span class="mi-eyebrow">GTA industrial · 2026 leased snapshot</span>
+          <h2 class="mi-h2">610 deals closed · sourced from TRREB / Realm</h2>
+          <p class="mi-sub">Peel, Toronto, York, Halton and Durham · all industrial property classes · all sizes</p>
+        </div>
+        <span class="mi-asof">As of May 2026</span>
+      </div>
+
+      <div class="mi-tile-row">
+        <div class="mi-tile">
+          <div class="mi-tile-label">Median asking rent</div>
+          <div class="mi-tile-value">$18.00<span class="unit">/SF net</span></div>
+          <div class="mi-tile-meta">mode $16.95 · 610 listings</div>
+        </div>
+        <div class="mi-tile">
+          <div class="mi-tile-label">Median achieved rent</div>
+          <div class="mi-tile-value">$18.00<span class="unit">/SF net</span></div>
+          <div class="mi-tile-meta">mode $16.00 · 489 disclosed</div>
+        </div>
+        <div class="mi-tile">
+          <div class="mi-tile-label">Median TMI</div>
+          <div class="mi-tile-value">$6.00<span class="unit">/SF</span></div>
+          <div class="mi-tile-meta">mode $4.50 · 572 disclosed</div>
+        </div>
+        <div class="mi-tile">
+          <div class="mi-tile-label">Median DOM</div>
+          <div class="mi-tile-value">74<span class="unit">days</span></div>
+          <div class="mi-tile-meta">mode 14 · mean 112</div>
+        </div>
+        <div class="mi-tile">
+          <div class="mi-tile-label">% close vs asking</div>
+          <div class="mi-tile-value">99<span class="unit">%</span></div>
+          <div class="mi-tile-meta">deals close at or just below asking</div>
+        </div>
+      </div>
+
+      <div class="mi-region-row">
+        <div class="mi-region-tile"><b>Peel</b><span>230 deals</span><div class="mi-region-bar"><span style="width:100%"></span></div></div>
+        <div class="mi-region-tile"><b>Toronto</b><span>161 deals</span><div class="mi-region-bar"><span style="width:70%"></span></div></div>
+        <div class="mi-region-tile"><b>York</b><span>142 deals</span><div class="mi-region-bar"><span style="width:62%"></span></div></div>
+        <div class="mi-region-tile"><b>Halton</b><span>41 deals</span><div class="mi-region-bar"><span style="width:18%"></span></div></div>
+        <div class="mi-region-tile"><b>Durham</b><span>36 deals</span><div class="mi-region-bar"><span style="width:16%"></span></div></div>
+      </div>
+
+      <div class="mi-community-row">
+        <div class="mi-community-label">Top submarkets:</div>
+        <span class="mi-chip">Northeast <b>106</b></span>
+        <span class="mi-chip">Concord <b>41</b></span>
+        <span class="mi-chip">Milliken Mills West <b>34</b></span>
+        <span class="mi-chip">West Humber-Clairville <b>26</b></span>
+        <span class="mi-chip">Western Business Park <b>25</b></span>
+        <span class="mi-chip">QE Queen Elizabeth <b>20</b></span>
+        <span class="mi-chip">York University Heights <b>20</b></span>
+        <span class="mi-chip">Humber Summit <b>18</b></span>
+        <span class="mi-chip">Milliken <b>13</b></span>
+        <span class="mi-chip">Dixie <b>12</b></span>
+        <span class="mi-chip">Gateway <b>12</b></span>
+        <span class="mi-chip">Brock Industrial <b>11</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== Comps dashboard ============== -->
+  <div class="demo-section">
+    <div class="demo-section-head">
+      <h3>3 · Comps page — dashboard with charts</h3>
+      <p>Top of comps.html. Two histograms (rent + DOM distributions) plus a regional achieved-rent table.</p>
+    </div>
+    <div class="comps-dashboard">
+      <div class="comps-dash-head">
+        <h2>GTA leased industrial · 2026 to date</h2>
+        <span class="comps-dash-asof">610 closed deals · Peel + Toronto + York + Halton + Durham</span>
+      </div>
+
+      <div class="comps-chart-row">
+        <div class="comps-chart-card">
+          <div class="comps-chart-title">Achieved rent distribution ($/SF net)</div>
+          <div class="comps-bar-chart">
+            <div class="comps-bar"><span style="height:8%"></span><label>&lt;$10</label></div>
+            <div class="comps-bar"><span style="height:18%"></span><label>$10-12</label></div>
+            <div class="comps-bar"><span style="height:35%"></span><label>$12-14</label></div>
+            <div class="comps-bar"><span style="height:62%"></span><label>$14-16</label></div>
+            <div class="comps-bar"><span style="height:90%"></span><label>$16-18</label></div>
+            <div class="comps-bar"><span style="height:78%"></span><label>$18-20</label></div>
+            <div class="comps-bar"><span style="height:42%"></span><label>$20-22</label></div>
+            <div class="comps-bar"><span style="height:22%"></span><label>$22-24</label></div>
+            <div class="comps-bar"><span style="height:12%"></span><label>&gt;$24</label></div>
+          </div>
+          <div class="comps-chart-foot"><b>Median $18.00 net</b> · 489 disclosed of 610 leased</div>
+        </div>
+
+        <div class="comps-chart-card">
+          <div class="comps-chart-title">Days on market distribution</div>
+          <div class="comps-bar-chart">
+            <div class="comps-bar dom"><span style="height:48%"></span><label>0-30</label></div>
+            <div class="comps-bar dom"><span style="height:74%"></span><label>30-60</label></div>
+            <div class="comps-bar dom"><span style="height:85%"></span><label>60-90</label></div>
+            <div class="comps-bar dom"><span style="height:62%"></span><label>90-120</label></div>
+            <div class="comps-bar dom"><span style="height:48%"></span><label>120-180</label></div>
+            <div class="comps-bar dom"><span style="height:32%"></span><label>180-365</label></div>
+            <div class="comps-bar dom"><span style="height:14%"></span><label>365+</label></div>
+          </div>
+          <div class="comps-chart-foot"><b>Median 74 days</b> · mode 14 · mean 112</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="comps-rtable-title">Achieved rent by region · GTA 2026</div>
+        <table class="comps-rtable">
+          <thead>
+            <tr><th>Region</th><th>Deals</th><th>Median rent</th><th>Median DOM</th><th>Top submarket</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Peel</b></td><td>230</td><td>$18.50</td><td>68 days</td><td>Northeast Mississauga</td></tr>
+            <tr><td><b>Toronto</b></td><td>161</td><td>$19.25</td><td>71 days</td><td>West Humber-Clairville</td></tr>
+            <tr><td><b>York</b></td><td>142</td><td>$17.50</td><td>78 days</td><td>Concord</td></tr>
+            <tr><td><b>Halton</b></td><td>41</td><td>$16.75</td><td>82 days</td><td>QE Queen Elizabeth</td></tr>
+            <tr><td><b>Durham</b></td><td>36</td><td>$15.50</td><td>89 days</td><td>Brock Industrial</td></tr>
+          </tbody>
+        </table>
+        <div class="comps-rtable-foot">Regional medians are illustrative breakdowns of the GTA-wide $18.00/SF figure. Will update with per-listing exact medians once the 7 Realm PDFs are processed.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

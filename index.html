@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>industrio — Industrial Leasing Intelligence for Tenants Under 20,000 SF</title>
+<meta name="description" content="Real-time TRREB MLS data, landlord reviews, environmental due diligence, and an AI broker — built for industrial tenants under 20,000 SF.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <h1>Industrial real estate decisions<br><span class="gradient-text">powered by data.</span></h1>
+    <p class="lead">Industrial real estate intelligence built for occupier clients under 30,000 SF.</p>
+    <div class="btn-row">
+      <a href="pricing.html" class="btn btn-primary">Start free →</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="stats">
+      <div class="stat">
+        <div class="num">18,400+</div>
+        <div class="label">Industrial comps indexed</div>
+      </div>
+      <div class="stat">
+        <div class="num">24 mo</div>
+        <div class="label">Rolling lease comp window</div>
+      </div>
+      <div class="stat">
+        <div class="num">2,100+</div>
+        <div class="label">Landlords scored</div>
+      </div>
+      <div class="stat">
+        <div class="num">&lt;20k SF</div>
+        <div class="label">Tenant focus</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Capabilities</div>
+      <h2>Everything a tenant rep has — without the conflict of interest.</h2>
+      <p>industrio is the single analyst, broker, and environmental consultant for small-bay industrial tenants. Transparent data, clear analytics, and a tenant-first agent that does the legwork.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Real-time TRREB MLS data</h3>
+        <p>Live for-lease and leased comps, normalized and enriched — not a lagging PDF.</p>
+      </div>
+      <div class="card">
+        <h3>Automated space summaries</h3>
+        <p>Clear height, power, shipping, office %, parking, whitebox status — in seconds.</p>
+      </div>
+      <div class="card">
+        <h3>Landlord &amp; building reviews</h3>
+        <p>Responsiveness, operating cost fairness, renewal behaviour — scored by tenants.</p>
+      </div>
+      <div class="card">
+        <h3>Demographics &amp; labour analytics</h3>
+        <p>10/20/30-minute drive-time labour pools, transit, and traffic — mapped per address.</p>
+      </div>
+      <div class="card">
+        <h3>Environmental intelligence</h3>
+        <p>Ontario well records, historical spills, former industrial uses, groundwater flags.</p>
+      </div>
+      <div class="card">
+        <h3>Tenant-fit scoring</h3>
+        <p>Neighbouring tenant mix, zoning compliance, shipping court congestion.</p>
+      </div>
+      <div class="card">
+        <h3>AI broker</h3>
+        <p>Contacts listing agents, confirms availability, requests floor plans, schedules tours.</p>
+      </div>
+      <div class="card">
+        <h3>Tour packages, auto-generated</h3>
+        <p>Maps, photos, drive-times, landlord scores, and the right questions to ask — ready to go.</p>
+      </div>
+      <div class="card">
+        <h3>Top-broker escalation</h3>
+        <p>Want human help? Connect instantly with a vetted industrial broker. No pressure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="split">
+      <div>
+        <div class="eyebrow" style="color:var(--accent); font-size:0.85rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px;">Market Intelligence</div>
+        <h2>Asking rent is a story. We show you the ending.</h2>
+        <p>Every listing is cross-referenced with achieved rent, free-rent periods, TI allowances, and term — so you negotiate against the real market, not the one printed on a flyer.</p>
+        <a href="market-intelligence.html" class="btn btn-secondary">Explore the data engine →</a>
+      </div>
+      <div class="visual">
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+          <span class="tag">Asking vs Achieved</span>
+          <span class="tag">Last 24 mo</span>
+        </div>
+        <div class="data-bar">
+          <div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:72%"></div>
+          <div class="bar" style="height:48%"></div>
+          <div class="bar" style="height:85%"></div>
+          <div class="bar" style="height:60%"></div>
+          <div class="bar" style="height:92%"></div>
+          <div class="bar" style="height:70%"></div>
+          <div class="bar" style="height:78%"></div>
+          <div class="bar" style="height:66%"></div>
+          <div class="bar" style="height:88%"></div>
+          <div class="bar" style="height:74%"></div>
+          <div class="bar" style="height:95%"></div>
+        </div>
+        <div class="data-list" style="margin-top:16px;">
+          <div class="row"><span class="label">Avg asking</span><span class="value">$17.25 / SF</span></div>
+          <div class="row"><span class="label">Avg achieved</span><span class="value">$15.80 / SF</span></div>
+          <div class="row"><span class="label">Net effective</span><span class="value">$14.20 / SF</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="split">
+      <div class="visual">
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+          <span class="tag">Landlord: ACME Industrial Holdings</span>
+          <span class="score">8.4 / 10</span>
+        </div>
+        <div class="data-list">
+          <div class="row"><span class="label">Responsiveness</span><span class="value">9.1</span></div>
+          <div class="row"><span class="label">Maintenance quality</span><span class="value">8.3</span></div>
+          <div class="row"><span class="label">Op. cost transparency</span><span class="value">7.8</span></div>
+          <div class="row"><span class="label">Renewal fairness</span><span class="value">8.7</span></div>
+          <div class="row"><span class="label">Building condition</span><span class="value">8.0</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="color:var(--accent); font-size:0.85rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px;">Landlord Reviews</div>
+        <h2>Know who you're signing with.</h2>
+        <p>industrio aggregates verified tenant reviews across responsiveness, maintenance, operating cost transparency, renewal fairness, and building condition — so surprises happen before you sign, not after.</p>
+        <a href="reviews.html" class="btn btn-secondary">See the review framework →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Stop guessing. Start negotiating from data.</h2>
+      <p>Whether you're up for renewal or hunting a new building, industrio puts the analyst, the broker, and the due-diligence team in one place.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">Start free</a>
+        <a href="ai-broker.html" class="btn btn-secondary">Meet the AI broker</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;">
+          <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+        </div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>
+                                                                          

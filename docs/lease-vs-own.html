@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lease vs. Own — industrio</title>
+<meta name="description" content="Honest lease-vs-own economics for industrial tenants considering an industrial condo purchase. Mortgage math, equity, tax, liquidity, and break-even.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Lease vs. Own</span>
+    <h1>Thinking about an <span class="gradient-text">industrial condo?</span></h1>
+    <p class="lead">Buying your own small-bay unit can be the best real-estate decision an owner-operator ever makes — or a capital-intensive distraction. industrio models both paths honestly, from down payment to exit, so the decision is yours with eyes wide open.</p>
+    <div class="btn-row">
+      <a href="#calculator" class="btn btn-primary">Try the calculator</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">What we model</div>
+      <h2>Both sides of the page — fully loaded costs, not headline numbers.</h2>
+      <p>industrio compares the real, after-tax economics of leasing vs. owning an industrial condo over your intended hold period, updated with live submarket data.</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Down payment &amp; mortgage structure</h3>
+        <p>Commercial mortgage assumptions (typically 25–35% down, 20–25 yr amortization), stress-tested against current Bank of Canada posted rates and spreads.</p>
+      </div>
+      <div class="card">
+        <h3>All-in cost of occupancy</h3>
+        <p>Lease: base rent + TMI + utilities + escalations. Own: mortgage P&amp;I + condo fees + realty tax + insurance + reserve contributions.</p>
+      </div>
+      <div class="card">
+        <h3>Equity build-up &amp; appreciation</h3>
+        <p>Principal paydown year-by-year plus conservative appreciation bands for GTA industrial condo stock — with sensitivity tables so you see the full range.</p>
+      </div>
+      <div class="card">
+        <h3>Tax treatment</h3>
+        <p>Rent deductibility vs. mortgage interest deductibility, CCA on the building, HST implications, and capital gains exposure on exit — flagged clearly.</p>
+      </div>
+      <div class="card">
+        <h3>Liquidity &amp; opportunity cost</h3>
+        <p>What that down payment could earn in the operating business instead. Owning real estate is a concentrated, illiquid asset — we price that in.</p>
+      </div>
+      <div class="card">
+        <h3>Personal guarantees &amp; covenants</h3>
+        <p>Commercial mortgages usually require personal guarantees. We surface the financial-covenant implications vs. a clean lease.</p>
+      </div>
+      <div class="card">
+        <h3>Flexibility &amp; exit</h3>
+        <p>Leases let you walk at term end. Condos take 6–18 months to sell in a soft market. We model the exit friction honestly.</p>
+      </div>
+      <div class="card">
+        <h3>Building &amp; condo-board risk</h3>
+        <p>Reserve fund adequacy, special assessment history, bylaws on outdoor storage and signage, and shared-facility rules that constrain your operation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="calculator">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Interactive calculator</div>
+      <h2>Run your own <span class="gradient-text">lease-vs-own</span> numbers.</h2>
+      <p>Change any assumption — the math updates live. After-tax, all values in CAD. Intended for decision support, not a substitute for your accountant.</p>
+    </div>
+
+    <div class="calc-grid">
+      <div class="calc-inputs">
+        <h3>Space &amp; deal</h3>
+        <label>Size (SF)<input type="number" id="calc-size" value="10000" min="1000" step="500"></label>
+        <label>Purchase price ($/SF)<input type="number" id="calc-price" value="425" min="50" step="25"></label>
+        <label>Hold period (years)<input type="number" id="calc-hold" value="10" min="1" max="40"></label>
+
+        <h3>Financing</h3>
+        <label>Down payment (%)<input type="number" id="calc-down" value="30" min="0" max="100" step="5"></label>
+        <label>Mortgage rate (%)<input type="number" id="calc-rate" value="6.5" min="0" max="15" step="0.25"></label>
+        <label>Amortization (years)<input type="number" id="calc-amort" value="25" min="5" max="40"></label>
+
+        <h3>Lease alternative</h3>
+        <label>Base rent ($/SF/yr)<input type="number" id="calc-rent" value="15" min="0" step="0.25"></label>
+        <label>TMI ($/SF/yr)<input type="number" id="calc-tmi" value="6" min="0" step="0.25"></label>
+        <label>Annual escalation (%)<input type="number" id="calc-esc" value="3" min="0" max="15" step="0.25"></label>
+
+        <h3>Ownership &amp; exit</h3>
+        <label>Condo + op ($/SF/yr)<input type="number" id="calc-condo" value="4.5" min="0" step="0.25"></label>
+        <label>Appreciation (% / yr)<input type="number" id="calc-appr" value="3" min="-5" max="15" step="0.25"></label>
+        <label>Corporate tax rate (%)<input type="number" id="calc-tax" value="26.5" min="0" max="60" step="0.5"></label>
+        <label>Selling cost (% of sale)<input type="number" id="calc-sell" value="2" min="0" max="10" step="0.25"></label>
+      </div>
+
+      <div class="calc-output">
+        <div class="visual" id="calc-results"></div>
+        <div class="calc-summary" id="calc-summary"></div>
+        <p class="text-center" style="color:var(--text-muted); font-size:0.82rem; margin-top:20px;">
+          Model is simplified. Assumes 50% capital gains inclusion, 4% declining-balance CCA on 90% building portion with half-year rule in year one, level condo escalation, and CCA recapture at sale. Consult your accountant for transaction-specific modeling.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="calculator.js"></script>
+
+
+<section id="condo-market">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Condo market intelligence</div>
+      <h2>Buying or selling an <span class="gradient-text">industrial condo?</span></h2>
+      <p>Run an instant valuation on any unit, then compare against live for-sale listings and recently-closed sales comps from TRREB MLS.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;">
+      <div class="card" style="padding:28px;">
+        <h3 style="margin-top:0;">Instant condo valuation</h3>
+        <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:20px;">Answer 6 questions, get a low/mid/high estimate grounded in submarket base prices and recent comps.</p>
+
+        <div class="pref-field" style="margin-bottom:16px;">
+          <span class="lbl">Submarket</span>
+          <div class="pill-group" id="vl-city">
+            <span class="pill on" data-value="Mississauga">Mississauga</span>
+            <span class="pill" data-value="Brampton">Brampton</span>
+            <span class="pill" data-value="Vaughan">Vaughan</span>
+            <span class="pill" data-value="Markham">Markham</span>
+            <span class="pill" data-value="Oakville">Oakville</span>
+            <span class="pill" data-value="Burlington">Burlington</span>
+            <span class="pill" data-value="Etobicoke">Etobicoke</span>
+            <span class="pill" data-value="Scarborough">Scarborough</span>
+            <span class="pill" data-value="Concord">Concord</span>
+            <span class="pill" data-value="Pickering">Pickering</span>
+          </div>
+        </div>
+
+        <div class="pref-field" style="margin-bottom:16px;">
+          <span class="lbl">Condition</span>
+          <div class="pill-group" id="vl-condition">
+            <span class="pill" data-value="excellent">Excellent</span>
+            <span class="pill on" data-value="good">Good</span>
+            <span class="pill" data-value="fair">Fair</span>
+            <span class="pill" data-value="needs-work">Needs work</span>
+          </div>
+        </div>
+
+        <div class="pref-grid" style="grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="pref-field">
+            <span class="lbl">Size (SF)</span>
+            <input type="number" id="vl-size" value="10000" min="1000" step="500">
+          </div>
+          <div class="pref-field">
+            <span class="lbl">Clear height (ft)</span>
+            <input type="number" id="vl-clear" value="24" min="14" max="40" step="1">
+          </div>
+          <div class="pref-field">
+            <span class="lbl">Office %</span>
+            <input type="number" id="vl-office" value="12" min="0" max="100" step="1">
+          </div>
+          <div class="pref-field">
+            <span class="lbl">Parking (/ 1,000 SF)</span>
+            <input type="number" id="vl-parking" value="1.2" min="0" max="5" step="0.1">
+          </div>
+        </div>
+      </div>
+
+      <div class="visual" id="vl-output"></div>
+    </div>
+
+    <h3 style="margin-top:64px;font-size:1.15rem;">Live for-sale listings <span class="tag" style="margin-left:8px;">TRREB MLS</span></h3>
+    <p style="color:var(--text-dim);margin:4px 0 20px 0;font-size:0.95rem;">Industrial condos currently on the market. Updated every 15 minutes.</p>
+    <div id="saleFeed" class="alert-feed"></div>
+
+    <h3 style="margin-top:56px;font-size:1.15rem;">Recently sold <span class="tag" style="margin-left:8px;">Last 60 days</span></h3>
+    <p style="color:var(--text-dim);margin:4px 0 20px 0;font-size:0.95rem;">Closed sales you can use as negotiating comps.</p>
+    <div id="soldFeed" class="alert-feed"></div>
+
+    <p class="text-center" style="color:var(--text-muted);font-size:0.82rem;margin-top:32px;">
+      Valuations are AI-generated decision support, not a formal appraisal. For loan-qualifying or tax purposes, engage a qualified commercial appraiser.
+    </p>
+  </div>
+</section>
+<script src="condo-market.js"></script>
+
+<section id="financing">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Financing for condo buyers</div>
+      <h2>Indicative terms from <span class="gradient-text">BDC and Roynat.</span></h2>
+      <p>Two lenders that specialize in commercial real estate financing for owner-operator businesses buying their own unit. Rates below are indicative product parameters — actual pricing is quoted deal-by-deal based on your covenant, LTV, and term.</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card" style="padding:32px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h3 style="margin:0;">BDC — Commercial Real Estate Loan</h3>
+          <span class="tag">Owner-occupier focused</span>
+        </div>
+        <p style="color:var(--text-dim);margin-bottom:20px;font-size:0.93rem;">Business Development Bank of Canada. Specializes in financing owner-occupiers (you use the space for your operating business). Often pairs with a bank first mortgage for a blended stack up to 100% LTV.</p>
+        <div class="data-list">
+          <div class="row"><span class="label">Typical LTV</span><span class="value">75–100%</span></div>
+          <div class="row"><span class="label">Amortization</span><span class="value">Up to 25 yr</span></div>
+          <div class="row"><span class="label">Term</span><span class="value">Usually 5 yr</span></div>
+          <div class="row"><span class="label">Rate type</span><span class="value">Variable or fixed</span></div>
+          <div class="row"><span class="label">Minimum loan</span><span class="value">~$350k</span></div>
+          <div class="row"><span class="label">Security</span><span class="value">1st mortgage + PG</span></div>
+          <div class="row"><span class="label">Best fit</span><span class="value" style="font-family:var(--font-sans);">Owner-operator, smaller deals, higher leverage</span></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;">
+          <a href="https://www.bdc.ca/en/financing/commercial-real-estate" target="_blank" rel="noopener" class="btn btn-primary" style="padding:9px 16px;font-size:0.88rem;">Get a BDC quote</a>
+          <button class="btn btn-secondary" data-lender="bdc" style="padding:9px 16px;font-size:0.88rem;">Draft RFP with AI</button>
+        </div>
+      </div>
+
+      <div class="card" style="padding:32px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h3 style="margin:0;">Roynat Capital</h3>
+          <span class="tag">Mid-market commercial</span>
+        </div>
+        <p style="color:var(--text-dim);margin-bottom:20px;font-size:0.93rem;">Scotiabank subsidiary specializing in mid-market commercial lending including real estate. Typically prices off Government of Canada bonds plus a spread, with flexible terms on mid-size industrial deals.</p>
+        <div class="data-list">
+          <div class="row"><span class="label">Typical LTV</span><span class="value">Up to 75%</span></div>
+          <div class="row"><span class="label">Amortization</span><span class="value">Up to 25 yr</span></div>
+          <div class="row"><span class="label">Term</span><span class="value">5–10 yr</span></div>
+          <div class="row"><span class="label">Rate type</span><span class="value">Fixed (GoC + spread)</span></div>
+          <div class="row"><span class="label">Minimum loan</span><span class="value">~$1M</span></div>
+          <div class="row"><span class="label">Security</span><span class="value">1st mortgage + PG + covenants</span></div>
+          <div class="row"><span class="label">Best fit</span><span class="value" style="font-family:var(--font-sans);">Mid-market buyers, longer fixed-rate terms</span></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;">
+          <a href="https://www.roynat.com/en/solutions/commercial-real-estate" target="_blank" rel="noopener" class="btn btn-primary" style="padding:9px 16px;font-size:0.88rem;">Get a Roynat quote</a>
+          <button class="btn btn-secondary" data-lender="roynat" style="padding:9px 16px;font-size:0.88rem;">Draft RFP with AI</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:24px;padding:24px;background:var(--accent-soft);border-color:rgba(30,64,175,0.25);">
+      <h3 style="margin-top:0;font-size:1.05rem;">Want a rate comparison across both lenders in one PDF?</h3>
+      <p style="margin:0;font-size:0.93rem;">Pro subscribers can run an AI-drafted RFP that includes your tenant covenant, target unit, and requested terms — sent to both lenders (and any others you choose) with a single click. Responses land in your Alerts feed.</p>
+    </div>
+
+    <p class="text-center" style="color:var(--text-muted);font-size:0.82rem;margin-top:24px;">
+      Terms above are indicative product parameters published by each lender and subject to change. Actual rate, LTV, and term depend on the deal, borrower covenant, and market conditions at time of application. industrio is not a mortgage broker and does not earn commissions on any financing placed through these links.
+    </p>
+  </div>
+</section>
+
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">When owning makes sense</div>
+      <h2>Five tenant profiles where a condo usually wins — and where it usually doesn't.</h2>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 style="color:var(--accent);">✓ Stable, long-tenure owner-operator</h3>
+        <p>5+ year track record, predictable revenue, owner drawing salary through a CCPC. Owning lets you pay rent to yourself via a holding company and build equity.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent);">✓ Customization-heavy operations</h3>
+        <p>Crane rails, heavy power upgrades, fixed racking, specialized ventilation — landlords often won't underwrite these. Ownership removes the approval bottleneck.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent);">✓ Forecastable 7–10 yr space need</h3>
+        <p>You know the footprint will hold. Breakeven on most GTA industrial condo deals lands between years 5 and 8 net of transaction costs.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent);">✓ Estate &amp; wealth planning angle</h3>
+        <p>Real estate outside the operating company can be passed, gifted, or used as security with flexibility that a lease cannot offer.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--danger);">✗ Rapidly growing business</h3>
+        <p>If you might need 2× the space in 3 years, a condo is a constraint. Leases (or larger buildings with expansion options) usually win.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--danger);">✗ Capital-starved operation</h3>
+        <p>A 30% down payment plus closing costs is dead capital from an operating standpoint. If your business earns a higher return on reinvested capital, leasing wins.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--danger);">✗ Short expected hold (&lt;5 yr)</h3>
+        <p>Transaction costs — land transfer tax, legal, inspections, broker fees on exit — usually erase the math under a 5-year hold.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--danger);">✗ Operations that need heavy shipping</h3>
+        <p>Most industrial condos share a shipping court with 4–12 other units. If your trucking pattern is dense, owning a standalone building or leasing freestanding is the better fit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="split">
+      <div class="visual">
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+          <span class="tag">Break-even sensitivity</span>
+          <span class="tag">Years to break even</span>
+        </div>
+        <div class="data-list">
+          <div class="row"><span class="label">Appreciation @ 2% / yr</span><span class="value">Yr 9</span></div>
+          <div class="row"><span class="label">Appreciation @ 4% / yr</span><span class="value">Yr 7</span></div>
+          <div class="row"><span class="label">Appreciation @ 6% / yr</span><span class="value">Yr 5</span></div>
+          <div class="row"><span class="label">Rate shock +200 bps</span><span class="value" style="color:var(--warning);">Yr 11+</span></div>
+          <div class="row"><span class="label">Early exit (yr 3, flat market)</span><span class="value" style="color:var(--danger);">Loss</span></div>
+          <div class="row"><span class="label">Condo special assessment $40k</span><span class="value">+0.5 yr</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="color:var(--accent); font-size:0.85rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px;">Sensitivity Analysis</div>
+        <h2>Your break-even moves with the market. Plan for the bad year, not the good one.</h2>
+        <p>industrio runs rate, appreciation, vacancy, and early-exit shocks against your numbers — and shows you the floor, not just the base case. The decision should survive a 200-bps rate move.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">What industrio delivers</div>
+      <h2>Your personal lease-vs-own report.</h2>
+      <p>Every Pro and Enterprise subscriber can run a lease-vs-own analysis against any live listing or target building. The output is ready for your accountant, lender, and board.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card"><h3>Live market comps</h3><p>Asking and achieved $/SF for industrial condo sales in the target submarket, last 24 months.</p></div>
+      <div class="card"><h3>Full financing model</h3><p>P&amp;I schedule, interest, tax shield, and equity curve — year by year.</p></div>
+      <div class="card"><h3>Tax-treatment summary</h3><p>Plain-language notes on HST, CCA, interest deductibility, and capital gains on exit.</p></div>
+      <div class="card"><h3>Risk &amp; sensitivity</h3><p>Rate, appreciation, vacancy, and exit-timing sensitivity across a 5×5 grid.</p></div>
+      <div class="card"><h3>Condo due diligence</h3><p>Reserve-fund adequacy checks, bylaw review flags, and special-assessment history where available.</p></div>
+      <div class="card"><h3>Board-ready PDF</h3><p>A clean, exportable summary — executive overview, assumptions, and scenario tables.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Run your own lease-vs-own scenario.</h2>
+      <p>industrio's Pro plan includes unlimited lease-vs-own runs against any GTA industrial listing — live market data, your lender's terms, your tax profile.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">Start Pro trial</a>
+        <a href="mailto:hello@industrio.ai" class="btn btn-secondary">Talk to us</a>
+      </div>
+    </div>
+    <p class="text-center" style="color:var(--text-muted); font-size:0.85rem; margin-top:24px;">industrio is not a mortgage broker, lender, accountant, or lawyer. The analysis above is for decision support and should be reviewed with your professional advisors before any transaction.</p>
+  </div>
+</section>
+<section class="vow-strip">
+  <div class="vow-inner">
+    <p><strong>VOW Brokerage Disclosure.</strong> industrio is operated by industrio Realty Inc., Brokerage, a Member of the Toronto Regional Real Estate Board. Listings displayed are from the TRREB MLS&reg; System under TRREB's Virtual Office Website rules. <strong>The information provided herein must only be used by consumers that have a bona fide interest in the purchase, sale, or lease of real estate</strong> of the type being offered via this VOW and may not be used for any commercial or other purpose. Information deemed reliable but not guaranteed accurate by TRREB. MLS&reg;, Multiple Listing Service&reg; and their logos are owned by CREA.</p>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;">
+          <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+        </div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>
+                                                                                                                                                                        

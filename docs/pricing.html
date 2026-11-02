@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — industrio</title>
+<meta name="description" content="Simple, transparent pricing for industrial tenants under 20,000 SF. Free, Pro, and Enterprise.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Pricing</span>
+    <h1>Pricing as <span class="gradient-text">transparent as our data.</span></h1>
+    <p class="lead">No broker commissions. No data-licensing surprises. Pick the plan that fits your search — upgrade or cancel any time.</p>
+  </div>
+</header>
+
+<section style="padding-top:20px;">
+  <div class="container">
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <div class="tier-name">Free</div>
+        <div class="price">$0<span> / forever</span></div>
+        <div class="desc">Browse the market and explore the data. For tenants in early-stage research.</div>
+        <ul class="price-features">
+          <li>Basic MLS search (under 20,000 SF)</li>
+          <li>Listing-level space summaries</li>
+          <li>Limited 24-month comps access</li>
+          <li>Single saved search</li>
+          <li>Community landlord review excerpts</li>
+        </ul>
+        <a href="#" class="btn btn-secondary" style="justify-content:center;">Start free</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="tier-name">Pro</div>
+        <div class="price">$249<span> / month</span></div>
+        <div class="desc">The full analytics suite for a tenant running a real renewal or relocation.</div>
+        <ul class="price-features">
+          <li>Unlimited MLS search &amp; saved searches</li>
+          <li>Full market intelligence &amp; rent benchmarks</li>
+          <li>Landlord &amp; building reviews — full access</li>
+          <li>Environmental screening on every shortlist</li>
+          <li>Drive-time, labour &amp; demographics analytics</li>
+          <li>Renewal vs. relocation economic modeling</li>
+          <li>Export-ready reports (PDF, Excel)</li>
+        </ul>
+        <a href="#" class="btn btn-primary" style="justify-content:center;">Start Pro trial</a>
+      </div>
+
+      <div class="price-card">
+        <div class="tier-name">Enterprise</div>
+        <div class="price">Custom</div>
+        <div class="desc">Pro plus the AI broker and hands-on renewal negotiation support.</div>
+        <ul class="price-features">
+          <li>Everything in Pro</li>
+          <li>AI broker: agent outreach &amp; tour coordination</li>
+          <li>Auto-generated tour packages</li>
+          <li>Renewal negotiation playbook &amp; benchmarks</li>
+          <li>Introductions to vetted human brokers (optional)</li>
+          <li>Dedicated account manager</li>
+          <li>API access to your data</li>
+        </ul>
+        <a href="mailto:sales@industrio.ai" class="btn btn-secondary" style="justify-content:center;">Talk to sales</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container-narrow">
+    <div class="section-header">
+      <div class="eyebrow">Frequently asked</div>
+      <h2>Straight answers.</h2>
+    </div>
+    <div class="card"><h3>Do you take broker commissions?</h3><p>No. industrio is paid only by its subscribers. When you choose to work with a human broker, that's a separate relationship, not a kickback to us.</p></div>
+    <div class="card" style="margin-top:12px;"><h3>Can I cancel any time?</h3><p>Yes. Monthly plans cancel any time. Annual plans are prorated. No hidden fees, ever.</p></div>
+    <div class="card" style="margin-top:12px;"><h3>Do you cover markets outside the GTA?</h3><p>Today we cover the Greater Toronto Area and immediately adjacent submarkets. Expansion to other Canadian industrial markets is on the roadmap.</p></div>
+    <div class="card" style="margin-top:12px;"><h3>Is the environmental screening enough for due diligence?</h3><p>No. industrio surfaces public records for early-stage screening. A qualified environmental consultant should still perform a Phase I ESA before you sign.</p></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;">
+          <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+        </div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

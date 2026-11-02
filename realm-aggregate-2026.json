@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "source": "Realm by PropTx — Statistics & Counts dialog",
+    "captured_at": "2026-05-05T15:50:00Z",
+    "search_filters": {
+      "areas": ["Peel", "Toronto", "York", "Durham", "Halton"],
+      "property_class": "Industrial (COM/I)",
+      "status": "Leased (LSD)",
+      "lease_close_date": ">= 2026-01-01",
+      "size_range": "all",
+      "result_count": 610
+    }
+  },
+  "pricing_psf_net": {
+    "list_price": {"count": 610, "mean": 591, "median": 18, "mode": 16.95, "low": 1, "high": 42000, "note": "Median $18/SF is the realistic asking benchmark; mean skewed by total-rent figures incorrectly listed as PSF"},
+    "original_list_price": {"count": 610, "mean": 595, "median": 18, "mode": 16.95, "low": 1, "high": 42000},
+    "sold_price": {"count": 489, "mean": 834, "median": 18, "mode": 16, "low": 1, "high": 40000, "note": "489 of 610 leased records have visible achieved rent; median $18 net = realistic GTA 2026 industrial achieved benchmark"},
+    "pct_difference": {"count": 153, "mean": 288, "median": 99, "mode": 100, "low": 79, "high": 26318, "note": "asking vs achieved (%); median 99% means deals close right at asking on average"}
+  },
+  "tmi_taxes_psf": {
+    "count": 572,
+    "mean": 1594,
+    "median": 6,
+    "mode": 4.50,
+    "low": 0.01,
+    "high": 250457.10,
+    "note": "Median $6/SF TMI; mode $4.50/SF is most-common; outliers skew mean"
+  },
+  "days_on_market": {
+    "count": 609,
+    "mean": 112,
+    "median": 74,
+    "mode": 14,
+    "low": 1,
+    "high": 1953,
+    "note": "Median DOM 74 days; mode 14 days = quick deals are common"
+  },
+  "geography_counts": {
+    "Peel": 230,
+    "Toronto": 161,
+    "York": 142,
+    "Halton": 41,
+    "Durham": 36
+  },
+  "top_communities": {
+    "Northeast": 106,
+    "Concord": 41,
+    "Milliken Mills West": 34,
+    "West Humber-Clairville": 26,
+    "Western Business Park": 25,
+    "1014 - QE Queen Elizabeth": 20,
+    "York University Heights": 20,
+    "Humber Summit": 18,
+    "Milliken": 13,
+    "Dixie": 12,
+    "Gateway": 12,
+    "Brock Industrial": 11
+  }
+}

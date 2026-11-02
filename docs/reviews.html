@@ -1,0 +1,229 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landlord Reviews — industrio</title>
+<meta name="description" content="Five-star reviews of GTA industrial landlords from verified tenants, with landlord replies on the record.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Landlord reviews</span>
+    <h1>Five stars. A few sentences. <span class="gradient-text">No more guesswork.</span></h1>
+    <p class="lead">Tenants in a landlord's portfolio rate them out of five. The landlord can post a single response. Everything is verified against a lease.</p>
+  </div>
+</header>
+
+<\!-- Directory -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Directory</div>
+      <h2>Browse GTA industrial landlords.</h2>
+      <p>Each profile shows an aggregate star rating, the number of verified tenant reviews, and a stream of recent feedback.</p>
+    </div>
+    <div class="grid grid-3">
+      <a href="landlord-acme.html" class="card" style="text-decoration:none;color:inherit;display:block;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h3 style="margin:0;color:var(--text);">ACME Industrial Holdings</h3>
+          <span class="star-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span><span class="rating-num">4.1</span></span>
+        </div>
+        <p style="color:var(--text-dim);margin:0 0 4px 0;font-size:0.9rem;">56 reviews &middot; 14 buildings &middot; 2.1M SF</p>
+        <p style="color:var(--accent);font-size:0.88rem;margin-top:8px;">View profile &rarr;</p>
+      </a>
+      <a href="landlord-continental.html" class="card" style="text-decoration:none;color:inherit;display:block;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h3 style="margin:0;color:var(--text);">Continental Business Parks</h3>
+          <span class="star-rating"><span class="stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span><span class="rating-num">3.6</span></span>
+        </div>
+        <p style="color:var(--text-dim);margin:0 0 4px 0;font-size:0.9rem;">41 reviews &middot; 22 buildings &middot; 3.4M SF</p>
+        <p style="color:var(--accent);font-size:0.88rem;margin-top:8px;">View profile &rarr;</p>
+      </a>
+      <a href="landlord-meridian.html" class="card" style="text-decoration:none;color:inherit;display:block;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h3 style="margin:0;color:var(--text);">Meridian Properties</h3>
+          <span class="star-rating"><span class="stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span><span class="rating-num">3.1</span></span>
+        </div>
+        <p style="color:var(--text-dim);margin:0 0 4px 0;font-size:0.9rem;">28 reviews &middot; 9 buildings &middot; 1.1M SF</p>
+        <p style="color:var(--accent);font-size:0.88rem;margin-top:8px;">View profile &rarr;</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<\!-- Recent reviews -->
+<section>
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin-bottom: 20px;">
+      <div class="eyebrow">Recent reviews</div>
+      <h2 style="margin:0;">Posted this month.</h2>
+    </div>
+
+    <div class="review-list">
+
+      <article class="review-item">
+        <div class="review-head">
+          <div>
+            <div class="star-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+            <h3>ACME Industrial Holdings &mdash; <span style="color:var(--text-muted);font-weight:400;">2400 Meadowvale Blvd, Mississauga</span></h3>
+            <div class="review-meta">Arjun R. &middot; 3PL, 12,400 SF &middot; Tenant since 2022 &middot; <span class="badge-verified">&check; Verified</span></div>
+          </div>
+        </div>
+        <p class="review-body">"Reconciliation arrives on time every March. When a truck knocked down a bollard, the property manager had it replaced before end of week. ACME actually picks up the phone. Would renew."</p>
+        <div class="landlord-reply">
+          <div class="side-label">&check; Landlord reply</div>
+          <p>Thank you, Arjun. Congratulations on the warehouse expansion last year. Our team will be in touch about your 2027 renewal window.</p>
+          <div style="font-size:0.78rem; color:var(--text-muted);">— ACME Asset Management &middot; April 2026</div>
+        </div>
+      </article>
+
+      <article class="review-item">
+        <div class="review-head">
+          <div>
+            <div class="star-rating"><span class="stars">&#9733;&#9733;&#9734;&#9734;&#9734;</span></div>
+            <h3>Meridian Properties &mdash; <span style="color:var(--text-muted);font-weight:400;">Scarborough warehouse</span></h3>
+            <div class="review-meta">Sarah K. &middot; Electrical contractor, 7,800 SF &middot; Tenant since 2019 &middot; <span class="badge-verified">&check; Verified</span></div>
+          </div>
+        </div>
+        <p class="review-body">"Opening renewal offer was market + 18%. It took eight weeks of back-and-forth and three comp packages before they met the market. Don't accept the first number."</p>
+        <div class="landlord-reply">
+          <div class="side-label">&check; Landlord reply</div>
+          <p>Meridian's initial renewal offers reflect portfolio risk premiums and final pricing tracks the market. We are reviewing our opening methodology with the Tenant Advisory Committee this quarter.</p>
+          <div style="font-size:0.78rem; color:var(--text-muted);">— Meridian Asset Management &middot; February 2026</div>
+        </div>
+      </article>
+
+      <article class="review-item">
+        <div class="review-head">
+          <div>
+            <div class="star-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span></div>
+            <h3>Continental Business Parks &mdash; <span style="color:var(--text-muted);font-weight:400;">8800 Airport Rd, Brampton</span></h3>
+            <div class="review-meta">Priya M. &middot; Distributor, 9,800 SF &middot; Tenant since 2020 &middot; <span class="badge-verified">&check; Verified</span></div>
+          </div>
+        </div>
+        <p class="review-body">"Building is well kept and the leasing team is professional. Maintenance response was patchy after the 2024 PM change, but seems to be improving in 2026. Parking enforcement has gotten aggressive."</p>
+        <div class="landlord-reply">
+          <div class="side-label">&check; Landlord reply</div>
+          <p>Thank you for the feedback, Priya. Median maintenance response is now 41 hours as of Q1 2026. On parking enforcement, please reach out to me directly so we can confirm your assigned stalls on the site plan.</p>
+          <div style="font-size:0.78rem; color:var(--text-muted);">— Continental Operations &middot; March 2026</div>
+        </div>
+      </article>
+
+      <article class="review-item">
+        <div class="review-head">
+          <div>
+            <div class="star-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+            <h3>ACME Industrial Holdings &mdash; <span style="color:var(--text-muted);font-weight:400;">1200 Aimco Blvd, Mississauga</span></h3>
+            <div class="review-meta">David L. &middot; Metal fabricator, 14,200 SF &middot; Tenant since 2021 &middot; <span class="badge-verified">&check; Verified</span></div>
+          </div>
+        </div>
+        <p class="review-body">"Needed a 600V 3-phase upgrade for new equipment. ACME split the cost 50/50 since the improvement stays with the building. That's unusual and appreciated."</p>
+      </article>
+
+      <article class="review-item">
+        <div class="review-head">
+          <div>
+            <div class="star-rating"><span class="stars">&#9733;&#9733;&#9734;&#9734;&#9734;</span></div>
+            <h3>Meridian Properties &mdash; <span style="color:var(--text-muted);font-weight:400;">Durham region</span></h3>
+            <div class="review-meta">Mark W. &middot; Food distributor, 11,200 SF &middot; Tenant since 2017 &middot; <span class="badge-verified">&check; Verified</span></div>
+          </div>
+        </div>
+        <p class="review-body">"TMI reconciliation arrives four to five months late every year. Questions about line items get ignored. Would not sign here again."</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<\!-- Write a review CTA -->
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Your lease is your proof.</h2>
+      <p>Write a review of your landlord in under two minutes. We verify against your lease — anonymous posts don't get published.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">Write a review</a>
+        <a href="community.html" class="btn btn-secondary">Join the tenant forum</a>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="vow-strip">
+  <div class="vow-inner">
+    <p><strong>VOW Brokerage Disclosure.</strong> industrio is operated by industrio Realty Inc., Brokerage, a Member of the Toronto Regional Real Estate Board. Listings displayed are from the TRREB MLS&reg; System under TRREB's Virtual Office Website rules. <strong>The information provided herein must only be used by consumers that have a bona fide interest in the purchase, sale, or lease of real estate</strong> of the type being offered via this VOW and may not be used for any commercial or other purpose. Information deemed reliable but not guaranteed accurate by TRREB. MLS&reg;, Multiple Listing Service&reg; and their logos are owned by CREA.</p>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Reviews verified by lease or estoppel. Landlord replies are on the record.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

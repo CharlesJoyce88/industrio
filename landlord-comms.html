@@ -1,0 +1,217 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landlord Communication Tracker — industrio</title>
+<meta name="description" content="Connect your email. industrio captures every message to and from your landlord, organizes by topic, and shares the audit trail with your team.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Landlord communication</span>
+    <h1>Every email with your landlord, <span class="gradient-text">indexed and shareable.</span></h1>
+    <p class="lead">Connect your inbox. industrio captures every message to and from your property manager, sorts it by topic, and makes it instantly searchable by you and your team.</p>
+  </div>
+</header>
+
+<section style="padding-top:16px;">
+  <div class="container">
+    <div class="comm-grid">
+
+      <\!-- Sidebar -->
+      <aside class="comm-sidebar">
+        <div class="comm-filter">
+          <div class="comm-topic active">All communication <span class="count">87</span></div>
+          <div class="comm-topic">Rent &amp; payments <span class="count">22</span></div>
+          <div class="comm-topic">Maintenance <span class="count">31</span></div>
+          <div class="comm-topic">TMI &amp; OpEx <span class="count">14</span></div>
+          <div class="comm-topic">Renewal &amp; term <span class="count">5</span></div>
+          <div class="comm-topic">Estoppel &amp; assignment <span class="count">3</span></div>
+          <div class="comm-topic">Insurance <span class="count">4</span></div>
+          <div class="comm-topic">Access &amp; keys <span class="count">8</span></div>
+        </div>
+
+        <div class="comm-connect">
+          <strong>&check; Connected:</strong><br>
+          Microsoft 365 &middot; charles@northbridgecapital.com<br>
+          <span style="color:var(--text-muted); font-size:0.78rem;">Last sync 6 minutes ago &middot; 3 filtered rules active</span>
+          <div style="margin-top:10px;">
+            <a href="#" style="font-size:0.82rem;">Manage rules &rarr;</a>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <h4 style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:8px;">Team access</h4>
+          <div style="font-size:0.85rem; color:var(--text-dim);">3 people can see this correspondence</div>
+          <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
+            <span class="tag">CR</span><span class="tag">JA</span><span class="tag">MK</span>
+          </div>
+          <a href="#" class="btn btn-secondary" style="margin-top:10px; padding:6px 12px; font-size:0.8rem; width:100%; justify-content:center;">+ Invite teammate</a>
+        </div>
+      </aside>
+
+      <\!-- Feed -->
+      <div>
+        <div class="comm-thread">
+          <div class="comm-thread-head">
+            <div>
+              <h3>Q1 2026 TMI reconciliation &mdash; actual vs. estimate</h3>
+              <div class="comm-thread-meta">From Rachel Mendoza (Property Manager, ACME) &middot; 4 messages &middot; Apr 21, 2026 &middot; <span class="tag">TMI &amp; OpEx</span></div>
+            </div>
+            <span class="notif-badge">New</span>
+          </div>
+          <p>Attached is the 2025 final reconciliation for 45 Courtneypark Dr E, Unit 7. Actual TMI landed at $7.42/SF vs. estimated $7.10/SF — variance driven by snow removal (+$0.18) and insurance (+$0.14). Payment of $3,712 is due May 15, 2026.</p>
+          <div class="note"><strong>Internal note (Charles):</strong> flag insurance line for audit — last year's figure was $0.62/SF. Pulling vendor invoices.</div>
+          <div class="assign">Assigned: <span>Maria (Accounting)</span> &middot; Due Apr 30</div>
+        </div>
+
+        <div class="comm-thread">
+          <div class="comm-thread-head">
+            <div>
+              <h3>Re: Dock seal replacement &mdash; Bay 3</h3>
+              <div class="comm-thread-meta">From Rachel Mendoza &middot; 6 messages &middot; Apr 18, 2026 &middot; <span class="tag">Maintenance</span></div>
+            </div>
+          </div>
+          <p>Dock seal vendor attended today. Replacement is scheduled for April 24 between 08:00–12:00. Please have bay cleared. No access needed beyond dock area.</p>
+          <div class="note"><strong>Internal note (Jenny):</strong> production team notified. We'll shift loads to Bay 2 that morning.</div>
+        </div>
+
+        <div class="comm-thread">
+          <div class="comm-thread-head">
+            <div>
+              <h3>Notice of HVAC inspection &mdash; Q2 PM</h3>
+              <div class="comm-thread-meta">From Rachel Mendoza &middot; 2 messages &middot; Apr 15, 2026 &middot; <span class="tag">Maintenance</span></div>
+            </div>
+          </div>
+          <p>Quarterly preventative maintenance on unit's RTU scheduled for Tuesday April 28 between 09:00 and 14:00. Expected downtime ~45 min during filter replacement.</p>
+        </div>
+
+        <div class="comm-thread">
+          <div class="comm-thread-head">
+            <div>
+              <h3>Lease renewal &mdash; preliminary discussion</h3>
+              <div class="comm-thread-meta">To Rachel Mendoza &middot; 3 messages &middot; Apr 10, 2026 &middot; <span class="tag">Renewal &amp; term</span></div>
+            </div>
+          </div>
+          <p>Rachel — we're starting early on our 2029 renewal planning. Could we get a preliminary conversation on the asking rent and any capital improvement plans for the building in the 2027–2028 window? Looking to align on timing.</p>
+          <div class="note"><strong>Internal note (Charles):</strong> Reference our lease-abstract benchmark: $17 net + expected market $18.50–$19.50. Negotiate from data.</div>
+          <div class="assign">Assigned: <span>Charles</span> &middot; Next action May 1</div>
+        </div>
+
+        <div class="comm-thread">
+          <div class="comm-thread-head">
+            <div>
+              <h3>Parking stall reassignment request</h3>
+              <div class="comm-thread-meta">To Rachel Mendoza &middot; 1 message &middot; Apr 6, 2026 &middot; <span class="tag">Access &amp; keys</span></div>
+            </div>
+          </div>
+          <p>Hi Rachel — we'd like to request reassignment of stalls 23 &amp; 24 to our unit as our fleet has grown. Stalls are currently unassigned per the site plan. Can you confirm?</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">How it works</div>
+      <h2>Three clicks from empty inbox to searchable record.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>Connect your mailbox</h3><p>Authorize Microsoft 365 or Google Workspace. We use read-only delegated access — we never send on your behalf.</p></div>
+      <div class="card"><h3>Tell us your landlord domains</h3><p>Enter the property manager's email address. Every message to or from that domain is captured automatically.</p></div>
+      <div class="card"><h3>Topic classification</h3><p>industrio reads the subject and body, classifies by topic (rent, maintenance, renewal, TMI, insurance), and threads related messages.</p></div>
+      <div class="card"><h3>Invite your team</h3><p>Bring in accounting, operations, or counsel. Each gets role-based read access with internal notes separate from the email content.</p></div>
+      <div class="card"><h3>Internal notes</h3><p>Attach context to any thread without replying to the landlord. Notes stay inside industrio.</p></div>
+      <div class="card"><h3>Dispute-ready</h3><p>Every message, timestamp, attachment, and note is preserved. Export the full correspondence file as a single PDF when you need it.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>Stop hunting through email threads.</h2>
+      <p>Landlord communication tracking is included in every Pro plan. Connect your inbox in under two minutes.</p>
+      <div class="btn-row">
+        <a href="pricing.html" class="btn btn-primary">See pricing</a>
+        <a href="lease-abstract.html" class="btn btn-secondary">Track your lease too</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Read-only email access. No content leaves your workspace.</span>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

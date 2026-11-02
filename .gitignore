@@ -1,0 +1,71 @@
+# =============================================================================
+# industrio — .gitignore
+#
+# Keep PII, raw source data, and local build artefacts OUT of the git repo.
+# GitHub Pages serves /docs/ which contains the scrubbed, public-safe copy.
+# =============================================================================
+
+# --- PII / private data ------------------------------------------------------
+# The root listings.json carries full broker contact details (name + phone).
+# scripts/build-public.py reads it and writes docs/listings.json with PII removed.
+# The full-PII file never leaves your machine.
+/listings.json
+
+# --- Raw ingestion sources ---------------------------------------------------
+# Broker emails and Realm PDFs may contain contact info, licensed data, or
+# anything else we don't want on GitHub. They stay local.
+realm-pdfs/*.pdf
+realm-pdfs/*.PDF
+*.msg
+*.eml
+emails/
+inbox/
+
+# --- Local-only backup / scratch ---------------------------------------------
+*.bak
+*.tmp
+*.orig
+*.new
+listings.*.backup.json
+
+# --- Photos (large; keep local for now) --------------------------------------
+# Comment this line out once we scrub + optimise photos for the public site.
+/photos/
+
+# --- Python ------------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+.Python
+venv/
+.venv/
+
+# --- Node / build tooling (future-proofing) ----------------------------------
+node_modules/
+dist/
+.cache/
+
+# --- Editor / OS -------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# --- OneDrive sync junk ------------------------------------------------------
+~$*
+.~lock*
+
+# --- Secrets -----------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+service-account*.json
+
+# --- Cloudflare Worker local state (if we add wrangler later) ---------------
+.wrangler/
+.dev.vars
