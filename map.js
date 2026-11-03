@@ -6,11 +6,12 @@
   map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
   window.industrioMap = map;  // expose for sidebar listing-card clicks
 
-  // CARTO Voyager tiles — Google-Maps-like clean aesthetic, free, no API key required.
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 20,
-    subdomains: 'abcd',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>'
+  // OpenStreetMap standard tiles — truly free, no API key, no rate-limit for normal use.
+  // (CARTO's basemaps-api endpoint now requires an API key for anonymous use, so we
+  // switched off it.)
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
   }).addTo(map);
 
   // Recalculate tile layout after the page settles — important when the map container
