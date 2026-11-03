@@ -162,6 +162,8 @@ def wipe_stale(dry_run: bool, verbose: bool) -> int:
             continue
         if item.name == "listings.json":
             continue  # we regenerate this
+        if item.name == "CNAME":
+            continue  # custom-domain file; keep across rebuilds
         if item.name not in root_names:
             if verbose or dry_run:
                 print(f"  rm    {item.name}  (stale)")
