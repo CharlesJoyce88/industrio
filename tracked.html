@@ -5,13 +5,59 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Saved Searches — industrio</title>
-<meta name="description" content="Save your search criteria and track every for-lease, for-sale, leased, and sold listing that matches — over time.">
+<title>My Saved Searches — industrio</title>
+<meta name="description" content="Set your requirement once. Every new industrial listing that matches — for-lease, for-sale, leased, or sold — flows into this page, viewable on a map or as photo cards.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
+<!-- Leaflet (for the Map view mode below) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<style>
+  /* View-mode toggle (Map / Cards) — sits just above the status tabs */
+  .tracked-viewmode {
+    display: inline-flex; gap: 0; margin: 20px 0 0 0;
+    background: var(--surface-2, #f1f3f8); border-radius: 10px; padding: 4px;
+  }
+  .tracked-viewmode button {
+    appearance: none; border: 0; background: transparent;
+    padding: 7px 18px; font-size: 0.86rem; font-weight: 600; cursor: pointer;
+    border-radius: 7px; color: var(--text-muted, #666);
+    font-family: inherit;
+  }
+  .tracked-viewmode button.active {
+    background: #fff; color: var(--text, #0f1e4e);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+  /* The Leaflet map container */
+  #trackedMap {
+    height: 540px; width: 100%; border-radius: 12px; margin-top: 16px;
+    border: 1px solid var(--border, #e5e7eb);
+  }
+  /* The per-search notification panel */
+  .tracked-notify {
+    margin-top: 28px; padding: 20px 22px; border: 1px dashed var(--border, #e5e7eb);
+    border-radius: 12px; background: var(--surface-2, #fafbfd);
+  }
+  .tracked-notify h4 { margin: 0 0 6px 0; font-size: 1rem; }
+  .tracked-notify .tracked-notify-row {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 10px;
+  }
+  .tracked-notify input[type="email"] {
+    flex: 1 1 260px; min-width: 240px; padding: 9px 12px; border: 1px solid var(--border, #d7dae2);
+    border-radius: 8px; font-size: 0.9rem; font-family: inherit;
+  }
+  .tracked-notify .soon {
+    font-size: 0.75rem; color: var(--text-muted, #6b7280);
+    background: #fff5d1; padding: 3px 9px; border-radius: 999px;
+  }
+  .tracked-notify-saved {
+    margin-top: 10px; font-size: 0.85rem; color: #047857; display: none;
+  }
+  .tracked-notify-saved.on { display: block; }
+</style>
 </head>
 <body>
 
@@ -38,9 +84,9 @@
 
 <header class="hero" style="padding:48px 0 24px 0;">
   <div class="container">
-    <span class="hero-eyebrow">Saved searches</span>
-    <h1>Saved searches, <span class="gradient-text">always live.</span></h1>
-    <p class="lead">Every search you save is watched continuously. New for-lease and for-sale listings flow in, leased and sold deals close out — all under one search, with the dates the deals happened.</p>
+    <span class="hero-eyebrow">My saved searches</span>
+    <h1>Set your requirement once. <span class="gradient-text">We watch the market for you.</span></h1>
+    <p class="lead">Every search you save becomes a live requirement. The moment a matching industrial listing hits the market — for-lease, for-sale, or just closed — it shows up here. Flip between a map and photo cards; drill into any listing with one click.</p>
   </div>
 </header>
 
@@ -84,9 +130,33 @@
         <button class="tracked-tab"        data-status="sold"      type="button">Recently Sold <span class="tab-count" id="cntSold">0</span></button>
       </div>
 
+      <!-- View-mode toggle: Map | Cards -->
+      <div class="tracked-viewmode" id="trackedViewMode" role="tablist" aria-label="View mode">
+        <button type="button" class="active" data-view="cards" role="tab" aria-selected="true">Photo cards</button>
+        <button type="button"                data-view="map"   role="tab" aria-selected="false">Map</button>
+      </div>
+
+      <!-- Cards view (existing) -->
       <div class="tracked-results" id="trackedResults"></div>
 
+      <!-- Map view (new; hidden by default) -->
+      <div id="trackedMap" hidden></div>
+
       <p style="font-size:0.78rem;color:var(--text-muted);margin-top:14px;">&laquo;Recently leased&raquo; and &laquo;Recently sold&raquo; show deals closed in the last 365 days. Source: TRREB MLS via industrio.</p>
+
+      <!-- Notification setup for the currently selected saved search -->
+      <div class="tracked-notify" id="trackedNotify">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <h4>Email me when new listings match this search</h4>
+          <span class="soon">Coming soon</span>
+        </div>
+        <p style="margin:0;color:var(--text-muted);font-size:0.88rem;">The moment a new industrial listing — from TRREB MLS, Realm, broker emails, or off-market feeds — matches these criteria, industrio sends you a one-click notification with the AI broker ready to inquire on your behalf.</p>
+        <div class="tracked-notify-row">
+          <input type="email" id="notifyEmail" placeholder="you@company.com" autocomplete="email">
+          <button type="button" class="btn btn-primary" id="notifySaveBtn">Save my email</button>
+        </div>
+        <div class="tracked-notify-saved" id="notifySaved">&check; Saved. We&rsquo;ll notify you here as soon as email delivery is wired up.</div>
+      </div>
     </div>
 
   </div>
@@ -102,7 +172,7 @@
       <div><h4>Product</h4><ul>
         <li><a href="market-intelligence.html">Market Intelligence</a></li>
         <li><a href="ai-broker.html">AI Broker</a></li>
-        <li><a href="map.html">My Requirement</a></li>
+        <li><a href="tracked.html">My Saved Searches</a></li>
         <li><a href="map.html">Search</a></li>
         <li><a href="tracked.html">Saved Searches</a></li>
         <li><a href="zoning.html">Zoning</a></li>

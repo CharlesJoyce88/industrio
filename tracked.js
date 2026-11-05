@@ -7,31 +7,39 @@
   // For Lease + For Sale = currently active. Leased + Sold = closed deals (last 365 days).
   var DATA = {
     'for-lease': [
-      { addr: '2450 Meadowvale Blvd, Unit 4',  city: 'Mississauga', size: 13400, clear: 26, dock: 3, driveIn: 0, rent: 16.00, photo: 'https://picsum.photos/seed/L1/600/300', landlord: 'ACME', stars: 4.1 },
-      { addr: '1650 Courtneypark Dr E, Unit 11', city: 'Mississauga', size: 14600, clear: 28, dock: 2, driveIn: 1, rent: 16.80, photo: 'https://picsum.photos/seed/L2/600/300', landlord: 'Prologis', stars: 4.6 },
-      { addr: '2700 Steeles Ave W, Unit 8',    city: 'Vaughan',     size: 16800, clear: 30, dock: 4, driveIn: 0, rent: 17.25, photo: 'https://picsum.photos/seed/L3/600/300', landlord: 'Continental', stars: 4.0 },
-      { addr: '65 International Blvd, Unit 3', city: 'Etobicoke',   size:  9500, clear: 24, dock: 2, driveIn: 0, rent: 14.75, photo: 'https://picsum.photos/seed/L4/600/300', landlord: 'Meridian', stars: 3.9 },
-      { addr: '80 Dynamic Dr',                 city: 'Scarborough', size: 12200, clear: 26, dock: 2, driveIn: 1, rent: 15.60, photo: 'https://picsum.photos/seed/L5/600/300', landlord: 'Skyline', stars: 4.1 },
-      { addr: '8800 Airport Rd',               city: 'Brampton',    size: 10200, clear: 24, dock: 2, driveIn: 0, rent: 14.50, photo: 'https://picsum.photos/seed/L6/600/300', landlord: 'Continental', stars: 3.8 }
+      { addr: '2450 Meadowvale Blvd, Unit 4',  city: 'Mississauga', lat: 43.5895, lng: -79.7235, size: 13400, clear: 26, dock: 3, driveIn: 0, rent: 16.00, photo: 'https://picsum.photos/seed/L1/600/300', landlord: 'ACME', stars: 4.1 },
+      { addr: '1650 Courtneypark Dr E, Unit 11', city: 'Mississauga', lat: 43.6200, lng: -79.6885, size: 14600, clear: 28, dock: 2, driveIn: 1, rent: 16.80, photo: 'https://picsum.photos/seed/L2/600/300', landlord: 'Prologis', stars: 4.6 },
+      { addr: '2700 Steeles Ave W, Unit 8',    city: 'Vaughan',     lat: 43.7800, lng: -79.5340, size: 16800, clear: 30, dock: 4, driveIn: 0, rent: 17.25, photo: 'https://picsum.photos/seed/L3/600/300', landlord: 'Continental', stars: 4.0 },
+      { addr: '65 International Blvd, Unit 3', city: 'Etobicoke',   lat: 43.6815, lng: -79.5995, size:  9500, clear: 24, dock: 2, driveIn: 0, rent: 14.75, photo: 'https://picsum.photos/seed/L4/600/300', landlord: 'Meridian', stars: 3.9 },
+      { addr: '80 Dynamic Dr',                 city: 'Scarborough', lat: 43.7770, lng: -79.2495, size: 12200, clear: 26, dock: 2, driveIn: 1, rent: 15.60, photo: 'https://picsum.photos/seed/L5/600/300', landlord: 'Skyline', stars: 4.1 },
+      { addr: '8800 Airport Rd',               city: 'Brampton',    lat: 43.7140, lng: -79.6340, size: 10200, clear: 24, dock: 2, driveIn: 0, rent: 14.50, photo: 'https://picsum.photos/seed/L6/600/300', landlord: 'Continental', stars: 3.8 }
     ],
     'for-sale': [
-      { addr: '500 Main St (industrial condo)', city: 'Markham',    size: 18000, clear: 28, dock: 6, driveIn: 0, askingPSF: 310, photo: 'https://picsum.photos/seed/S1/600/300', subtype: 'Freestanding' },
-      { addr: '1280 Aerowood Dr',               city: 'Mississauga', size: 14200, clear: 26, dock: 4, driveIn: 1, askingPSF: 295, photo: 'https://picsum.photos/seed/S2/600/300', subtype: 'Condo' },
-      { addr: '7700 Pine Valley Dr',            city: 'Vaughan',     size: 16500, clear: 30, dock: 5, driveIn: 0, askingPSF: 305, photo: 'https://picsum.photos/seed/S3/600/300', subtype: 'Freestanding' }
+      { addr: '500 Main St (industrial condo)', city: 'Markham',    lat: 43.8630, lng: -79.3200, size: 18000, clear: 28, dock: 6, driveIn: 0, askingPSF: 310, photo: 'https://picsum.photos/seed/S1/600/300', subtype: 'Freestanding' },
+      { addr: '1280 Aerowood Dr',               city: 'Mississauga', lat: 43.6485, lng: -79.6560, size: 14200, clear: 26, dock: 4, driveIn: 1, askingPSF: 295, photo: 'https://picsum.photos/seed/S2/600/300', subtype: 'Condo' },
+      { addr: '7700 Pine Valley Dr',            city: 'Vaughan',     lat: 43.8160, lng: -79.5720, size: 16500, clear: 30, dock: 5, driveIn: 0, askingPSF: 305, photo: 'https://picsum.photos/seed/S3/600/300', subtype: 'Freestanding' }
     ],
     'leased': [
-      { addr: '5400 Dixie Rd Unit 8',     city: 'Mississauga', size: 11200, clear: 24, asking: 17.95, achieved: 16.80, freeMonths: 2, tiPSF: 4, dom: 52,  closedAt: '2026-04-02', photo: 'https://picsum.photos/seed/Le1/600/300' },
-      { addr: '2880 Argentia Rd Unit 4',  city: 'Mississauga', size: 13800, clear: 26, asking: 18.50, achieved: 17.10, freeMonths: 3, tiPSF: 5, dom: 71,  closedAt: '2026-03-18', photo: 'https://picsum.photos/seed/Le2/600/300' },
-      { addr: '8500 Keele St Unit 12',    city: 'Vaughan',     size: 13500, clear: 28, asking: 18.75, achieved: 17.40, freeMonths: 2, tiPSF: 5, dom: 65,  closedAt: '2026-02-25', photo: 'https://picsum.photos/seed/Le3/600/300' },
-      { addr: '120 Walker Dr',            city: 'Brampton',    size: 15800, clear: 24, asking: 17.00, achieved: 15.85, freeMonths: 3, tiPSF: 5, dom: 110, closedAt: '2026-01-12', photo: 'https://picsum.photos/seed/Le4/600/300' },
-      { addr: '95 Dynamic Dr',            city: 'Scarborough', size: 10800, clear: 26, asking: 16.00, achieved: 14.85, freeMonths: 2, tiPSF: 3, dom: 80,  closedAt: '2025-11-04', photo: 'https://picsum.photos/seed/Le5/600/300' },
-      { addr: '125 Carlingview Dr',       city: 'Etobicoke',   size:  9200, clear: 24, asking: 16.50, achieved: 15.20, freeMonths: 2, tiPSF: 3, dom: 45,  closedAt: '2025-09-22', photo: 'https://picsum.photos/seed/Le6/600/300' }
+      { addr: '5400 Dixie Rd Unit 8',     city: 'Mississauga', lat: 43.6150, lng: -79.6160, size: 11200, clear: 24, asking: 17.95, achieved: 16.80, freeMonths: 2, tiPSF: 4, dom: 52,  closedAt: '2026-04-02', photo: 'https://picsum.photos/seed/Le1/600/300' },
+      { addr: '2880 Argentia Rd Unit 4',  city: 'Mississauga', lat: 43.6410, lng: -79.7175, size: 13800, clear: 26, asking: 18.50, achieved: 17.10, freeMonths: 3, tiPSF: 5, dom: 71,  closedAt: '2026-03-18', photo: 'https://picsum.photos/seed/Le2/600/300' },
+      { addr: '8500 Keele St Unit 12',    city: 'Vaughan',     lat: 43.8095, lng: -79.5075, size: 13500, clear: 28, asking: 18.75, achieved: 17.40, freeMonths: 2, tiPSF: 5, dom: 65,  closedAt: '2026-02-25', photo: 'https://picsum.photos/seed/Le3/600/300' },
+      { addr: '120 Walker Dr',            city: 'Brampton',    lat: 43.7240, lng: -79.7420, size: 15800, clear: 24, asking: 17.00, achieved: 15.85, freeMonths: 3, tiPSF: 5, dom: 110, closedAt: '2026-01-12', photo: 'https://picsum.photos/seed/Le4/600/300' },
+      { addr: '95 Dynamic Dr',            city: 'Scarborough', lat: 43.7795, lng: -79.2510, size: 10800, clear: 26, asking: 16.00, achieved: 14.85, freeMonths: 2, tiPSF: 3, dom: 80,  closedAt: '2025-11-04', photo: 'https://picsum.photos/seed/Le5/600/300' },
+      { addr: '125 Carlingview Dr',       city: 'Etobicoke',   lat: 43.6890, lng: -79.5880, size:  9200, clear: 24, asking: 16.50, achieved: 15.20, freeMonths: 2, tiPSF: 3, dom: 45,  closedAt: '2025-09-22', photo: 'https://picsum.photos/seed/Le6/600/300' }
     ],
     'sold': [
-      { addr: '500 Main St N',         city: 'Markham',     size: 18000, askingPSF: 320, soldPSF: 305, dom: 88,  closedAt: '2026-03-30', photo: 'https://picsum.photos/seed/So1/600/300' },
-      { addr: '7700 Pine Valley Dr',   city: 'Vaughan',     size: 16500, askingPSF: 295, soldPSF: 285, dom: 110, closedAt: '2026-01-08', photo: 'https://picsum.photos/seed/So2/600/300' },
-      { addr: '6610 Tomken Rd',        city: 'Mississauga', size: 12800, askingPSF: 285, soldPSF: 270, dom: 95,  closedAt: '2025-08-16', photo: 'https://picsum.photos/seed/So3/600/300' }
+      { addr: '500 Main St N',         city: 'Markham',     lat: 43.8650, lng: -79.3215, size: 18000, askingPSF: 320, soldPSF: 305, dom: 88,  closedAt: '2026-03-30', photo: 'https://picsum.photos/seed/So1/600/300' },
+      { addr: '7700 Pine Valley Dr',   city: 'Vaughan',     lat: 43.8160, lng: -79.5720, size: 16500, askingPSF: 295, soldPSF: 285, dom: 110, closedAt: '2026-01-08', photo: 'https://picsum.photos/seed/So2/600/300' },
+      { addr: '6610 Tomken Rd',        city: 'Mississauga', lat: 43.6525, lng: -79.6305, size: 12800, askingPSF: 285, soldPSF: 270, dom: 95,  closedAt: '2025-08-16', photo: 'https://picsum.photos/seed/So3/600/300' }
     ]
+  };
+
+  // Color per status for the map markers. Matches map.html's palette roughly.
+  var STATUS_COLORS = {
+    'for-lease': '#2563eb',  // blue
+    'for-sale':  '#b45309',  // amber-brown
+    'leased':    '#047857',  // green
+    'sold':      '#dc2626'   // red
   };
 
   // ---- localStorage helpers
@@ -78,6 +86,9 @@
 
   var currentSearchId = null;
   var currentTab = 'for-lease';
+  var currentView = 'cards';      // 'cards' | 'map'
+  var lastItems = [];              // remember most recent render so view-switch repaints the same list
+  var lastStatus = 'for-lease';
 
   // ---- Renderers
   function fmtNum(n){ return Number(n).toLocaleString('en-CA'); }
@@ -237,6 +248,18 @@
     document.getElementById('cntLeased').textContent = f.counts['leased'];
     document.getElementById('cntSold').textContent   = f.counts['sold'];
     var items = f.lists[status] || [];
+
+    // Render whichever view is currently active.
+    if (currentView === 'map') {
+      renderMap(items, status);
+    } else {
+      renderCards(items, status);
+    }
+    lastItems = items;
+    lastStatus = status;
+  }
+
+  function renderCards(items, status){
     if (!items.length){
       resultsEl.innerHTML = '<div class="tracked-no-matches">No ' + status.replace('-', ' ') + ' listings match this search right now. Industrio will alert you when one does.</div>';
       return;
@@ -249,6 +272,81 @@
       return '';
     }).join('');
     resultsEl.innerHTML = html;
+  }
+
+  // ---- Map view: lazy-initialize Leaflet when first requested, then plot
+  //      a colored circleMarker for each listing in the current status tab.
+  var mapInstance = null;
+  var markerLayer = null;
+
+  function popupHtml(item, status){
+    var price;
+    if (status === 'for-lease') price = '<strong>$' + item.rent.toFixed(2) + '</strong> net / SF / yr';
+    else if (status === 'for-sale') price = '<strong>$' + item.askingPSF + '</strong> / SF asking';
+    else if (status === 'leased') price = '<strong>$' + item.achieved.toFixed(2) + '</strong> achieved · $' + item.asking.toFixed(2) + ' asking';
+    else if (status === 'sold') price = '<strong>$' + item.soldPSF + '</strong> sold · $' + item.askingPSF + ' asking';
+    else price = '';
+    return '<div style="min-width:180px">' +
+      '<div style="font-weight:600;margin-bottom:4px;">' + item.addr + '</div>' +
+      '<div style="color:#555;font-size:0.82rem;margin-bottom:6px;">' + item.city + '</div>' +
+      '<div style="font-size:0.88rem;">' + price + '</div>' +
+      '<div style="font-size:0.78rem;color:#666;margin-top:6px;">' +
+        fmtNum(item.size) + ' SF' + (item.clear ? ' &middot; ' + item.clear + "' clear" : '') +
+      '</div>' +
+    '</div>';
+  }
+
+  function initMap(){
+    if (mapInstance || typeof L === 'undefined') return;
+    var mapEl = document.getElementById('trackedMap');
+    if (!mapEl) return;
+    mapInstance = L.map(mapEl, { scrollWheelZoom: true }).setView([43.70, -79.55], 10);
+    mapInstance.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+    }).addTo(mapInstance);
+    markerLayer = L.layerGroup().addTo(mapInstance);
+    setTimeout(function(){ if (mapInstance) mapInstance.invalidateSize(); }, 50);
+  }
+
+  function renderMap(items, status){
+    initMap();
+    if (!mapInstance || !markerLayer) return;
+    markerLayer.clearLayers();
+    var color = STATUS_COLORS[status] || '#0f1e4e';
+    var pts = [];
+    items.forEach(function(item){
+      if (typeof item.lat !== 'number' || typeof item.lng !== 'number') return;
+      var m = L.circleMarker([item.lat, item.lng], {
+        radius: 9, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.95
+      }).bindPopup(popupHtml(item, status));
+      markerLayer.addLayer(m);
+      pts.push([item.lat, item.lng]);
+    });
+    if (pts.length === 0) {
+      // No points — nothing to re-fit; leave view where it is.
+      return;
+    }
+    if (pts.length === 1) {
+      mapInstance.setView(pts[0], 12);
+    } else {
+      mapInstance.fitBounds(L.latLngBounds(pts), { padding: [40, 40], maxZoom: 13 });
+    }
+    setTimeout(function(){ mapInstance.invalidateSize(); }, 50);
+  }
+
+  // ---- Notification email: persisted per-search in localStorage.
+  function notifyKey(sid){ return 'industrio.savedSearches.notify.' + sid; }
+  function loadNotifyEmail(sid){ try { return localStorage.getItem(notifyKey(sid)) || ''; } catch(e){ return ''; } }
+  function saveNotifyEmail(sid, email){ try { localStorage.setItem(notifyKey(sid), email); } catch(e){} }
+
+  function syncNotifyPanel(){
+    var input = document.getElementById('notifyEmail');
+    var saved = document.getElementById('notifySaved');
+    if (!input) return;
+    input.value = currentSearchId ? loadNotifyEmail(currentSearchId) : '';
+    if (saved) saved.classList.remove('on');
   }
 
   function refreshPicker(selectId){
@@ -293,7 +391,30 @@
     var s = loadSearches().find(function(x){ return x.id === currentSearchId; });
     if (!s) return;
     renderCriteria(s);
+    applyViewVisibility();  // make sure the correct view container is shown
     renderTab(s, currentTab);
+    syncNotifyPanel();
+  }
+
+  // Toggle visibility of the two view containers (#trackedResults = cards,
+  // #trackedMap = Leaflet map) based on currentView.
+  function applyViewVisibility(){
+    var cardsEl = document.getElementById('trackedResults');
+    var mapEl   = document.getElementById('trackedMap');
+    if (cardsEl) {
+      if (currentView === 'cards') cardsEl.removeAttribute('hidden');
+      else cardsEl.setAttribute('hidden', '');
+    }
+    if (mapEl) {
+      if (currentView === 'map') mapEl.removeAttribute('hidden');
+      else mapEl.setAttribute('hidden', '');
+    }
+    // Toggle button .active state
+    document.querySelectorAll('#trackedViewMode button').forEach(function(b){
+      var isActive = b.dataset.view === currentView;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
   }
 
   // ---- Wire up
@@ -315,6 +436,40 @@
     });
   });
   newBtn.addEventListener('click', function(){ window.location.href = 'map.html'; });
+
+  // View-mode toggle: Photo cards | Map
+  var viewModeEl = document.getElementById('trackedViewMode');
+  if (viewModeEl){
+    viewModeEl.addEventListener('click', function(e){
+      var b = e.target.closest('button[data-view]');
+      if (!b) return;
+      var v = b.dataset.view;
+      if (v !== 'cards' && v !== 'map') return;
+      if (v === currentView) return;
+      currentView = v;
+      renderCurrent();
+    });
+  }
+
+  // Notification email: save per-search to localStorage, show a brief confirmation.
+  var notifyBtn = document.getElementById('notifySaveBtn');
+  if (notifyBtn){
+    notifyBtn.addEventListener('click', function(){
+      if (!currentSearchId) return;
+      var input = document.getElementById('notifyEmail');
+      var saved = document.getElementById('notifySaved');
+      var val = input ? input.value.trim() : '';
+      if (val && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val)){
+        alert('Please enter a valid email address.');
+        return;
+      }
+      saveNotifyEmail(currentSearchId, val);
+      if (saved){
+        saved.classList.add('on');
+        setTimeout(function(){ saved.classList.remove('on'); }, 3500);
+      }
+    });
+  }
   renameBtn.addEventListener('click', function(){
     var arr = loadSearches();
     var s = arr.find(function(x){ return x.id === currentSearchId; });
