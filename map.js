@@ -173,6 +173,8 @@
       // Build sidebar cards + update stats strip from this data
       renderSidebarCards(data);
       updateStatsStrip(data);
+      // HouseSigma-style per-building density labels (zoom >= 15)
+      initDensityLabels(data);
     }).catch(function(err){
       console.error('[industrio] FAILED to load listings.json:', err.message || err);
       console.error('[industrio] If you opened map.html via file://, fetch() is blocked. Run a local server (e.g. `python -m http.server 8000`) and open http://localhost:8000/map.html');
@@ -604,6 +606,181 @@
       regionRow.innerHTML = keys.slice(0, 6).map(function(k){
         return '<span class="stat-region"><b>' + k + '</b>&nbsp;' + regions[k] + '</span>';
       }).join('') || '<span class="stat-region" style="color:var(--text-muted)">—</span>';
+    }
+  }
+
+  // ============================================================================
+  // HouseSigma-style per-building density labels.
+  //
+  // What this does:
+  //   - Groups every record in listings.json by building_id (fallback: address).
+  //   - For each building, computes avg net asking rent (from for_lease) and
+  //     avg achieved rent (from leased), plus unit counts and avg unit size.
+  //   - Renders two small coloured pill labels per building at the building's
+  //     lat/lng:
+  //        * Light-blue pill  (availabilities)  "A $15.0 · 3"
+  //        * Dark-purple pill (leased comps)    "L $16.2 · 2"
+  //   - Pills only appear when the user is zoomed in (zoom >= DENSITY_ZOOM).
+  //     At lower zooms the map stays uncluttered and the small grey inventory
+  //     backdrop + colored comp dots carry the view.
+  //   - Clicking a pill opens a popup listing every unit at that building with
+  //     address+unit, size, and rate.
+  //
+  // Styling is injected as a <style> block so this feature is self-contained in
+  // map.js and doesn't require edits to map.html.
+  // ============================================================================
+
+  var DENSITY_ZOOM = 15;  // show pills at zoom levels >= this
+
+  function injectDensityCSS(){
+    if (document.getElementById('densityLabelStyles')) return;
+    var style = document.createElement('style');
+    style.id = 'densityLabelStyles';
+    style.textContent = [
+      '.density-pill { display:inline-block; padding:3px 7px 3px 6px; border-radius:6px;',
+      '  font: 600 11px/1.15 ui-sans-serif, system-ui, -apple-system, sans-serif;',
+      '  color:#fff; white-space:nowrap; letter-spacing:.01em;',
+      '  box-shadow:0 1px 3px rgba(0,0,0,.25); cursor:pointer;',
+      '  pointer-events:auto;',
+      '}',
+      '.density-pill.avail  { background:#14b8a6; }',  // teal — availabilities
+      '.density-pill.leased { background:#5b21b6; }',  // deep purple — leased
+      '.density-pill .k { opacity:.9; font-weight:700; margin-right:3px; }',
+      '.density-pill .n { opacity:.85; font-weight:500; margin-left:4px; }',
+      '.density-pop  { font: 13px/1.35 ui-sans-serif, system-ui, -apple-system, sans-serif; }',
+      '.density-pop h4 { margin:0 0 4px 0; font-size:13px; }',
+      '.density-pop .sub { color:#555; font-size:11px; margin-bottom:8px; }',
+      '.density-pop table { border-collapse:collapse; width:100%; font-size:11.5px; }',
+      '.density-pop td { padding:3px 6px 3px 0; border-top:1px solid #eee; vertical-align:top; }',
+      '.density-pop td.rt { text-align:right; color:#0f1e4e; font-weight:600; white-space:nowrap; }'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
+
+  // Sum & avg helpers that skip null / undefined.
+  function avg(nums){
+    var xs = nums.filter(function(x){ return typeof x === 'number' && !isNaN(x); });
+    if (!xs.length) return null;
+    var s = 0; for (var i=0;i<xs.length;i++) s += xs[i];
+    return s / xs.length;
+  }
+
+  function aggregateByBuilding(data){
+    var byId = {};
+    function ensure(key, rec){
+      if (!byId[key]) {
+        byId[key] = {
+          building_id: key,
+          address: rec.address,
+          city: rec.city,
+          lat: rec.lat,
+          lng: rec.lng,
+          avail: [],   // for_lease records
+          leased: []   // leased records
+        };
+      }
+      // Keep the first lat/lng we see; occasionally per-unit lat/lng drifts a
+      // few metres — we want the building centroid to be stable.
+      return byId[key];
+    }
+    (data.for_lease || []).forEach(function(r){
+      if (typeof r.lat !== 'number' || typeof r.lng !== 'number') return;
+      var key = r.building_id || (r.address + '|' + r.city);
+      ensure(key, r).avail.push(r);
+    });
+    (data.leased || []).forEach(function(r){
+      if (typeof r.lat !== 'number' || typeof r.lng !== 'number') return;
+      var key = r.building_id || (r.address + '|' + r.city);
+      ensure(key, r).leased.push(r);
+    });
+    return byId;
+  }
+
+  function fmtRate(x){ return (x == null) ? '—' : '$' + Number(x).toFixed(1); }
+  function fmtSF(x){   return (x == null) ? '—' : Number(x).toLocaleString('en-CA'); }
+
+  function buildPopup(bldg){
+    var rowsAvail = bldg.avail.map(function(r){
+      return '<tr><td>' + (r.unit ? 'Unit ' + r.unit : '—') + '</td>' +
+             '<td>' + fmtSF(r.size_sf) + ' SF</td>' +
+             '<td class="rt">' + fmtRate(r.net_rent_psf) + '/SF</td></tr>';
+    }).join('');
+    var rowsLeased = bldg.leased.map(function(r){
+      return '<tr><td>' + (r.unit ? 'Unit ' + r.unit : '—') + '</td>' +
+             '<td>' + fmtSF(r.size_sf) + ' SF</td>' +
+             '<td class="rt">' + fmtRate(r.achieved_net_psf || r.net_rent_psf) + '/SF</td></tr>';
+    }).join('');
+    var availSection = bldg.avail.length ?
+      '<div style="margin-top:8px;"><strong style="color:#0f766e;">' + bldg.avail.length + ' availability' + (bldg.avail.length === 1 ? '' : 'ies') + '</strong>' +
+      '<table>' + rowsAvail + '</table></div>' : '';
+    var leasedSection = bldg.leased.length ?
+      '<div style="margin-top:8px;"><strong style="color:#5b21b6;">' + bldg.leased.length + ' leased deal' + (bldg.leased.length === 1 ? '' : 's') + '</strong>' +
+      '<table>' + rowsLeased + '</table></div>' : '';
+    var allSizes = bldg.avail.concat(bldg.leased).map(function(r){ return r.size_sf; });
+    var avgUnit = avg(allSizes);
+    var totalSF = allSizes.reduce(function(a,b){ return a + (b || 0); }, 0);
+    return '<div class="density-pop">' +
+      '<h4>' + (bldg.address || '—') + '</h4>' +
+      '<div class="sub">' + (bldg.city || '') +
+        (avgUnit ? ' &middot; avg unit ' + fmtSF(Math.round(avgUnit)) + ' SF' : '') +
+        (totalSF ? ' &middot; tracked ' + fmtSF(totalSF) + ' SF' : '') +
+      '</div>' + availSection + leasedSection + '</div>';
+  }
+
+  // Build the density layers (one per bucket), hidden by default. The zoom
+  // handler below adds/removes them based on the current zoom level.
+  var densityAvail = null;
+  var densityLeased = null;
+  var densityReady = false;
+
+  function initDensityLabels(data){
+    if (densityReady) return;
+    densityReady = true;
+    injectDensityCSS();
+    var agg = aggregateByBuilding(data);
+    densityAvail  = L.layerGroup();
+    densityLeased = L.layerGroup();
+    Object.keys(agg).forEach(function(k){
+      var b = agg[k];
+      var popupHTML = buildPopup(b);
+      if (b.avail.length){
+        var rate = avg(b.avail.map(function(r){ return r.net_rent_psf; }));
+        var html = '<div class="density-pill avail"><span class="k">A</span>' +
+                   fmtRate(rate) + '<span class="n">&middot; ' + b.avail.length + '</span></div>';
+        var icon = L.divIcon({ className: '', html: html, iconSize: null, iconAnchor: [0, 0] });
+        L.marker([b.lat, b.lng], { icon: icon, interactive: true, keyboard: false, riseOnHover: true })
+          .bindPopup(popupHTML, { maxWidth: 320 })
+          .addTo(densityAvail);
+      }
+      if (b.leased.length){
+        var rate2 = avg(b.leased.map(function(r){ return (r.achieved_net_psf != null) ? r.achieved_net_psf : r.net_rent_psf; }));
+        // Stack the leased pill ~16px below the availability one so they don't overlap
+        // when both buckets exist for the same building.
+        var offset = b.avail.length ? 18 : 0;
+        var html2 = '<div class="density-pill leased" style="transform:translateY(' + offset + 'px);">' +
+                    '<span class="k">L</span>' + fmtRate(rate2) +
+                    '<span class="n">&middot; ' + b.leased.length + '</span></div>';
+        var icon2 = L.divIcon({ className: '', html: html2, iconSize: null, iconAnchor: [0, 0] });
+        L.marker([b.lat, b.lng], { icon: icon2, interactive: true, keyboard: false, riseOnHover: true })
+          .bindPopup(popupHTML, { maxWidth: 320 })
+          .addTo(densityLeased);
+      }
+    });
+    console.log('[industrio.density] built labels for ' + Object.keys(agg).length + ' buildings');
+    syncDensityVisibility();
+    map.on('zoomend', syncDensityVisibility);
+  }
+
+  function syncDensityVisibility(){
+    if (!densityAvail || !densityLeased) return;
+    var z = map.getZoom();
+    var show = z >= DENSITY_ZOOM;
+    if (show){
+      if (!map.hasLayer(densityAvail))  densityAvail.addTo(map);
+      if (!map.hasLayer(densityLeased)) densityLeased.addTo(map);
+    } else {
+      if (map.hasLayer(densityAvail))  map.removeLayer(densityAvail);
+      if (map.hasLayer(densityLeased)) map.removeLayer(densityLeased);
     }
   }
 
