@@ -12,6 +12,99 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
+<!-- Chart.js for the real-data visualizations below (deal volume, submarkets,
+     asking vs achieved, DOM distribution). ~75kB, no API key. -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+<script src="market-intel.js" defer></script>
+<style>
+  /* ---- Market Intelligence interactive section styling ---- */
+  .mi-charts-section { padding-top: 24px; }
+  .mi-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  @media (max-width: 860px) { .mi-charts-grid { grid-template-columns: 1fr; } }
+  .mi-chart-card {
+    background: #fff; border: 1px solid var(--border, #e5e7eb);
+    border-radius: 14px; padding: 18px 20px 16px 20px;
+    display: flex; flex-direction: column; min-height: 320px;
+  }
+  .mi-chart-card h3 { margin: 0 0 2px 0; font-size: 1.02rem; }
+  .mi-chart-card .mi-chart-sub {
+    font-size: 0.78rem; color: var(--text-muted, #6b7280); margin-bottom: 12px;
+  }
+  .mi-chart-canvas-wrap { flex: 1; position: relative; min-height: 230px; }
+  .mi-chart-foot {
+    font-size: 0.72rem; color: var(--text-muted, #6b7280);
+    margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border, #e5e7eb);
+  }
+  /* ---- Submarket picker tiles ---- */
+  .mi-region-picker {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px;
+  }
+  @media (max-width: 760px) { .mi-region-picker { grid-template-columns: repeat(2, 1fr); } }
+  .mi-region-btn {
+    appearance: none; background: #fff; border: 1.5px solid var(--border, #e5e7eb);
+    border-radius: 12px; padding: 14px 10px; text-align: center; cursor: pointer;
+    font-family: inherit; transition: all .15s ease;
+  }
+  .mi-region-btn:hover { border-color: var(--accent, #0d9488); }
+  .mi-region-btn.active {
+    background: var(--accent, #0d9488); color: #fff; border-color: var(--accent, #0d9488);
+  }
+  .mi-region-btn b { display: block; font-size: 1rem; }
+  .mi-region-btn span { display: block; font-size: 0.78rem; opacity: 0.9; margin-top: 4px; }
+  .mi-region-detail {
+    margin-top: 16px; padding: 18px 20px; background: #fff;
+    border: 1px solid var(--border, #e5e7eb); border-radius: 12px;
+  }
+  .mi-region-detail h4 { margin: 0 0 8px 0; font-size: 1rem; }
+  .mi-region-detail .mi-region-stats {
+    display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .mi-region-detail .mi-region-stat .lbl { font-size: 0.74rem; color: var(--text-muted, #6b7280); text-transform: uppercase; letter-spacing: .04em; }
+  .mi-region-detail .mi-region-stat .val { font-size: 1.1rem; font-weight: 700; color: var(--text, #0f1e4e); }
+  .mi-comm-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mi-comm-pill {
+    background: var(--surface-2, #f1f3f8); border-radius: 999px;
+    padding: 4px 11px; font-size: 0.78rem;
+  }
+  .mi-comm-pill b { margin-left: 4px; color: var(--accent, #0d9488); }
+  /* ---- Address report widget ---- */
+  .mi-report-card {
+    background: #fff; border: 1px solid var(--border, #e5e7eb);
+    border-radius: 14px; padding: 22px 24px;
+  }
+  .mi-report-input-row {
+    display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .mi-report-input-row input {
+    flex: 1 1 320px; min-width: 260px; padding: 11px 14px;
+    border: 1px solid var(--border, #d7dae2); border-radius: 10px;
+    font-size: 0.95rem; font-family: inherit;
+  }
+  .mi-report-results { margin-top: 18px; display: none; }
+  .mi-report-results.on { display: block; }
+  .mi-report-headline {
+    display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap;
+    margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border, #e5e7eb);
+  }
+  .mi-report-headline .big { font-size: 1.6rem; font-weight: 700; color: var(--text, #0f1e4e); }
+  .mi-report-headline .vs { font-size: 0.9rem; color: var(--text-muted, #6b7280); }
+  .mi-report-comps { display: grid; gap: 10px; }
+  .mi-report-comp {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px;
+    padding: 10px 12px; background: var(--surface-2, #fafbfd); border-radius: 10px;
+  }
+  .mi-report-comp .addr { font-weight: 600; font-size: 0.9rem; }
+  .mi-report-comp .meta { font-size: 0.78rem; color: var(--text-muted, #6b7280); }
+  .mi-report-comp .rate { font-weight: 700; text-align: right; color: var(--text, #0f1e4e); }
+  .mi-report-empty {
+    padding: 14px; background: var(--surface-2, #fafbfd); border-radius: 10px;
+    color: var(--text-muted, #6b7280); font-size: 0.9rem; text-align: center;
+  }
+</style>
 </head>
 <body>
 
@@ -22,6 +115,7 @@
     </a>
     <div class="nav-links">
       <a href="map.html">Search</a>
+      <a href="market-intelligence.html" class="active">Market Intelligence</a>
       <a href="tracked.html">Saved Searches</a>
           <div class="nav-dropdown nav-resources-link">
         <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
@@ -112,48 +206,97 @@
   </div>
 </section>
 
+<!-- ============================================================================
+     Interactive charts — real GTA 2026 leased data from realm-aggregate-2026.json
+     ============================================================================ -->
+<section class="mi-charts-section">
+  <div class="container">
+    <div class="section-header" style="text-align:left; margin-bottom:18px;">
+      <div class="eyebrow">Data-driven — GTA 2026 leased industrial</div>
+      <h2 style="margin:4px 0;">Where the market is moving.</h2>
+      <p style="margin:0; max-width: 680px; color: var(--text-muted);">
+        Four views over the 610 industrial leases that closed across Peel, Toronto, York,
+        Halton and Durham so far in 2026. Pulled from TRREB / Realm, updated monthly.
+      </p>
+    </div>
+
+    <div class="mi-charts-grid">
+
+      <div class="mi-chart-card">
+        <h3>Deal volume by region</h3>
+        <div class="mi-chart-sub">610 leased deals — where they closed</div>
+        <div class="mi-chart-canvas-wrap"><canvas id="chartRegion"></canvas></div>
+        <div class="mi-chart-foot">Peel leads at 38% of all GTA industrial leasing; Durham smallest at 6%.</div>
+      </div>
+
+      <div class="mi-chart-card">
+        <h3>Top submarkets</h3>
+        <div class="mi-chart-sub">The 12 communities with the most deal activity</div>
+        <div class="mi-chart-canvas-wrap"><canvas id="chartSubmarkets"></canvas></div>
+        <div class="mi-chart-foot">Northeast Mississauga is the single busiest community (106 deals, 17% of the GTA).</div>
+      </div>
+
+      <div class="mi-chart-card">
+        <h3>Asking vs. achieved rent</h3>
+        <div class="mi-chart-sub">Median $/SF net — the real negotiation room</div>
+        <div class="mi-chart-canvas-wrap"><canvas id="chartSpread"></canvas></div>
+        <div class="mi-chart-foot">Median achieved rent lands at <strong id="miSpreadPct">99%</strong> of asking. Landlords are holding the line in 2026.</div>
+      </div>
+
+      <div class="mi-chart-card">
+        <h3>Days on market</h3>
+        <div class="mi-chart-sub">609 deals — distribution of time to lease</div>
+        <div class="mi-chart-canvas-wrap"><canvas id="chartDom"></canvas></div>
+        <div class="mi-chart-foot">Mode <strong>14 days</strong> means the hottest listings move in under two weeks. Median <strong>74 days</strong>. Long tail skews the mean to 112.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     Submarket drill-down
+     ============================================================================ -->
 <section>
   <div class="container">
-    <div class="grid grid-3">
-      <div class="card">
-        <h3>Lease comps — last 24 months</h3>
-        <p>Every leased deal, cross-referenced to the listing: size, tenant, term, starting rent, and escalations.</p>
+    <div class="section-header" style="text-align:left; margin-bottom:18px;">
+      <div class="eyebrow">Compare submarkets</div>
+      <h2 style="margin:4px 0;">Pick a region. See where the deals are.</h2>
+      <p style="margin:0; max-width: 680px; color: var(--text-muted);">
+        Click any region tile to see its share of 2026 GTA activity and the communities driving it.
+      </p>
+    </div>
+
+    <div class="mi-region-picker" id="miRegionPicker"></div>
+    <div class="mi-region-detail" id="miRegionDetail" hidden></div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     "Pull a report on your address" widget
+     ============================================================================ -->
+<section>
+  <div class="container">
+    <div class="mi-report-card">
+      <div class="eyebrow" style="color:var(--accent); font-size:0.85rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px;">Address report</div>
+      <h2 style="margin:0 0 6px 0;">Pull a market report on a specific address.</h2>
+      <p style="margin:0; color: var(--text-muted);">
+        Type any GTA industrial address. We find the closest comps in our dataset and
+        show you how the rent benchmarks against the submarket and the GTA median.
+      </p>
+      <div class="mi-report-input-row">
+        <input type="text" id="miReportAddress" placeholder="e.g. 1030 Kamato Rd, Mississauga" autocomplete="street-address" />
+        <button type="button" class="btn btn-primary" id="miReportBtn">Pull report</button>
       </div>
-      <div class="card">
-        <h3>Asking vs. achieved rents</h3>
-        <p>The real gap between what landlords quote and what tenants pay — by submarket, by size band, by quarter.</p>
-      </div>
-      <div class="card">
-        <h3>Operating cost benchmarks</h3>
-        <p>TMI benchmarked against comparable buildings, with audit-ready line-item comparisons.</p>
-      </div>
-      <div class="card">
-        <h3>Renewal negotiation benchmarks</h3>
-        <p>What recent tenants have achieved on renewals: rent reductions, free rent, TI allowances, and term trades.</p>
-      </div>
-      <div class="card">
-        <h3>Vacancy trends</h3>
-        <p>Submarket vacancy over time, size-banded, so you know whether to push harder or move faster.</p>
-      </div>
-      <div class="card">
-        <h3>Submarket comparisons</h3>
-        <p>Side-by-side economics for adjacent submarkets — rent, TMI, labour, and drive-time impact.</p>
-      </div>
-      <div class="card">
-        <h3>Space efficiency scoring</h3>
-        <p>Column grids, bay depths, and dock-to-clear-height ratios scored against your operational footprint.</p>
-      </div>
-      <div class="card">
-        <h3>Parking ratios</h3>
-        <p>Stalls per 1,000 SF mapped across the submarket, flagged against your headcount and shift patterns.</p>
-      </div>
-      <div class="card">
-        <h3>Power availability</h3>
-        <p>Amps, volts, and phase at the panel — plus upgrade feasibility where data is available.</p>
-      </div>
-      <div class="card">
-        <h3>Clear height distribution</h3>
-        <p>The market's height profile, by submarket and age of building, so you know what's actually achievable in your budget.</p>
+
+      <div class="mi-report-results" id="miReportResults">
+        <div class="mi-report-headline">
+          <div><div style="font-size:0.74rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;">Submarket median</div><div class="big" id="miReportSubMedian">—</div></div>
+          <div><div style="font-size:0.74rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;">GTA median</div><div class="big" id="miReportGtaMedian">$18.00</div></div>
+          <div class="vs" id="miReportVs"></div>
+        </div>
+        <div style="font-size:0.9rem; font-weight:600; margin-bottom:8px;" id="miReportCompsTitle">Nearby comps</div>
+        <div class="mi-report-comps" id="miReportComps"></div>
       </div>
     </div>
   </div>
@@ -209,7 +352,7 @@
         <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
       </div>
       <div><h4>Product</h4><ul>
-        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="market-intelligence.html" class="active">Market Intelligence</a></li>
         <li><a href="ai-broker.html">AI Broker</a></li>
         <li><a href="tracked.html">My Saved Searches</a></li>
         <li><a href="map.html">Search</a></li>
