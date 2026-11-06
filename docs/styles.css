@@ -841,7 +841,6 @@ html[data-auth="out"] .nav-account-link { display: none !important; }
 .nav-account-link { display: inline; }
 
 /* Resources dropdown in nav (logged-in only) */
-html[data-auth="out"] .nav-resources-link { display: none !important; }
 .nav-dropdown { position: relative; display: inline-block; }
 .nav-dropdown-toggle { color: var(--text-dim); font-size: 0.9rem; font-weight: 500; cursor: pointer; padding: 4px 0; user-select: none; white-space: nowrap; }
 .nav-dropdown-toggle:hover { color: var(--text); }
