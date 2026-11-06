@@ -26,10 +26,13 @@
       <a href="agents.html">Agents</a>
       <a href="tracked.html">Saved Searches</a>
           <div class="nav-dropdown nav-resources-link">
-        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <a class="nav-dropdown-toggle" tabindex="0">Tools &#9662;</a>
         <div class="nav-dropdown-menu">
           <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="lease-vs-own.html">Lease vs. Own</a>
           <a href="templates.html">Document Templates</a>
+          <a href="reviews.html">Landlord Reviews</a>
+          <a href="zoning.html">Zoning</a>
         </div>
       </div>
       <a href="account.html" class="nav-account-link">My Account</a>
@@ -390,6 +393,28 @@
 </section>
 
 
+<style>
+  /* New footer (added Nov 2026) — Company + Support + social + app badges */
+  .footer-social { display: flex; gap: 10px; margin-top: 16px; }
+  .footer-social a {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); color: #fff; text-decoration: none;
+    transition: background .15s ease;
+  }
+  .footer-social a:hover { background: rgba(255,255,255,0.18); }
+  .footer-social svg { width: 16px; height: 16px; fill: currentColor; }
+  .footer-apps { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .footer-apps a {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #000; color: #fff; padding: 8px 14px; border-radius: 8px;
+    text-decoration: none; font-family: inherit; min-width: 148px;
+  }
+  .footer-apps a:hover { background: #1a1a1a; }
+  .footer-apps svg { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; }
+  .footer-apps .app-small { font-size: 0.6rem; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
+  .footer-apps .app-big   { font-size: 0.95rem; font-weight: 600; line-height: 1.1; }
+</style>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -398,36 +423,52 @@
           <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
         </div>
         <p style="max-width:340px;">Industrial real estate intelligence for occupiers under 50,000 SF. Transparent data. Tenant-first AI.</p>
+
+        <div class="footer-social">
+          <a href="https://facebook.com/industrio" aria-label="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.3C16.4 4.3 15.4 4 14.1 4c-2.3 0-3.9 1.4-3.9 4v2.8H7.5V14h2.7v8h3.3z"/></svg>
+          </a>
+          <a href="https://twitter.com/industrio" aria-label="X (Twitter)" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://linkedin.com/company/industrio" aria-label="LinkedIn" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3A2 2 0 0 1 21 5v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.339 18.337V9.66H5.669v8.677h2.67zM7.004 8.57a1.548 1.548 0 1 0 0-3.096 1.548 1.548 0 0 0 0 3.096zm11.333 9.767v-4.962c0-2.573-1.397-3.767-3.26-3.767-1.504 0-2.178.827-2.555 1.407V9.66h-2.668c.035.753 0 8.677 0 8.677h2.668v-4.845c0-.24.017-.48.088-.65.192-.48.633-.976 1.37-.976.967 0 1.354.737 1.354 1.817v4.654h2.667z"/></svg>
+          </a>
+        </div>
+
+        <div class="footer-apps">
+          <a href="#" aria-label="Download on the App Store">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.05 12.04c-.03-3.17 2.59-4.69 2.7-4.76-1.47-2.15-3.77-2.44-4.59-2.47-1.95-.2-3.81 1.15-4.8 1.15-.99 0-2.52-1.12-4.14-1.09-2.13.03-4.09 1.24-5.19 3.14-2.21 3.82-.57 9.49 1.6 12.59 1.06 1.52 2.32 3.23 3.98 3.17 1.6-.06 2.21-1.03 4.15-1.03 1.93 0 2.49 1.03 4.19 1 1.73-.03 2.82-1.54 3.88-3.07 1.22-1.76 1.73-3.48 1.76-3.57-.04-.02-3.37-1.29-3.4-5.12zm-3.14-9.4c.88-1.07 1.47-2.55 1.31-4.02-1.26.05-2.79.84-3.7 1.9-.81.94-1.52 2.46-1.33 3.9 1.4.11 2.84-.71 3.72-1.78z"/></svg>
+            <span><span class="app-small">Download on the</span><br><span class="app-big">App Store</span></span>
+          </a>
+          <a href="#" aria-label="Get it on Google Play">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.609 1.814L13.792 12 3.609 22.186a.996.996 0 01-.609-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.459 1.421a1 1 0 010 1.73l-2.46 1.421-2.68-2.686 2.681-2.686zM5.864 2.658L16.802 8.99l-2.303 2.303-8.635-8.635z"/></svg>
+            <span><span class="app-small">Get it on</span><br><span class="app-big">Google Play</span></span>
+          </a>
+        </div>
       </div>
-      <div><h4>Product</h4><ul>
-        <li><a href="market-intelligence.html">Market Intelligence</a></li>
-        <li><a href="ai-broker.html">AI Broker</a></li>
-        <li><a href="tracked.html">My Saved Searches</a></li>
-        <li><a href="map.html">Search</a></li>
-        <li><a href="zoning.html">Zoning</a></li>
-        <li><a href="operations-fit.html">Operations Fit</a></li>
-        <li><a href="lease-abstract.html">Lease Abstract</a></li>
-        <li><a href="landlord-comms.html">Landlord Comms</a></li>
-        <li><a href="comps.html">Comps</a></li>
-        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
-        <li><a href="templates.html">Document Templates</a></li>
-        <li><a href="pricing.html">Pricing</a></li>
-      </ul></div>
-      <div><h4>Data</h4><ul>
-        <li><a href="reviews.html">Landlord Reviews</a></li>
-        <li><a href="community.html">Community</a></li>
-        <li><a href="docs.html">Developer Docs</a></li>
-      </ul></div>
+
       <div>
         <h4>Company</h4>
         <ul>
-          <li><a href="about.html">About</a></li>
-          <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="market-intelligence.html">Market Trends</a></li>
+          <li><a href="careers.html">Careers</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="faq.html">FAQs</a></li>
+          <li><a href="mailto:feedback@industrio.ai">Feedback</a></li>
+          <li><a href="data-policy.html">Privacy &amp; Security</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 industrio All rights reserved.</span>
+      <span>&copy; 2026 industrio All rights reserved.</span>
       <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
     </div>
   </div>
