@@ -71,6 +71,75 @@
     padding: 4px 11px; font-size: 0.78rem;
   }
   .mi-comm-pill b { margin-left: 4px; color: var(--accent, #0d9488); }
+  /* ---- Filter bar (HouseSigma-style sticky filter row) ---- */
+  .mi-filter-bar {
+    position: sticky; top: 0; z-index: 20;
+    background: #fff; border-bottom: 1px solid var(--border, #e5e7eb);
+    padding: 12px 0;
+  }
+  .mi-filter-row {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  }
+  .mi-filter-group { display: flex; align-items: center; gap: 6px; }
+  .mi-filter-group label {
+    font-size: 0.72rem; color: var(--text-muted, #6b7280);
+    text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
+  }
+  .mi-filter-bar select {
+    padding: 7px 10px; border: 1px solid var(--border, #d7dae2); border-radius: 8px;
+    font-family: inherit; font-size: 0.85rem; background: #fff; min-width: 150px;
+  }
+  .mi-pill-row {
+    display: inline-flex; background: var(--surface-2, #f1f3f8);
+    border-radius: 10px; padding: 3px; gap: 0;
+  }
+  .mi-pill-row button {
+    appearance: none; border: 0; background: transparent;
+    padding: 6px 12px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    border-radius: 7px; color: var(--text-muted, #6b7280); font-family: inherit;
+  }
+  .mi-pill-row button.active {
+    background: #fff; color: var(--text, #0f1e4e);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+  /* ---- Headline tiles ---- */
+  .mi-head-context {
+    font-size: 0.8rem; color: var(--text-muted, #6b7280); margin: 18px 0 10px 0;
+  }
+  .mi-head-row {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px; margin-bottom: 18px;
+  }
+  @media (max-width: 960px) { .mi-head-row { grid-template-columns: repeat(2, 1fr); } }
+  .mi-head-tile {
+    background: #fff; border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px; padding: 14px 16px;
+  }
+  .mi-head-tile .lbl {
+    font-size: 0.72rem; color: var(--text-muted, #6b7280);
+    text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600;
+  }
+  .mi-head-tile .val {
+    font-size: 1.5rem; font-weight: 700; color: var(--text, #0f1e4e); margin-top: 6px;
+  }
+  .mi-head-tile .val .unit {
+    font-size: 0.78rem; color: var(--text-muted, #6b7280); font-weight: 500; margin-left: 2px;
+  }
+  .mi-head-tile .sub {
+    font-size: 0.74rem; color: var(--text-muted, #6b7280); margin-top: 4px;
+  }
+  /* ---- Big combined time-series chart ---- */
+  .mi-ts-card {
+    background: #fff; border: 1px solid var(--border, #e5e7eb);
+    border-radius: 14px; padding: 18px 20px; margin-bottom: 24px;
+  }
+  .mi-ts-card h3 { margin: 0 0 2px 0; font-size: 1.05rem; }
+  .mi-ts-sub {
+    font-size: 0.78rem; color: var(--text-muted, #6b7280); margin-bottom: 12px;
+  }
+  .mi-ts-canvas-wrap {
+    position: relative; width: 100%; height: 340px;
+  }
   /* ---- Address report widget ---- */
   .mi-report-card {
     background: #fff; border: 1px solid var(--border, #e5e7eb);
@@ -116,6 +185,7 @@
     <div class="nav-links">
       <a href="map.html">Search</a>
       <a href="market-intelligence.html" class="active">Market Intelligence</a>
+      <a href="agents.html">Agents</a>
       <a href="tracked.html">Saved Searches</a>
           <div class="nav-dropdown nav-resources-link">
         <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
@@ -138,70 +208,96 @@
   </div>
 </header>
 
-<!-- GTA leased industrial 2026 snapshot, sourced from Realm/TRREB -->
-<section style="padding-top: 0;">
+<!-- ============================================================================
+     FILTER BAR — sticky at the top of the content area
+     ============================================================================ -->
+<div class="mi-filter-bar">
   <div class="container">
-    <div class="mi-snapshot">
-      <div class="mi-snapshot-head">
-        <div>
-          <span class="mi-eyebrow">GTA industrial · 2026 leased snapshot</span>
-          <h2 class="mi-h2">610 deals closed · sourced from TRREB / Realm</h2>
-          <p class="mi-sub">Peel, Toronto, York, Halton and Durham · all industrial property classes · all sizes</p>
-        </div>
-        <span class="mi-asof">As of <span id="miAsOf">May 2026</span></span>
+    <div class="mi-filter-row">
+
+      <div class="mi-filter-group">
+        <label>Region</label>
+        <select id="miFilterRegion"></select>
       </div>
 
-      <div class="mi-tile-row">
-        <div class="mi-tile">
-          <div class="mi-tile-label">Median asking rent</div>
-          <div class="mi-tile-value">$18.00<span class="unit">/SF net</span></div>
-          <div class="mi-tile-meta">mode $16.95 · 610 listings</div>
-        </div>
-        <div class="mi-tile">
-          <div class="mi-tile-label">Median achieved rent</div>
-          <div class="mi-tile-value">$18.00<span class="unit">/SF net</span></div>
-          <div class="mi-tile-meta">mode $16.00 · 489 disclosed</div>
-        </div>
-        <div class="mi-tile">
-          <div class="mi-tile-label">Median TMI</div>
-          <div class="mi-tile-value">$6.00<span class="unit">/SF</span></div>
-          <div class="mi-tile-meta">mode $4.50 · 572 disclosed</div>
-        </div>
-        <div class="mi-tile">
-          <div class="mi-tile-label">Median DOM</div>
-          <div class="mi-tile-value">74<span class="unit">days</span></div>
-          <div class="mi-tile-meta">mode 14 · mean 112</div>
-        </div>
-        <div class="mi-tile">
-          <div class="mi-tile-label">% close vs asking</div>
-          <div class="mi-tile-value">99<span class="unit">%</span></div>
-          <div class="mi-tile-meta">deals close at or just below asking</div>
+      <div class="mi-filter-group">
+        <label>Size</label>
+        <select id="miFilterSize"></select>
+      </div>
+
+      <div class="mi-filter-group">
+        <label>Property type</label>
+        <div class="mi-pill-row" data-pill-group="propType">
+          <button type="button" data-value="all">All</button>
+          <button type="button" data-value="freestanding">Freestanding</button>
+          <button type="button" data-value="multi-tenant">Multi-tenant</button>
         </div>
       </div>
 
-      <div class="mi-region-row">
-        <div class="mi-region-tile"><b>Peel</b><span>230 deals</span><div class="mi-region-bar"><span style="width:100%"></span></div></div>
-        <div class="mi-region-tile"><b>Toronto</b><span>161 deals</span><div class="mi-region-bar"><span style="width:70%"></span></div></div>
-        <div class="mi-region-tile"><b>York</b><span>142 deals</span><div class="mi-region-bar"><span style="width:62%"></span></div></div>
-        <div class="mi-region-tile"><b>Halton</b><span>41 deals</span><div class="mi-region-bar"><span style="width:18%"></span></div></div>
-        <div class="mi-region-tile"><b>Durham</b><span>36 deals</span><div class="mi-region-bar"><span style="width:16%"></span></div></div>
+      <div class="mi-filter-group">
+        <label>Status</label>
+        <div class="mi-pill-row" data-pill-group="status">
+          <button type="button" data-value="leased">Leased</button>
+          <button type="button" data-value="sold">Sold</button>
+        </div>
       </div>
 
-      <div class="mi-community-row">
-        <div class="mi-community-label">Top submarkets:</div>
-        <span class="mi-chip">Northeast <b>106</b></span>
-        <span class="mi-chip">Concord <b>41</b></span>
-        <span class="mi-chip">Milliken Mills West <b>34</b></span>
-        <span class="mi-chip">West Humber-Clairville <b>26</b></span>
-        <span class="mi-chip">Western Business Park <b>25</b></span>
-        <span class="mi-chip">QE Queen Elizabeth <b>20</b></span>
-        <span class="mi-chip">York University Heights <b>20</b></span>
-        <span class="mi-chip">Humber Summit <b>18</b></span>
-        <span class="mi-chip">Milliken <b>13</b></span>
-        <span class="mi-chip">Dixie <b>12</b></span>
-        <span class="mi-chip">Gateway <b>12</b></span>
-        <span class="mi-chip">Brock Industrial <b>11</b></span>
+      <div class="mi-filter-group" style="margin-left:auto;">
+        <label>Timeline</label>
+        <div class="mi-pill-row" data-pill-group="timeline">
+          <button type="button" data-value="6m">6 mo</button>
+          <button type="button" data-value="1y">1 yr</button>
+          <button type="button" data-value="3y">3 yr</button>
+          <button type="button" data-value="5y">5 yr</button>
+        </div>
       </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================================
+     HEADLINE TILES — reactive to filter state
+     ============================================================================ -->
+<section style="padding-top: 24px;">
+  <div class="container">
+    <div class="mi-head-context" id="miHeadContext">All GTA · All sizes · Leased</div>
+
+    <div class="mi-head-row">
+      <div class="mi-head-tile">
+        <div class="lbl">Median rate</div>
+        <div class="val"><span id="miHeadMedian">—</span><span class="unit" id="miHeadMedianUnit"> / SF net</span></div>
+        <div class="sub">this month</div>
+      </div>
+      <div class="mi-head-tile">
+        <div class="lbl">New listings</div>
+        <div class="val"><span id="miHeadListings">—</span></div>
+        <div class="sub">this month</div>
+      </div>
+      <div class="mi-head-tile">
+        <div class="lbl">1-yr change</div>
+        <div class="val"><span id="miHead1y">—</span></div>
+        <div class="sub">vs. 12 months ago</div>
+      </div>
+      <div class="mi-head-tile">
+        <div class="lbl">3-yr change</div>
+        <div class="val"><span id="miHead3y">—</span></div>
+        <div class="sub">vs. 36 months ago</div>
+      </div>
+      <div class="mi-head-tile">
+        <div class="lbl">5-yr change</div>
+        <div class="val"><span id="miHead5y">—</span></div>
+        <div class="sub">vs. 60 months ago</div>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         BIG TIME-SERIES CHART (line = median $/SF, bars = DOM)
+         ======================================================================= -->
+    <div class="mi-ts-card">
+      <h3>Median rate &amp; days on market</h3>
+      <div class="mi-ts-sub">Monthly history for the filter combination above. Hover a point for exact values.</div>
+      <div class="mi-ts-canvas-wrap"><canvas id="chartTimeseries"></canvas></div>
     </div>
   </div>
 </section>

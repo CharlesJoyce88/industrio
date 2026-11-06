@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agents — industrio</title>
+<meta name="description" content="Industrio's industrial-leasing agents across the GTA. Browse by territory, see deal history and ratings, connect in one click.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ---- Agents index page ---- */
+  .agents-toolbar {
+    display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+    margin: 18px 0 20px 0;
+  }
+  .agents-toolbar .filter-label {
+    font-size: 0.78rem; font-weight: 600; color: var(--text-muted, #6b7280);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .agents-toolbar select {
+    padding: 8px 12px; border: 1px solid var(--border, #d7dae2);
+    border-radius: 8px; font-family: inherit; font-size: 0.9rem; background: #fff;
+    min-width: 220px;
+  }
+  .agents-toolbar .agents-count {
+    margin-left: auto; font-size: 0.86rem; color: var(--text-muted, #6b7280);
+  }
+  .agents-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
+  }
+  .agent-card {
+    background: #fff; border: 1px solid var(--border, #e5e7eb); border-radius: 14px;
+    padding: 18px; display: flex; flex-direction: column; transition: all .15s ease;
+    text-decoration: none; color: inherit;
+  }
+  .agent-card:hover {
+    border-color: var(--accent, #0d9488); transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15, 30, 78, 0.08);
+  }
+  .agent-card-head {
+    display: flex; gap: 14px; align-items: center; margin-bottom: 14px;
+  }
+  .agent-card-photo {
+    width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    background: var(--surface-2, #f1f3f8);
+  }
+  .agent-card-name {
+    font-weight: 700; font-size: 1.02rem; margin: 0; color: var(--text, #0f1e4e);
+  }
+  .agent-card-title {
+    font-size: 0.82rem; color: var(--text-muted, #6b7280); margin-top: 2px;
+  }
+  .agent-card-areas {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px;
+  }
+  .agent-area-pill {
+    background: var(--surface-2, #f1f3f8); font-size: 0.72rem; padding: 3px 9px;
+    border-radius: 999px; color: var(--text, #0f1e4e); font-weight: 500;
+  }
+  .agent-card-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;
+    padding-top: 12px; border-top: 1px solid var(--border, #e5e7eb);
+  }
+  .agent-card-stat .val { font-weight: 700; color: var(--text, #0f1e4e); font-size: 0.95rem; }
+  .agent-card-stat .lbl { font-size: 0.68rem; color: var(--text-muted, #6b7280);
+    text-transform: uppercase; letter-spacing: 0.04em; margin-top: 1px; }
+  .agent-card-rating {
+    font-size: 0.82rem; margin-bottom: 14px; color: var(--text-muted, #6b7280);
+  }
+  .agent-card-rating .stars { color: #f59e0b; letter-spacing: 1px; }
+  .agent-card-rating b { color: var(--text, #0f1e4e); }
+  .agent-card-cta {
+    background: var(--accent, #0d9488); color: #fff; text-align: center;
+    padding: 9px 14px; border-radius: 8px; font-weight: 600; font-size: 0.86rem;
+    margin-top: auto;
+  }
+  .agents-empty {
+    padding: 48px; text-align: center; color: var(--text-muted, #6b7280);
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="market-intelligence.html">Market Intelligence</a>
+      <a href="agents.html" class="active">Agents</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<header class="hero" style="padding:48px 0 24px 0;">
+  <div class="container">
+    <span class="hero-eyebrow">Agents</span>
+    <h1>industrio agents, <span class="gradient-text">by territory.</span></h1>
+    <p class="lead">Each agent owns a defined industrial submarket in the GTA. Filter by area to find the broker who lives and breathes your corridor — then see their deal history, turf map, and client rating before you reach out.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+
+    <div class="agents-toolbar">
+      <span class="filter-label">Area</span>
+      <select id="areaFilter">
+        <option value="">All areas</option>
+      </select>
+      <span class="agents-count" id="agentsCount">0 agents</span>
+    </div>
+
+    <div class="agents-grid" id="agentsGrid"></div>
+    <div class="agents-empty" id="agentsEmpty" hidden>No agents match that area yet. Pick another area or clear the filter.</div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="agents.html">Agents</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="tracked.html">My Saved Searches</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="zoning.html">Zoning</a></li>
+        <li><a href="operations-fit.html">Operations Fit</a></li>
+        <li><a href="lease-abstract.html">Lease Abstract</a></li>
+        <li><a href="landlord-comms.html">Landlord Comms</a></li>
+        <li><a href="comps.html">Comps</a></li>
+        <li><a href="lease-vs-own.html">Lease vs. Own</a></li>
+        <li><a href="templates.html">Document Templates</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="agents-data.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var sel = document.getElementById('areaFilter');
+  var grid = document.getElementById('agentsGrid');
+  var empty = document.getElementById('agentsEmpty');
+  var cnt = document.getElementById('agentsCount');
+
+  // Populate the area dropdown from the agents' area pills.
+  (window.INDUSTRIO_AGENT_AREAS || []).forEach(function(a){
+    var o = document.createElement('option');
+    o.value = a; o.textContent = a;
+    sel.appendChild(o);
+  });
+
+  function fmtK(n){
+    if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (n >= 1000)    return Math.round(n/1000) + 'K';
+    return String(n);
+  }
+
+  function starBar(rating){
+    var full = Math.floor(rating);
+    var half = (rating - full) >= 0.5;
+    var s = '';
+    for (var i = 0; i < full; i++) s += '★';
+    if (half) s += '½';
+    while (s.replace('½','').length < 5) s += '☆';
+    return s;
+  }
+
+  function cardHTML(a){
+    return '<a class="agent-card" href="agent-profile.html?id=' + encodeURIComponent(a.id) + '">' +
+      '<div class="agent-card-head">' +
+        '<img class="agent-card-photo" src="' + a.photo + '" alt="' + a.name + '" loading="lazy">' +
+        '<div><h3 class="agent-card-name">' + a.name + '</h3>' +
+          '<div class="agent-card-title">' + a.title + '</div></div>' +
+      '</div>' +
+      '<div class="agent-card-areas">' +
+        a.areas.map(function(x){ return '<span class="agent-area-pill">' + x + '</span>'; }).join('') +
+      '</div>' +
+      '<div class="agent-card-rating">' +
+        '<span class="stars">' + starBar(a.rating) + '</span> ' +
+        '<b>' + a.rating.toFixed(1) + '</b> &middot; ' + a.review_count + ' reviews' +
+      '</div>' +
+      '<div class="agent-card-stats">' +
+        '<div class="agent-card-stat"><div class="val">' + a.stats.deals_total + '</div><div class="lbl">Deals</div></div>' +
+        '<div class="agent-card-stat"><div class="val">' + fmtK(a.stats.sf_leased) + '</div><div class="lbl">SF leased</div></div>' +
+        '<div class="agent-card-stat"><div class="val">' + fmtK(a.stats.sf_sold) + '</div><div class="lbl">SF sold</div></div>' +
+      '</div>' +
+      '<div class="agent-card-cta">View profile &rarr;</div>' +
+    '</a>';
+  }
+
+  function render(){
+    var area = sel.value;
+    var list = (window.INDUSTRIO_AGENTS || []).filter(function(a){
+      if (!area) return true;
+      return a.areas.indexOf(area) >= 0;
+    });
+    cnt.textContent = list.length + (list.length === 1 ? ' agent' : ' agents');
+    if (!list.length){
+      grid.innerHTML = '';
+      empty.removeAttribute('hidden');
+      return;
+    }
+    empty.setAttribute('hidden','');
+    grid.innerHTML = list.map(cardHTML).join('');
+  }
+
+  sel.addEventListener('change', render);
+  render();
+})();
+</script>
+
+</body>
+</html>

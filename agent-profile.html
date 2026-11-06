@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.dataset.auth = (localStorage.getItem('industrio.loggedIn') === 'true') ? 'in' : 'out';</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent profile — industrio</title>
+<meta name="description" content="An industrio agent's deal history, turf, and ratings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<style>
+  /* ---- Agent profile layout ---- */
+  .ap-hero {
+    display: grid; grid-template-columns: 136px 1fr auto; gap: 24px;
+    align-items: center; margin-top: 36px; padding-bottom: 28px;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+  }
+  @media (max-width: 760px) { .ap-hero { grid-template-columns: 1fr; } }
+  .ap-photo {
+    width: 136px; height: 136px; border-radius: 50%; object-fit: cover;
+    background: var(--surface-2, #f1f3f8);
+  }
+  .ap-name { font-size: 2rem; font-weight: 700; margin: 0; color: var(--text, #0f1e4e); }
+  .ap-title { font-size: 1rem; color: var(--text-muted, #6b7280); margin-top: 4px; }
+  .ap-meta { margin-top: 10px; font-size: 0.86rem; color: var(--text-muted, #6b7280); }
+  .ap-meta .dot { color: #cbd5e1; margin: 0 6px; }
+  .ap-areas { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .ap-areas .pill {
+    background: var(--surface-2, #f1f3f8); font-size: 0.75rem; padding: 3px 10px;
+    border-radius: 999px; color: var(--text, #0f1e4e); font-weight: 500;
+  }
+  .ap-cta { display: flex; gap: 8px; }
+  .ap-cta .btn-primary {
+    background: var(--accent, #0d9488); color: #fff; padding: 10px 18px; border-radius: 8px;
+    font-weight: 600; text-decoration: none; font-size: 0.9rem;
+  }
+  .ap-cta .btn-secondary {
+    background: #fff; color: var(--text, #0f1e4e); padding: 10px 18px; border-radius: 8px;
+    font-weight: 600; text-decoration: none; font-size: 0.9rem;
+    border: 1px solid var(--border, #d7dae2);
+  }
+
+  /* Stats strip */
+  .ap-stats {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px; margin: 24px 0 12px 0;
+  }
+  @media (max-width: 760px) { .ap-stats { grid-template-columns: repeat(2, 1fr); } }
+  .ap-stat {
+    background: #fff; border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px; padding: 16px;
+  }
+  .ap-stat .val { font-size: 1.5rem; font-weight: 700; color: var(--text, #0f1e4e); }
+  .ap-stat .lbl { font-size: 0.74rem; color: var(--text-muted, #6b7280);
+    text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+  .ap-stat .sub { font-size: 0.78rem; color: var(--text-muted, #6b7280); margin-top: 6px; }
+  .ap-stars { color: #f59e0b; letter-spacing: 2px; font-size: 1.05rem; }
+
+  /* Bio */
+  .ap-bio {
+    background: var(--surface-2, #fafbfd); border-radius: 12px; padding: 16px 20px;
+    font-size: 0.94rem; color: var(--text, #0f1e4e); margin-top: 12px;
+  }
+
+  /* Map */
+  #apMap {
+    height: 420px; width: 100%; border-radius: 12px; margin-top: 24px;
+    border: 1px solid var(--border, #e5e7eb);
+  }
+
+  /* Deals list + filters */
+  .ap-deals-head {
+    display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+    margin: 28px 0 12px 0;
+  }
+  .ap-deals-head h2 { margin: 0; font-size: 1.1rem; }
+  .ap-filter-pill {
+    appearance: none; background: #fff; border: 1px solid var(--border, #d7dae2);
+    padding: 6px 12px; border-radius: 999px; font-family: inherit; font-size: 0.82rem;
+    cursor: pointer; color: var(--text, #0f1e4e);
+  }
+  .ap-filter-pill.active {
+    background: var(--accent, #0d9488); color: #fff; border-color: var(--accent, #0d9488);
+  }
+  .ap-filter-pill:hover:not(.active) { border-color: var(--accent, #0d9488); }
+  .ap-filter-input {
+    padding: 6px 12px; border: 1px solid var(--border, #d7dae2); border-radius: 999px;
+    font-family: inherit; font-size: 0.82rem; width: 180px;
+  }
+  .ap-deals-count { margin-left: auto; font-size: 0.82rem; color: var(--text-muted, #6b7280); }
+  .ap-deals-table {
+    width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 8px;
+  }
+  .ap-deals-table th {
+    text-align: left; padding: 10px 12px; font-size: 0.74rem; color: var(--text-muted, #6b7280);
+    text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border, #e5e7eb);
+    background: #fff;
+  }
+  .ap-deals-table td {
+    padding: 10px 12px; border-bottom: 1px solid var(--border, #e5e7eb);
+    vertical-align: top;
+  }
+  .ap-deals-table .right { text-align: right; }
+  .ap-deals-table .type-pill {
+    font-size: 0.7rem; padding: 2px 8px; border-radius: 999px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .ap-deals-table .type-pill.lease { background: #ccfbf1; color: #115e59; }
+  .ap-deals-table .type-pill.sale  { background: #ede9fe; color: #5b21b6; }
+  .ap-deals-empty {
+    padding: 28px; text-align: center; color: var(--text-muted, #6b7280);
+    background: var(--surface-2, #fafbfd); border-radius: 10px;
+  }
+
+  /* Leaflet turf polygon tooltip */
+  .ap-turf-label {
+    background: rgba(13, 148, 136, 0.9); color: #fff; padding: 4px 10px;
+    border-radius: 6px; font: 600 11px/1.1 inherit; border: none; box-shadow: none;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="wordmark">industrio<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Search</a>
+      <a href="market-intelligence.html">Market Intelligence</a>
+      <a href="agents.html" class="active">Agents</a>
+      <a href="tracked.html">Saved Searches</a>
+          <div class="nav-dropdown nav-resources-link">
+        <a class="nav-dropdown-toggle" tabindex="0">Resources &#9662;</a>
+        <div class="nav-dropdown-menu">
+          <a href="lease-abstract.html">Lease Abstract</a>
+          <a href="templates.html">Document Templates</a>
+        </div>
+      </div>
+      <a href="account.html" class="nav-account-link">My Account</a>
+    </div>
+    <div class="nav-auth"><a href="login.html" class="for-landlords-link">Log in</a><a href="join.html" class="nav-cta">Join</a></div>
+  </div>
+</nav>
+
+<section>
+  <div class="container">
+
+    <div style="margin-top:18px;"><a href="agents.html" style="color:var(--text-muted);text-decoration:none;font-size:0.86rem;">&larr; All agents</a></div>
+
+    <!-- Missing-agent fallback -->
+    <div id="apMissing" hidden style="margin:60px 0; text-align:center;">
+      <h2>Agent not found.</h2>
+      <p style="color:var(--text-muted);margin-top:10px;">That agent isn't in our roster yet.</p>
+      <a href="agents.html" class="btn btn-primary" style="margin-top:14px;">Browse all agents &rarr;</a>
+    </div>
+
+    <!-- Profile body (populated by JS) -->
+    <div id="apBody" hidden>
+
+      <div class="ap-hero">
+        <img class="ap-photo" id="apPhoto" src="" alt="">
+        <div>
+          <h1 class="ap-name" id="apName"></h1>
+          <div class="ap-title" id="apTitle"></div>
+          <div class="ap-areas" id="apAreas"></div>
+          <div class="ap-meta" id="apMeta"></div>
+        </div>
+        <div class="ap-cta">
+          <a href="#" class="btn-primary" id="apContactBtn">Contact</a>
+          <a href="#" class="btn-secondary" id="apSaveBtn">Save</a>
+        </div>
+      </div>
+
+      <div class="ap-stats">
+        <div class="ap-stat">
+          <div class="val" id="apStatDeals">—</div>
+          <div class="lbl">Deals closed</div>
+          <div class="sub" id="apStatDealsSub"></div>
+        </div>
+        <div class="ap-stat">
+          <div class="val" id="apStatSfLeased">—</div>
+          <div class="lbl">SF leased</div>
+          <div class="sub">tenant representation</div>
+        </div>
+        <div class="ap-stat">
+          <div class="val" id="apStatSfSold">—</div>
+          <div class="lbl">SF sold</div>
+          <div class="sub">user-sale + investment</div>
+        </div>
+        <div class="ap-stat">
+          <div class="val" id="apStatRating">—</div>
+          <div class="lbl">Client rating</div>
+          <div class="sub" id="apStatRatingSub"></div>
+        </div>
+      </div>
+
+      <div class="ap-bio" id="apBio"></div>
+
+      <div id="apMap"></div>
+      <p style="font-size:0.74rem;color:var(--text-muted);margin-top:8px;">
+        <span style="display:inline-block;width:10px;height:10px;background:#0d9488;border:2px solid #fff;border-radius:50%;vertical-align:-1px;margin-right:4px;"></span> Lease deal
+        <span style="margin:0 10px;">&middot;</span>
+        <span style="display:inline-block;width:10px;height:10px;background:#5b21b6;border:2px solid #fff;border-radius:50%;vertical-align:-1px;margin-right:4px;"></span> Sale deal
+        <span style="margin:0 10px;">&middot;</span>
+        <span style="display:inline-block;width:12px;height:8px;background:rgba(13,148,136,0.18);border:1.5px solid #0d9488;vertical-align:-1px;margin-right:4px;"></span> Agent's assigned turf
+      </p>
+
+      <div class="ap-deals-head">
+        <h2>Deal history</h2>
+        <button class="ap-filter-pill active" data-type="all" type="button">All</button>
+        <button class="ap-filter-pill" data-type="lease" type="button">Lease</button>
+        <button class="ap-filter-pill" data-type="sale"  type="button">Sale</button>
+        <select class="ap-filter-pill" id="apSizeFilter">
+          <option value="">Any size</option>
+          <option value="0-10000">Under 10k SF</option>
+          <option value="10000-20000">10-20k SF</option>
+          <option value="20000-50000">20-50k SF</option>
+          <option value="50000-99999999">50k+ SF</option>
+        </select>
+        <input class="ap-filter-input" id="apLocFilter" placeholder="City / address contains…">
+        <span class="ap-deals-count" id="apDealsCount">0 deals</span>
+      </div>
+
+      <table class="ap-deals-table" id="apDealsTable">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Address</th>
+            <th>City</th>
+            <th class="right">Size</th>
+            <th class="right">$ / SF</th>
+            <th class="right">Closed</th>
+          </tr>
+        </thead>
+        <tbody id="apDealsBody"></tbody>
+      </table>
+      <div class="ap-deals-empty" id="apDealsEmpty" hidden>No deals match these filters.</div>
+
+      <div style="height:48px;"></div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:12px;"><span class="wordmark">industrio<span class="wordmark-dot">.</span></span></div>
+        <p style="max-width:340px;">Industrial leasing intelligence built for tenants under 20,000 SF. Transparent data. Tenant-first AI.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a href="market-intelligence.html">Market Intelligence</a></li>
+        <li><a href="agents.html">Agents</a></li>
+        <li><a href="map.html">Search</a></li>
+        <li><a href="tracked.html">My Saved Searches</a></li>
+        <li><a href="ai-broker.html">AI Broker</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul></div>
+      <div><h4>Data</h4><ul>
+        <li><a href="reviews.html">Landlord Reviews</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="docs.html">Developer Docs</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="for-landlords.html">For Landlords</a></li>
+        <li><a href="mailto:hello@industrio.ai">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 industrio All rights reserved.</span>
+      <span>Data sourced from TRREB MLS, Ontario public records, and verified tenants.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="agents-data.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  function qs(name){
+    var u = new URL(window.location.href);
+    return u.searchParams.get(name);
+  }
+  function fmtN(n){ return Number(n).toLocaleString('en-CA'); }
+  function fmtK(n){
+    if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (n >= 1000) return Math.round(n/1000) + 'K';
+    return String(n);
+  }
+  function fmtDate(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+    if (!m) return s || '';
+    var d = new Date(+m[1], +m[2]-1, +m[3]);
+    return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+  function starBar(rating){
+    var full = Math.floor(rating);
+    var half = (rating - full) >= 0.5;
+    var s = '';
+    for (var i = 0; i < full; i++) s += '★';
+    if (half) s += '½';
+    while (s.replace('½','').length < 5) s += '☆';
+    return s;
+  }
+
+  var id = qs('id');
+  var agent = (window.INDUSTRIO_AGENTS_BY_ID || {})[id];
+  if (!agent){
+    document.getElementById('apMissing').removeAttribute('hidden');
+    return;
+  }
+  document.getElementById('apBody').removeAttribute('hidden');
+  document.title = agent.name + ' — industrio';
+
+  // Hero
+  document.getElementById('apPhoto').src = agent.photo;
+  document.getElementById('apPhoto').alt = agent.name;
+  document.getElementById('apName').textContent = agent.name;
+  document.getElementById('apTitle').textContent = agent.title;
+  document.getElementById('apMeta').innerHTML =
+    agent.years_experience + ' yrs industrial' +
+    '<span class="dot">·</span>' + (agent.languages || []).join(', ') +
+    '<span class="dot">·</span>' + 'Based in ' + agent.primary_city;
+  document.getElementById('apAreas').innerHTML = agent.areas.map(function(a){
+    return '<span class="pill">' + a + '</span>';
+  }).join('');
+  document.getElementById('apContactBtn').href = 'mailto:' + agent.id + '@industrio.ai?subject=Request%20to%20connect';
+  document.getElementById('apSaveBtn').href = '#';
+
+  // Stats
+  document.getElementById('apStatDeals').textContent = agent.stats.deals_total;
+  document.getElementById('apStatDealsSub').textContent = 'avg deal ' + fmtN(agent.stats.avg_deal_size) + ' SF';
+  document.getElementById('apStatSfLeased').textContent = fmtK(agent.stats.sf_leased);
+  document.getElementById('apStatSfSold').textContent   = fmtK(agent.stats.sf_sold);
+  document.getElementById('apStatRating').innerHTML =
+    '<span class="ap-stars">' + starBar(agent.rating) + '</span> ' + agent.rating.toFixed(1);
+  document.getElementById('apStatRatingSub').textContent = agent.review_count + ' client reviews';
+
+  // Bio
+  document.getElementById('apBio').textContent = agent.bio || '';
+
+  // ---- Map: deal markers + turf polygon
+  function initMap(){
+    if (typeof L === 'undefined'){
+      setTimeout(initMap, 50);
+      return;
+    }
+    var map = L.map('apMap', { scrollWheelZoom: true }).setView([43.70, -79.55], 10);
+    map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Turf polygon (the agent's assigned area)
+    if (agent.turf && agent.turf.polygon){
+      var poly = L.polygon(agent.turf.polygon, {
+        color: '#0d9488', weight: 2, fillColor: '#0d9488', fillOpacity: 0.12,
+        dashArray: '6,4'
+      }).addTo(map);
+      poly.bindTooltip(agent.turf.label, {
+        permanent: true, direction: 'center', className: 'ap-turf-label'
+      });
+    }
+
+    // Deal markers
+    var deals = agent.deals || [];
+    var bounds = [];
+    deals.forEach(function(d){
+      if (typeof d.lat !== 'number' || typeof d.lng !== 'number') return;
+      var color = d.type === 'sale' ? '#5b21b6' : '#0d9488';
+      var priceLine = (d.type === 'sale')
+        ? '$' + d.rate_or_price + ' / SF'
+        : '$' + Number(d.rate_or_price).toFixed(2) + ' / SF net';
+      var popup = '<div style="min-width:180px"><strong>' + d.address + '</strong><br>' +
+        d.city + ' &middot; ' + fmtN(d.size_sf) + ' SF<br>' +
+        '<span style="color:' + color + ';font-weight:600;">' + (d.type === 'sale' ? 'Sale' : 'Lease') + '</span> — ' + priceLine + '<br>' +
+        '<span style="color:#666;font-size:0.82rem;">Closed ' + fmtDate(d.closed_at) + '</span></div>';
+      L.circleMarker([d.lat, d.lng], {
+        radius: 9, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.95
+      }).bindPopup(popup).addTo(map);
+      bounds.push([d.lat, d.lng]);
+    });
+    // Include turf polygon in bounds too
+    if (agent.turf && agent.turf.polygon) {
+      agent.turf.polygon.forEach(function(p){ bounds.push(p); });
+    }
+    if (bounds.length) {
+      map.fitBounds(L.latLngBounds(bounds), { padding: [40, 40], maxZoom: 13 });
+    }
+    setTimeout(function(){ map.invalidateSize(); }, 80);
+  }
+  initMap();
+
+  // ---- Deal list + filters
+  var typeBtns = document.querySelectorAll('.ap-filter-pill[data-type]');
+  var sizeSel = document.getElementById('apSizeFilter');
+  var locInput = document.getElementById('apLocFilter');
+  var body = document.getElementById('apDealsBody');
+  var empty = document.getElementById('apDealsEmpty');
+  var cntEl = document.getElementById('apDealsCount');
+  var typeFilter = 'all';
+
+  typeBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      typeBtns.forEach(function(x){ x.classList.toggle('active', x === b); });
+      typeFilter = b.dataset.type;
+      renderDeals();
+    });
+  });
+  sizeSel.addEventListener('change', renderDeals);
+  locInput.addEventListener('input', renderDeals);
+
+  function renderDeals(){
+    var deals = agent.deals || [];
+    var locQ = (locInput.value || '').trim().toLowerCase();
+    var sizeR = sizeSel.value ? sizeSel.value.split('-').map(Number) : null;
+
+    var filtered = deals.filter(function(d){
+      if (typeFilter !== 'all' && d.type !== typeFilter) return false;
+      if (sizeR && (d.size_sf < sizeR[0] || d.size_sf > sizeR[1])) return false;
+      if (locQ){
+        var hay = (d.address + ' ' + d.city).toLowerCase();
+        if (hay.indexOf(locQ) < 0) return false;
+      }
+      return true;
+    }).sort(function(a, b){ return (b.closed_at || '').localeCompare(a.closed_at || ''); });
+
+    cntEl.textContent = filtered.length + (filtered.length === 1 ? ' deal' : ' deals');
+    if (!filtered.length){
+      body.innerHTML = '';
+      empty.removeAttribute('hidden');
+      return;
+    }
+    empty.setAttribute('hidden', '');
+    body.innerHTML = filtered.map(function(d){
+      var priceCell = d.type === 'sale'
+        ? '$' + d.rate_or_price
+        : '$' + Number(d.rate_or_price).toFixed(2);
+      return '<tr>' +
+        '<td><span class="type-pill ' + d.type + '">' + d.type + '</span></td>' +
+        '<td>' + d.address + '</td>' +
+        '<td>' + d.city + '</td>' +
+        '<td class="right">' + fmtN(d.size_sf) + ' SF</td>' +
+        '<td class="right">' + priceCell + '</td>' +
+        '<td class="right">' + fmtDate(d.closed_at) + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+  renderDeals();
+})();
+</script>
+
+</body>
+</html>
