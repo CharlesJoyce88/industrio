@@ -12,6 +12,125 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
+<style>
+  /* ---- HouseSigma-style horizontal card rows ---- */
+  .hs-section {
+    padding: 36px 0 12px 0;
+  }
+  .hs-section.alt { background: var(--surface-2, #fafbfd); }
+  .hs-row-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap; margin-bottom: 4px;
+  }
+  .hs-row-head h2 { margin: 0; font-size: 1.35rem; color: var(--text, #0f1e4e); }
+  .hs-see-all {
+    font-size: 0.86rem; color: var(--accent, #0d9488); text-decoration: none;
+    font-weight: 600;
+  }
+  .hs-see-all:hover { text-decoration: underline; }
+  .hs-row-sub {
+    margin: 0 0 16px 0; font-size: 0.85rem; color: var(--text-muted, #6b7280);
+  }
+  .hs-tabs {
+    display: inline-flex; margin: 10px 0 14px 0;
+    background: var(--surface-2, #f1f3f8); border-radius: 10px; padding: 3px;
+  }
+  .hs-tabs button {
+    appearance: none; border: 0; background: transparent;
+    padding: 7px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    border-radius: 7px; color: var(--text-muted, #6b7280); font-family: inherit;
+  }
+  .hs-tabs button.active {
+    background: #fff; color: var(--text, #0f1e4e);
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
+  .hs-cards-scroll {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 260px;
+    gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 4px 2px 14px 2px;
+    scrollbar-width: thin;
+  }
+  .hs-cards-scroll::-webkit-scrollbar { height: 8px; }
+  .hs-cards-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  .hs-card {
+    scroll-snap-align: start;
+    background: #fff; border: 1px solid var(--border, #e5e7eb); border-radius: 12px;
+    overflow: hidden; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit; transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .hs-card:hover {
+    transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,30,78,.08);
+    border-color: var(--accent, #0d9488);
+  }
+  .hs-card-photo {
+    aspect-ratio: 16/10; width: 100%;
+    background-size: cover; background-position: center;
+    background-color: var(--surface-2, #f1f3f8);
+    position: relative;
+  }
+  .hs-badge {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: 999px; background: #fff; color: var(--text, #0f1e4e);
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+  }
+  .hs-badge.lease    { background: #0d9488; color: #fff; }
+  .hs-badge.sale     { background: #5b21b6; color: #fff; }
+  .hs-badge.leased   { background: #0f766e; color: #fff; }
+  .hs-badge.sold     { background: #4c1d95; color: #fff; }
+  .hs-badge.featured { background: #b45309; color: #fff; }
+  .hs-watch-dot {
+    position: absolute; top: 10px; right: 10px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,.95); display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem; box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  }
+  .hs-card-body { padding: 12px 14px 14px 14px; flex: 1; display: flex; flex-direction: column; }
+  .hs-card-price {
+    font-size: 1.05rem; font-weight: 700; color: var(--text, #0f1e4e); line-height: 1.1;
+  }
+  .hs-card-price .u {
+    font-size: 0.74rem; font-weight: 500; color: var(--text-muted, #6b7280); margin-left: 3px;
+  }
+  .hs-card-addr {
+    font-size: 0.86rem; margin-top: 6px; color: var(--text, #0f1e4e);
+    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .hs-card-meta {
+    font-size: 0.76rem; color: var(--text-muted, #6b7280); margin-top: 4px;
+  }
+  .hs-card-specs {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
+  }
+  .hs-spec {
+    font-size: 0.7rem; background: var(--surface-2, #f1f3f8);
+    padding: 2px 7px; border-radius: 4px; color: var(--text, #0f1e4e);
+  }
+  /* GTA stats section */
+  .hs-stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+  }
+  @media (max-width: 760px) { .hs-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  .hs-stat-card {
+    background: #fff; border: 1px solid var(--border, #e5e7eb); border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .hs-stat-card .lbl {
+    font-size: 0.74rem; color: var(--text-muted, #6b7280);
+    text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600;
+  }
+  .hs-stat-card .val {
+    font-size: 1.6rem; font-weight: 700; color: var(--text, #0f1e4e); margin-top: 6px;
+  }
+  .hs-stat-card .val .unit {
+    font-size: 0.78rem; color: var(--text-muted, #6b7280); font-weight: 500; margin-left: 2px;
+  }
+  .hs-stat-card .delta {
+    font-size: 0.78rem; margin-top: 4px; font-weight: 600;
+  }
+  .hs-stat-card .delta.up   { color: #047857; }
+  .hs-stat-card .delta.down { color: #b91c1c; }
+</style>
 </head>
 <body>
 
@@ -66,6 +185,100 @@
       <div class="stat">
         <div class="num">&lt;50k SF</div>
         <div class="label">Occupier focus</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     1. WATCHED — properties the user has flagged or recently viewed
+     ============================================================================ -->
+<section class="hs-section alt">
+  <div class="container">
+    <div class="hs-row-head">
+      <h2>Watched properties</h2>
+      <a href="tracked.html" class="hs-see-all">See all watched &rarr;</a>
+    </div>
+    <p class="hs-row-sub">Properties you&rsquo;ve viewed or flagged recently &mdash; both lease and sale.</p>
+    <div class="hs-cards-scroll" id="homeWatched"></div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     2. RECOMMENDED — based on the user's saved searches
+     ============================================================================ -->
+<section class="hs-section">
+  <div class="container">
+    <div class="hs-row-head">
+      <h2>Recommended for you</h2>
+      <a href="tracked.html" class="hs-see-all">Edit saved searches &rarr;</a>
+    </div>
+    <p class="hs-row-sub">New matches against your saved search criteria.</p>
+    <div class="hs-cards-scroll" id="homeRecommended"></div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     3. FEATURED — landlord-uploaded highlights
+     ============================================================================ -->
+<section class="hs-section alt">
+  <div class="container">
+    <div class="hs-row-head">
+      <h2>Featured listings</h2>
+      <a href="for-landlords.html" class="hs-see-all">List your space &rarr;</a>
+    </div>
+    <p class="hs-row-sub">Premium spaces highlighted by owners and landlords this week.</p>
+    <div class="hs-cards-scroll" id="homeFeatured"></div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     4. JUST LEASED / JUST SOLD — recent closes
+     ============================================================================ -->
+<section class="hs-section">
+  <div class="container">
+    <div class="hs-row-head">
+      <h2>Recent closes</h2>
+      <a href="market-intelligence.html" class="hs-see-all">Full comp set &rarr;</a>
+    </div>
+    <div class="hs-tabs" id="homeClosedTabs" role="tablist">
+      <button type="button" class="active" data-close-tab="leased" role="tab">Just leased</button>
+      <button type="button"                data-close-tab="sold"   role="tab">Just sold</button>
+    </div>
+    <div class="hs-cards-scroll" id="homeClosed"></div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     5. GTA STATISTICS — live tiles, link into Market Intelligence
+     ============================================================================ -->
+<section class="hs-section alt">
+  <div class="container">
+    <div class="hs-row-head">
+      <h2>GTA industrial pulse</h2>
+      <a href="market-intelligence.html" class="hs-see-all">Explore all charts &rarr;</a>
+    </div>
+    <p class="hs-row-sub">Where the GTA under-50k-SF industrial market sits right now.</p>
+    <div class="hs-stats-grid">
+      <div class="hs-stat-card">
+        <div class="lbl">GTA median asking</div>
+        <div class="val">$18.00<span class="unit">/ SF net</span></div>
+        <div class="delta up">&uarr; +5.6% vs 1 yr ago</div>
+      </div>
+      <div class="hs-stat-card">
+        <div class="lbl">GTA median achieved</div>
+        <div class="val">$17.80<span class="unit">/ SF net</span></div>
+        <div class="delta up">&uarr; +4.9% vs 1 yr ago</div>
+      </div>
+      <div class="hs-stat-card">
+        <div class="lbl">Median DOM</div>
+        <div class="val">74<span class="unit">days</span></div>
+        <div class="delta down">&darr; faster than last year</div>
+      </div>
+      <div class="hs-stat-card">
+        <div class="lbl">Deals closed (2026 YTD)</div>
+        <div class="val">610</div>
+        <div class="delta">across Peel, Toronto, York, Halton, Durham</div>
       </div>
     </div>
   </div>
@@ -240,6 +453,125 @@
   </div>
 </footer>
 
+
+<script>
+// ============================================================================
+// Homepage listing-card data.
+//
+// DATA SOURCE SWAP POINT: today powered by HOME_DEMO_DATA below. When the API
+// is live, replace loadHomeData() with fetch('/api/home-feed?user=...') and
+// keep the record shape:
+//   { id, status, address, city, size_sf, rate_or_price, photo_seed, tags[] }
+// ============================================================================
+(function(){
+  "use strict";
+
+  var HOME_DEMO_DATA = {
+    watched: [
+      { id: 'w1', status: 'lease', address: '2450 Meadowvale Blvd, Unit 4',  city: 'Mississauga', size_sf: 13400, rate_or_price: 16.00, photo_seed: 'wL1', tags: ['26\' clear', '3 TL'] },
+      { id: 'w2', status: 'lease', address: '1650 Courtneypark Dr E, Unit 11', city: 'Mississauga', size_sf: 14600, rate_or_price: 16.80, photo_seed: 'wL2', tags: ['28\' clear', '2 TL'] },
+      { id: 'w3', status: 'sale',  address: '1280 Aerowood Dr',             city: 'Mississauga', size_sf: 14200, rate_or_price: 295,   photo_seed: 'wS1', tags: ['Condo', '4 TL'] },
+      { id: 'w4', status: 'lease', address: '2700 Steeles Ave W, Unit 8',   city: 'Vaughan',     size_sf: 16800, rate_or_price: 17.25, photo_seed: 'wL3', tags: ['30\' clear', '4 TL'] },
+      { id: 'w5', status: 'lease', address: '80 Dynamic Dr',                city: 'Scarborough', size_sf: 12200, rate_or_price: 15.60, photo_seed: 'wL4', tags: ['26\' clear', '2 TL + DI'] }
+    ],
+    recommended: [
+      { id: 'r1', status: 'lease', address: '5400 Dixie Rd Unit 8',         city: 'Mississauga', size_sf: 11200, rate_or_price: 15.75, photo_seed: 'rL1', tags: ['Matches: 10-15k SF', '5 km of pin'] },
+      { id: 'r2', status: 'lease', address: '2880 Argentia Rd Unit 4',      city: 'Mississauga', size_sf: 13800, rate_or_price: 17.10, photo_seed: 'rL2', tags: ['Matches: 10-15k SF', 'Meadowvale'] },
+      { id: 'r3', status: 'lease', address: '8800 Airport Rd',              city: 'Brampton',    size_sf: 10200, rate_or_price: 14.50, photo_seed: 'rL3', tags: ['Matches: Brampton', 'New today'] },
+      { id: 'r4', status: 'lease', address: '65 International Blvd, Unit 3',city: 'Etobicoke',   size_sf:  9500, rate_or_price: 14.75, photo_seed: 'rL4', tags: ['Matches: < 10k SF', 'Whitebox'] },
+      { id: 'r5', status: 'sale',  address: '7700 Pine Valley Dr',          city: 'Vaughan',     size_sf: 16500, rate_or_price: 305,   photo_seed: 'rS1', tags: ['Matches: for sale', 'Freestanding'] },
+      { id: 'r6', status: 'lease', address: '35 Caldari Rd',                city: 'Vaughan',     size_sf: 12200, rate_or_price: 17.90, photo_seed: 'rL5', tags: ['Matches: Vaughan', '14 days new'] }
+    ],
+    featured: [
+      { id: 'f1', status: 'featured', sub_status: 'lease', address: '2400 Matheson Blvd W', city: 'Mississauga', size_sf:  8900, rate_or_price: 16.75, photo_seed: 'fF1', tags: ['Prologis', 'Rail-served', 'Featured'] },
+      { id: 'f2', status: 'featured', sub_status: 'sale',  address: '35 Walker Dr',         city: 'Brampton',    size_sf: 11500, rate_or_price: 275,   photo_seed: 'fF2', tags: ['Owner-user ready', 'Yard', 'Featured'] },
+      { id: 'f3', status: 'featured', sub_status: 'lease', address: '1 Concord Rd',         city: 'Vaughan',     size_sf: 21000, rate_or_price: 18.10, photo_seed: 'fF3', tags: ['600A power', 'Crane-ready', 'Featured'] },
+      { id: 'f4', status: 'featured', sub_status: 'lease', address: '6655 Kitimat Rd',      city: 'Mississauga', size_sf: 15200, rate_or_price: 16.90, photo_seed: 'fF4', tags: ['Whitebox', 'Trailer parking', 'Featured'] },
+      { id: 'f5', status: 'featured', sub_status: 'sale',  address: '500 Main St N',        city: 'Markham',     size_sf: 18000, rate_or_price: 310,   photo_seed: 'fF5', tags: ['Freestanding', 'Fenced', 'Featured'] }
+    ],
+    leased: [
+      { id: 'l1', status: 'leased', address: '2446 Cawthra Rd Unit B4-6',    city: 'Mississauga', size_sf:  2268, rate_or_price: 15.50, photo_seed: 'xL1', tags: ['45 days DOM', 'Closed last wk'] },
+      { id: 'l2', status: 'leased', address: '8500 Keele St Unit 12',        city: 'Vaughan',     size_sf: 13500, rate_or_price: 17.40, photo_seed: 'xL2', tags: ['65 days DOM', '93% of ask'] },
+      { id: 'l3', status: 'leased', address: '120 Walker Dr',                city: 'Brampton',    size_sf: 15800, rate_or_price: 15.85, photo_seed: 'xL3', tags: ['110 days DOM', '93% of ask'] },
+      { id: 'l4', status: 'leased', address: '95 Dynamic Dr',                city: 'Scarborough', size_sf: 10800, rate_or_price: 14.85, photo_seed: 'xL4', tags: ['80 days DOM', '93% of ask'] },
+      { id: 'l5', status: 'leased', address: '125 Carlingview Dr',           city: 'Etobicoke',   size_sf:  9200, rate_or_price: 15.20, photo_seed: 'xL5', tags: ['45 days DOM', '92% of ask'] },
+      { id: 'l6', status: 'leased', address: '7001 Mavis Rd',                city: 'Mississauga', size_sf: 10500, rate_or_price: 16.40, photo_seed: 'xL6', tags: ['52 days DOM', '95% of ask'] }
+    ],
+    sold: [
+      { id: 's1', status: 'sold', address: '500 Main St N',        city: 'Markham',     size_sf: 18000, rate_or_price: 305, photo_seed: 'xS1', tags: ['88 days DOM', '95% of ask'] },
+      { id: 's2', status: 'sold', address: '7700 Pine Valley Dr',  city: 'Vaughan',     size_sf: 16500, rate_or_price: 285, photo_seed: 'xS2', tags: ['110 days DOM', '97% of ask'] },
+      { id: 's3', status: 'sold', address: '6610 Tomken Rd',       city: 'Mississauga', size_sf: 12800, rate_or_price: 270, photo_seed: 'xS3', tags: ['95 days DOM', '95% of ask'] },
+      { id: 's4', status: 'sold', address: '35 Walker Dr',         city: 'Brampton',    size_sf: 11500, rate_or_price: 275, photo_seed: 'xS4', tags: ['72 days DOM', '100% of ask'] },
+      { id: 's5', status: 'sold', address: '1125 Finch Ave E',     city: 'Scarborough', size_sf:  8200, rate_or_price: 280, photo_seed: 'xS5', tags: ['60 days DOM', '98% of ask'] }
+    ]
+  };
+
+  function loadHomeData(){ return Promise.resolve(HOME_DEMO_DATA); }
+
+  // ---- Helpers ----
+  function fmtN(n){ return Number(n).toLocaleString('en-CA'); }
+  function statusLabel(s){
+    if (s === 'lease')    return 'For Lease';
+    if (s === 'sale')     return 'For Sale';
+    if (s === 'leased')   return 'Leased';
+    if (s === 'sold')     return 'Sold';
+    if (s === 'featured') return 'Featured';
+    return s;
+  }
+  function priceLine(item){
+    var s = item.status === 'featured' ? item.sub_status : item.status;
+    if (s === 'lease')  return '$' + Number(item.rate_or_price).toFixed(2) + '<span class="u">/ SF net</span>';
+    if (s === 'sale')   return '$' + fmtN(item.rate_or_price) + '<span class="u">/ SF</span>';
+    if (s === 'leased') return '$' + Number(item.rate_or_price).toFixed(2) + '<span class="u">/ SF achieved</span>';
+    if (s === 'sold')   return '$' + fmtN(item.rate_or_price) + '<span class="u">/ SF sold</span>';
+    return '';
+  }
+
+  function cardHTML(item, opts){
+    opts = opts || {};
+    var s = item.status;
+    var sub = item.sub_status || item.status;
+    var badgeClass = s === 'featured' ? 'featured' : s;
+    var badgeText = statusLabel(s);
+    var photo = 'https://picsum.photos/seed/' + encodeURIComponent(item.photo_seed || item.id) + '/560/350';
+    return '<a class="hs-card" href="listing-detail.html?id=' + encodeURIComponent(item.id) + '">' +
+      '<div class="hs-card-photo" style="background-image:url(\'' + photo + '\');">' +
+        '<span class="hs-badge ' + badgeClass + '">' + badgeText + '</span>' +
+        (opts.watchable ? '<span class="hs-watch-dot" title="Watched">&#9733;</span>' : '') +
+      '</div>' +
+      '<div class="hs-card-body">' +
+        '<div class="hs-card-price">' + priceLine(item) + '</div>' +
+        '<div class="hs-card-addr">' + item.address + '</div>' +
+        '<div class="hs-card-meta">' + item.city + ' &middot; ' + fmtN(item.size_sf) + ' SF</div>' +
+        '<div class="hs-card-specs">' + (item.tags || []).map(function(t){ return '<span class="hs-spec">' + t + '</span>'; }).join('') + '</div>' +
+      '</div>' +
+    '</a>';
+  }
+
+  function renderRow(containerId, items, opts){
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = items.map(function(i){ return cardHTML(i, opts); }).join('');
+  }
+
+  // Boot
+  loadHomeData().then(function(data){
+    renderRow('homeWatched',     data.watched,     { watchable: true });
+    renderRow('homeRecommended', data.recommended, { watchable: false });
+    renderRow('homeFeatured',    data.featured,    { watchable: false });
+    renderRow('homeClosed',      data.leased,      { watchable: false });
+
+    // Just-leased / just-sold tab toggle
+    var tabs = document.querySelectorAll('#homeClosedTabs button');
+    tabs.forEach(function(b){
+      b.addEventListener('click', function(){
+        tabs.forEach(function(x){ x.classList.toggle('active', x === b); });
+        renderRow('homeClosed', data[b.dataset.closeTab] || [], { watchable: false });
+      });
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
